@@ -59,7 +59,7 @@ export default function Header() {
           {/* Desktop Social Links */}
           <div className="hidden md:flex items-center space-x-3">
             <motion.a
-              href="https://github.com"
+              href="https://github.com/omaraburub-byte"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded-lg bg-black/50 border border-gray-800 text-gray-400 hover:text-spider-red hover:border-spider-red transition-all"
@@ -69,7 +69,7 @@ export default function Header() {
               <Github size={20} />
             </motion.a>
             <motion.a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/omar-aburub-profile/"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded-lg bg-black/50 border border-gray-800 text-gray-400 hover:text-spider-red hover:border-spider-red transition-all"
@@ -121,13 +121,13 @@ export default function Header() {
                   </a>
                 ))}
                 <div className="flex space-x-3 pt-4">
-                  <a href="https://github.com" className="flex-1 p-3 rounded-lg bg-black/50 border border-gray-800 text-center text-gray-400 hover:text-spider-red">
+                  <a href="https://github.com/omaraburub-byte" className="flex-1 p-3 rounded-lg bg-black/50 border border-gray-800 text-center text-gray-400 hover:text-spider-red">
                     <Github size={20} className="mx-auto" />
                   </a>
-                  <a href="https://linkedin.com" className="flex-1 p-3 rounded-lg bg-black/50 border border-gray-800 text-center text-gray-400 hover:text-spider-red">
+                  <a href="https://www.linkedin.com/in/omar-aburub-profile/" className="flex-1 p-3 rounded-lg bg-black/50 border border-gray-800 text-center text-gray-400 hover:text-spider-red">
                     <Linkedin size={20} className="mx-auto" />
                   </a>
-                  <a href="mailto:omar.abualrob@gmail.com" className="flex-1 p-3 rounded-lg bg-black/50 border border-gray-800 text-center text-gray-400 hover:text-spider-red">
+                  <a href="mailto:omar.spiderofse@gmail.com" className="flex-1 p-3 rounded-lg bg-black/50 border border-gray-800 text-center text-gray-400 hover:text-spider-red">
                     <Mail size={20} className="mx-auto" />
                   </a>
                 </div>

@@ -20,14 +20,14 @@ export default function ContactSection() {
   }
 
   const contactInfo = [
-    { icon: Mail, text: 'omar.abualrob@gmail.com', href: 'mailto:omar.abualrob@gmail.com' },
+    { icon: Mail, text: 'omar.spiderofse@gmail.com', href: 'mailto:omar.spiderofse@gmail.com' },
     { icon: Phone, text: '+962 782 329 277', href: 'tel:+962782329277' },
     { icon: MapPin, text: 'Amman, Jordan 11934', href: '#' },
   ]
 
   const socialLinks = [
-    { icon: Github, href: 'https://github.com', label: 'GitHub' },
-    { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
+    { icon: Github, href: 'https://github.com/omaraburub-byte', label: 'GitHub' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/in/omar-aburub-profile/', label: 'LinkedIn' },
     { icon: MessageSquare, href: '#', label: 'Portfolio' },
   ]
 
