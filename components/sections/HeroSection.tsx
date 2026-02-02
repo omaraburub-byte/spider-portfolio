@@ -22,7 +22,7 @@ export default function HeroSection() {
         >
           {/* Spider Logo */}
           <motion.div
-  className="inline-block p-6 rounded-full bg-black/50 backdrop-blur-sm border border-spider-gray mb-8"
+  className="inline-block p-6 rounded-full bg-black/0 backdrop-blur-sm border border-spider-gray mb-8"
   whileHover={{ scale: 1.05 }}
 >
   <div className="w-40 h-40 mx-auto relative">
