@@ -25,13 +25,13 @@ export default function Preloader() {
       clearInterval(dotInterval)
     }
   }, [])
-  // Add to the useEffect
-useEffect(() => {
-  const handleKeyPress = () => setIsLoading(false)
-  window.addEventListener('keydown', handleKeyPress)
-  
-  return () => window.removeEventListener('keydown', handleKeyPress)
-}, [])
+
+  useEffect(() => {
+    const handleKeyPress = () => setIsLoading(false)
+    window.addEventListener('keydown', handleKeyPress)
+    
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [])
 
   const loadingText = `Spider-Sense tingling${'.'.repeat(dots)}`
 
@@ -42,7 +42,7 @@ useEffect(() => {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background"
         >
           {/* Web lines radiating from center */}
           <div className="absolute inset-0 overflow-hidden">
@@ -69,7 +69,7 @@ useEffect(() => {
             {[1, 2, 3].map((radius) => (
               <motion.div
                 key={radius}
-                className="absolute top-1/2 left-1/2 rounded-full border border-spider-red/30"
+                className="absolute top-1/2 left-1/2 rounded-full border border-border/50"
                 style={{
                   width: `${radius * 200}px`,
                   height: `${radius * 200}px`,
@@ -105,7 +105,7 @@ useEffect(() => {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
               >
-                <div className="w-40 h-40 border-2 border-spider-red/50 rounded-full" />
+                <div className="w-40 h-40 border-2 border-spider-red/30 rounded-full" />
               </motion.div>
 
               {/* Spider logo */}
@@ -139,7 +139,7 @@ useEffect(() => {
             <div className="font-barrio text-2xl text-spider-red mb-2">
               OMAR ABURUB
             </div>
-            <div className="font-montserrat text-gray-700">
+            <div className="font-montserrat text-foreground">
               {loadingText}
             </div>
           </motion.div>
@@ -149,7 +149,7 @@ useEffect(() => {
             initial={{ width: '0%' }}
             animate={{ width: '100%' }}
             transition={{ duration: 2.5, ease: 'linear' }}
-            className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-64 h-1 bg-gray-200 rounded-full overflow-hidden"
+            className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-64 h-1 bg-muted rounded-full overflow-hidden"
           >
             <div className="h-full bg-gradient-to-r from-spider-red to-spider-blue" />
           </motion.div>
@@ -160,7 +160,7 @@ useEffect(() => {
             animate={{ opacity: 0.7 }}
             transition={{ delay: 1 }}
             onClick={() => setIsLoading(false)}
-            className="absolute bottom-8 text-sm text-gray-500 hover:text-spider-red transition-colors"
+            className="absolute bottom-8 text-sm text-muted-foreground hover:text-spider-red transition-colors"
           >
             Press any key to skip
           </motion.button>
