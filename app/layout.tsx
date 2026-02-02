@@ -3,13 +3,17 @@ import { Montserrat } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import Preloader from '@/components/sections/Preloader'
+import { ThemeProvider } from '@/components/providers/ThemeProvider'
+import CursorTrail from '@/components/effects/CursorTrail'
+import HoverSense from '@/components/effects/HoverSense'
 
 const montserrat = Montserrat({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Omar Aburub | The Spider of Software Engineering',
   description: 'UX/UI Designer • HCI Researcher • AI Application Developer | Weaving digital experiences with code, design, and AI.',
-  manifest: '/site.webmanifest', // Add this line
+  manifest: '/site.webmanifest',
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon-16x16.png',
@@ -41,18 +45,28 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={`${montserrat.className} antialiased`}>
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <main className="flex-1 relative z-10">
-            {children}
-          </main>
-          <Footer />
-        </div>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Preloader />
+          <CursorTrail />
+          <HoverSense />
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-1 relative z-10">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   )

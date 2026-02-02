@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Github, Linkedin, Mail, FileText, Sparkles } from 'lucide-react'
 import Link from 'next/link'
-import SpiderLogo from '@/components/SpiderLogo' // Add this import
+import SpiderLogo from '@/components/SpiderLogo'
+import ThemeToggle from '@/components/ThemeToggle'
 
 const navItems = [
   { name: 'Home', href: '#home' },
@@ -56,8 +57,9 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Desktop Social Links */}
+          {/* Desktop Social Links - UPDATED WITH THEME TOGGLE */}
           <div className="hidden md:flex items-center space-x-3">
+            <ThemeToggle />
             <motion.a
               href="https://github.com/omaraburub-byte"
               target="_blank"
@@ -99,7 +101,7 @@ export default function Header() {
           </motion.button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - UPDATED WITH THEME TOGGLE */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
@@ -120,6 +122,12 @@ export default function Header() {
                     {item.name}
                   </a>
                 ))}
+                
+                {/* Theme Toggle for Mobile */}
+                <div className="flex items-center justify-center py-4">
+                  <ThemeToggle />
+                </div>
+                
                 <div className="flex space-x-3 pt-4">
                   <a href="https://github.com/omaraburub-byte" className="flex-1 p-3 rounded-lg bg-black/50 border border-gray-800 text-center text-gray-400 hover:text-spider-red">
                     <Github size={20} className="mx-auto" />

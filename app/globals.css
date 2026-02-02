@@ -4,44 +4,169 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-color: black;
-  color: white;
-}
-/* Add to the end of the file */
+@layer base {
+  :root {
+    /* Light theme (Spider-Man classic suit) */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 98%;
+    --card-foreground: 0 0% 3.9%;
+    --primary: 221 83% 53%; /* Spider Blue #1A73E8 */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 189 100% 50%; /* Spider Neon #00D4FF */
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 221 83% 53%;
+    --radius: 0.5rem;
+  }
 
-/* Custom scrollbar */
+  .dark {
+    /* Dark theme (Venom/Black suit) */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --primary: 0 84% 60%; /* Spider Red #E62429 */
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 189 100% 50%; /* Spider Neon #00D4FF */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 84% 60%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Smooth transitions for theme switching */
+  * {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@layer utilities {
+  .hover-sense {
+    @apply transition-all duration-300;
+  }
+  
+  .hover-sense:hover {
+    @apply scale-105;
+  }
+
+  .spider-web {
+    background-image: 
+      radial-gradient(circle at 1px 1px, rgba(230, 36, 41, 0.1) 1px, transparent 0);
+    background-size: 40px 40px;
+  }
+
+  /* Comic book Ben-Day dots effect */
+  .comic-dots {
+    background-image: radial-gradient(circle at 1px 1px, currentColor 1px, transparent 1px);
+    background-size: 4px 4px;
+  }
+
+  /* Text gradient utilities */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r;
+  }
+
+  .spider-gradient {
+    @apply bg-gradient-to-r from-spider-red via-spider-blue to-spider-neon;
+  }
+
+  /* Glass morphism effect */
+  .glass-effect {
+    @apply backdrop-blur-md bg-white/5 border border-white/10;
+  }
+
+  /* Spider sense pulse animation */
+  @keyframes spider-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .animate-spider-pulse {
+    animation: spider-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+/* Custom scrollbar (outside Tailwind layers) */
 ::-webkit-scrollbar {
   width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #000;
+  @apply bg-gray-900;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #E62429;
-  border-radius: 5px;
+  @apply bg-spider-red rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #1A73E8;
+  @apply bg-spider-blue;
 }
 
-/* Selection color */
+.dark ::-webkit-scrollbar-track {
+  @apply bg-black;
+}
+
+.light ::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  @apply bg-spider-blue;
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  @apply bg-spider-red;
+}
+
+/* Selection colors */
 ::selection {
-  background: rgba(230, 36, 41, 0.3);
-  color: white;
+  @apply bg-spider-red/30 text-white;
 }
 
-/* Smooth transitions */
-* {
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+.dark ::selection {
+  @apply bg-spider-red/30;
 }
 
-/* Web background pattern */
-.spider-web {
-  background-image: 
-    radial-gradient(circle at 1px 1px, rgba(230, 36, 41, 0.1) 1px, transparent 0);
-  background-size: 40px 40px;
+.light ::selection {
+  @apply bg-spider-blue/30;
+}
+
+/* Focus outlines */
+*:focus {
+  @apply outline-none ring-2 ring-spider-red/50 ring-offset-2 ring-offset-background;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove tap highlight on mobile */
+@media (max-width: 768px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
