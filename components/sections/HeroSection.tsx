@@ -6,7 +6,26 @@ import SpiderLogo from '@/components/SpiderLogo'
 
 export default function HeroSection() {
   return (
-    <section id="home" className="min-h-screen relative flex items-center justify-center overflow-hidden">
+    <section id="home" className="min-h-screen relative flex items-center justify-center overflow-hidden bg-background">
+      {/* BEN-DAY DOTS COMIC BACKGROUND */}
+      
+      {/* Classic Ben-Day dots pattern */}
+      <div className="absolute inset-0" style={{
+        backgroundImage: `radial-gradient(circle at 1px 1px, 
+          hsl(var(--muted-foreground) / 0.15) 1px, 
+          transparent 2px)`,
+        backgroundSize: '6px 6px'
+      }}></div>
+      
+      {/* Larger Ben-Day dots overlay (varied sizes) */}
+      <div className="absolute inset-0 opacity-10" style={{
+        backgroundImage: `radial-gradient(circle at 2px 2px, 
+          hsl(var(--primary) / 0.1) 2px, 
+          transparent 3px)`,
+        backgroundSize: '12px 12px'
+      }}></div>
+      
+      {/* YOUR ORIGINAL CONTENT - NO CHANGES */}
       {/* Web background */}
       <div className="absolute inset-0 spider-web opacity-10"></div>
       
@@ -22,20 +41,20 @@ export default function HeroSection() {
         >
           {/* Spider Logo */}
           <motion.div
-  className="inline-block p-6 rounded-full bg-black/0 backdrop-blur-sm border border-spider-gray mb-8"
-  whileHover={{ scale: 1.05 }}
->
-  <div className="w-40 h-40 mx-auto relative">
-    <div className="absolute inset-0 animate-web-spin">
-      <div className="w-full h-full border-2 border-spider-red/30 rounded-full"></div>
-    </div>
-    <div className="w-full h-full flex items-center justify-center">
-      <div className="w-32 h-32 rounded-full bg-spider-red/20 flex items-center justify-center">
-        <SpiderLogo className="w-20 h-20" />
-      </div>
-    </div>
-  </div>
-</motion.div>
+            className="inline-block p-6 rounded-full bg-black/0 backdrop-blur-sm border border-spider-gray mb-8"
+            whileHover={{ scale: 1.05 }}
+          >
+            <div className="w-40 h-40 mx-auto relative">
+              <div className="absolute inset-0 animate-web-spin">
+                <div className="w-full h-full border-2 border-spider-red/30 rounded-full"></div>
+              </div>
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="w-32 h-32 rounded-full bg-spider-red/20 flex items-center justify-center">
+                  <SpiderLogo className="w-20 h-20" />
+                </div>
+              </div>
+            </div>
+          </motion.div>
           
           {/* Name & Title */}
           <h1 className="font-sacramento text-7xl md:text-8xl text-spider-red mb-4">
@@ -64,7 +83,7 @@ export default function HeroSection() {
             </motion.a>
             <motion.a
               href="#contact"
-              className="px-8 py-3 border border-spider-gray text-gray-300 rounded-lg font-medium hover:border-spider-red hover:text-spider-red transition-colors"
+              className="px-8 py-3 border border-spider-gray text-gray-450 rounded-lg font-medium hover:border-spider-red hover:text-spider-red transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -81,6 +100,15 @@ export default function HeroSection() {
             <ChevronDown className="text-gray-500" size={24} />
           </motion.div>
         </motion.div>
+      </div>
+      
+      {/* SIMPLE BOTTOM TRANSITION - JUST ADD THIS */}
+      <div className="absolute bottom-0 left-0 right-0">
+        {/* Gradient fade */}
+        <div className="h-32 bg-gradient-to-t from-background to-transparent"></div>
+        
+        {/* Optional: Simple comic panel line */}
+        <div className="h-1 bg-gradient-to-r from-transparent via-spider-red to-transparent"></div>
       </div>
     </section>
   )
