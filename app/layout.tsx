@@ -49,7 +49,7 @@ export default function RootLayout({
       <head>
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className={`${montserrat.className} antialiased`}>
+      <body className={`${montserrat.className} antialiased relative`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -59,7 +59,8 @@ export default function RootLayout({
           <Preloader />
           <CursorTrail />
           <HoverSense />
-          <div className="min-h-screen flex flex-col">
+          {/* CRITICAL: This wrapper prevents horizontal overflow */}
+          <div className="min-h-screen flex flex-col overflow-clip">
             <Header />
             <main className="flex-1 relative z-10">
               {children}

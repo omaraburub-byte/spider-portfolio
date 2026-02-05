@@ -383,6 +383,16 @@ eval("// Exports\nmodule.exports = {\n\t\"style\": {\"fontFamily\":\"'__Montserr
 
 /***/ }),
 
+/***/ "(ssr)/./node_modules/next/font/google/target.css?{\"path\":\"components\\\\sections\\\\Preloader.tsx\",\"import\":\"Bebas_Neue\",\"arguments\":[{\"subsets\":[\"latin\"],\"weight\":\"400\",\"variable\":\"--font-bebas\"}],\"variableName\":\"bebasNeue\"}":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/next/font/google/target.css?{"path":"components\\sections\\Preloader.tsx","import":"Bebas_Neue","arguments":[{"subsets":["latin"],"weight":"400","variable":"--font-bebas"}],"variableName":"bebasNeue"} ***!
+  \*******************************************************************************************************************************************************************************************************************************/
+/***/ ((module) => {
+
+eval("// Exports\nmodule.exports = {\n\t\"style\": {\"fontFamily\":\"'__Bebas_Neue_d758cf', '__Bebas_Neue_Fallback_d758cf'\",\"fontWeight\":400,\"fontStyle\":\"normal\"},\n\t\"className\": \"__className_d758cf\",\n\t\"variable\": \"__variable_d758cf\"\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHNzcikvLi9ub2RlX21vZHVsZXMvbmV4dC9mb250L2dvb2dsZS90YXJnZXQuY3NzP3tcInBhdGhcIjpcImNvbXBvbmVudHNcXFxcc2VjdGlvbnNcXFxcUHJlbG9hZGVyLnRzeFwiLFwiaW1wb3J0XCI6XCJCZWJhc19OZXVlXCIsXCJhcmd1bWVudHNcIjpbe1wic3Vic2V0c1wiOltcImxhdGluXCJdLFwid2VpZ2h0XCI6XCI0MDBcIixcInZhcmlhYmxlXCI6XCItLWZvbnQtYmViYXNcIn1dLFwidmFyaWFibGVOYW1lXCI6XCJiZWJhc05ldWVcIn0iLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBLFdBQVcsMkdBQTJHO0FBQ3RIO0FBQ0E7QUFDQSIsInNvdXJjZXMiOlsid2VicGFjazovL3NwaWRlci1wb3J0Zm9saW8vLi9ub2RlX21vZHVsZXMvbmV4dC9mb250L2dvb2dsZS90YXJnZXQuY3NzPzgzMzUiXSwic291cmNlc0NvbnRlbnQiOlsiLy8gRXhwb3J0c1xubW9kdWxlLmV4cG9ydHMgPSB7XG5cdFwic3R5bGVcIjoge1wiZm9udEZhbWlseVwiOlwiJ19fQmViYXNfTmV1ZV9kNzU4Y2YnLCAnX19CZWJhc19OZXVlX0ZhbGxiYWNrX2Q3NThjZidcIixcImZvbnRXZWlnaHRcIjo0MDAsXCJmb250U3R5bGVcIjpcIm5vcm1hbFwifSxcblx0XCJjbGFzc05hbWVcIjogXCJfX2NsYXNzTmFtZV9kNzU4Y2ZcIixcblx0XCJ2YXJpYWJsZVwiOiBcIl9fdmFyaWFibGVfZDc1OGNmXCJcbn07XG4iXSwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(ssr)/./node_modules/next/font/google/target.css?{\"path\":\"components\\\\sections\\\\Preloader.tsx\",\"import\":\"Bebas_Neue\",\"arguments\":[{\"subsets\":[\"latin\"],\"weight\":\"400\",\"variable\":\"--font-bebas\"}],\"variableName\":\"bebasNeue\"}\n");
+
+/***/ }),
+
 /***/ "(ssr)/./node_modules/next/dist/api/image.js":
 /*!*********************************************!*\
   !*** ./node_modules/next/dist/api/image.js ***!

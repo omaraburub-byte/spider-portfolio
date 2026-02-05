@@ -1,5 +1,6 @@
 ﻿import HeroSection from '@/components/sections/HeroSection'
-import PanelsSection from '@/components/sections/PanelsSection' 
+import PanelsSection from '@/components/sections/PanelsSection'
+import SpideyScreenSection from '@/components/sections/SpideyScreenSection'
 import StatsSection from '@/components/sections/StatsSection'
 import ProjectsSection from '@/components/sections/ProjectsSection'
 import SkillsSection from '@/components/sections/SkillsSection'
@@ -11,7 +12,8 @@ export default function Home() {
   return (
     <div className="relative">
       <HeroSection />
-      <PanelsSection />  {/* Add this line */}
+      <PanelsSection />
+      <SpideyScreenSection />
       <StatsSection />
       <ProjectsSection />
       <SkillsSection />

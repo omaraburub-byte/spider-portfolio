@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { Mail, Phone, MapPin, Send, Linkedin, Github, MessageSquare } from 'lucide-react'
+import { Mail, Phone, MapPin, Send, Linkedin, Github, MessageSquare, Loader2 } from 'lucide-react'
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -10,13 +10,36 @@ export default function ContactSection() {
     email: '',
     message: '',
   })
+  
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Add your form submission logic here
-    console.log('Form submitted:', formData)
-    alert('Message sent! (In a real app, this would connect to an email service)')
-    setFormData({ name: '', email: '', message: '' })
+    setStatus('loading')
+    setErrorMessage('')
+
+    try {
+      const response = await fetch('https://formspree.io/f/xrelnwgy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (response.ok) {
+        setStatus('success')
+        setFormData({ name: '', email: '', message: '' })
+        setTimeout(() => setStatus('idle'), 5000)
+      } else {
+        setStatus('error')
+        setErrorMessage('Failed to send message. Please try again.')
+      }
+    } catch (error) {
+      setStatus('error')
+      setErrorMessage('Network error. Please check your connection.')
+    }
   }
 
   const contactInfo = [
@@ -28,7 +51,7 @@ export default function ContactSection() {
   const socialLinks = [
     { icon: Github, href: 'https://github.com/omaraburub-byte', label: 'GitHub' },
     { icon: Linkedin, href: 'https://www.linkedin.com/in/omar-aburub-profile/', label: 'LinkedIn' },
-    { icon: MessageSquare, href: '#', label: 'Portfolio' },
+    { icon: MessageSquare, href: 'mailto:omar.spiderofse@gmail.com', label: 'Portfolio' },
   ]
 
   return (
@@ -44,7 +67,7 @@ export default function ContactSection() {
             SEND A WEB SIGNAL
           </h2>
           <p className="font-montserrat text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-            Got a project? Let's build something amazing together.
+            Got a project ? Let's build something amazing together.
           </p>
         </motion.div>
 
@@ -101,6 +124,27 @@ export default function ContactSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
+            {/* Status Messages */}
+            {status === 'success' && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 bg-green-500/10 border border-green-500/30 text-green-500 rounded-lg"
+              >
+                Message sent successfully! I'll get back to you soon.
+              </motion.div>
+            )}
+            
+            {status === 'error' && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 bg-red-500/10 border border-red-500/30 text-red-500 rounded-lg"
+              >
+                ⚠️ {errorMessage || 'Failed to send message. Please try again.'}
+              </motion.div>
+            )}
+            
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-muted-foreground mb-2">
                 Name
@@ -113,6 +157,7 @@ export default function ContactSection() {
                 className="w-full px-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-spider-red transition-colors"
                 placeholder="Peter Parker"
                 required
+                disabled={status === 'loading'}
               />
             </div>
             
@@ -128,6 +173,7 @@ export default function ContactSection() {
                 className="w-full px-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-spider-red transition-colors"
                 placeholder="peter@dailybugle.com"
                 required
+                disabled={status === 'loading'}
               />
             </div>
             
@@ -143,18 +189,33 @@ export default function ContactSection() {
                 className="w-full px-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-spider-red transition-colors resize-none"
                 placeholder="With great power comes great responsibility..."
                 required
+                disabled={status === 'loading'}
               />
             </div>
             
             <motion.button
               type="submit"
-              className="w-full py-3 bg-spider-red text-white rounded-lg font-medium flex items-center justify-center hover:bg-spider-red/90 transition-colors"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              disabled={status === 'loading'}
+              className="w-full py-3 bg-spider-red text-white rounded-lg font-medium flex items-center justify-center hover:bg-spider-red/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              whileHover={{ scale: status === 'loading' ? 1 : 1.02 }}
+              whileTap={{ scale: status === 'loading' ? 1 : 0.98 }}
             >
-              Shoot Web
-              <Send size={16} className="ml-2" />
+              {status === 'loading' ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Sending Web...
+                </>
+              ) : (
+                <>
+                  Shoot Web
+                  <Send size={16} className="ml-2" />
+                </>
+              )}
             </motion.button>
+            
+            <p className="text-xs text-muted-foreground text-center mt-4">
+              I typically respond within 24 hours.
+            </p>
           </motion.form>
         </div>
       </div>

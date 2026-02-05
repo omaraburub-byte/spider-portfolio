@@ -37,7 +37,7 @@ export default function Header() {
                 SPIDER-PORTFOLIO
               </div>
               <div className="font-montserrat text-xs text-muted-foreground flex items-center">
-                <Zap className="w-3 h-3 mr-1 text-spider-neon" />
+                <Zap className="w-3 h-3 mr-1 text-spider-blue" />
                 ISSUE #2026
               </div>
             </div>

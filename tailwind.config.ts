@@ -59,6 +59,7 @@ const config: Config = {
         barrio: ["Barrio", "cursive"],
         sacramento: ["Sacramento", "cursive"],
         montserrat: ["Montserrat", "sans-serif"],
+        'comeback-home': ["var(--font-comeback-home)", "sans-serif"], // Added this line
       },
       animation: {
         "web-spin": "web-spin 20s linear infinite",

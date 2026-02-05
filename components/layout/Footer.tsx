@@ -36,14 +36,14 @@ export default function Footer() {
                   SPIDER-PORTFOLIO
                 </div>
                 <div className="font-montserrat text-sm text-muted-foreground flex items-center">
-                  <Zap className="w-3 h-3 mr-1 text-spider-neon" />
+                  <Zap className="w-3 h-3 mr-1 text-spider-blue" />
                   FINAL ISSUE
                 </div>
               </div>
             </div>
             
             <div className="font-montserrat text-sm text-muted-foreground max-w-xs">
-              "With great power comes great responsibility." - Uncle Ben
+              "With great power comes great user experience." - Omar Aburub, The Spider of Software Engineering
             </div>
           </motion.div>
 
@@ -132,10 +132,7 @@ export default function Footer() {
                 <ArrowUp className="w-4 h-4 text-spider-red" />
                 <span className="font-barrio text-sm text-foreground">BACK TO TOP</span>
               </div>
-              
-              {/* Comic web line effect */}
-              <div className="absolute -top-4 left-1/2 w-1 h-4 bg-gradient-to-b from-transparent to-spider-red opacity-0 group-hover:opacity-50 transition-opacity"></div>
-              
+                            
               {/* Tooltip */}
               <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-card border border-spider-red rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                 <div className="text-xs text-foreground">Return to start</div>
@@ -153,8 +150,6 @@ export default function Footer() {
         </div>
       </div>
       
-      {/* Comic book bottom border decoration */}
-      <div className="h-2 bg-gradient-to-r from-spider-red via-spider-blue to-spider-neon"></div>
     </footer>
   )
 }

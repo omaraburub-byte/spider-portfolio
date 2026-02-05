@@ -1,15 +1,13 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ChevronDown, Sparkles } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import SpiderLogo from '@/components/SpiderLogo'
 
 export default function HeroSection() {
   return (
     <section id="home" className="min-h-screen relative flex items-center justify-center overflow-hidden bg-background">
       {/* BEN-DAY DOTS COMIC BACKGROUND */}
-      
-      {/* Classic Ben-Day dots pattern */}
       <div className="absolute inset-0" style={{
         backgroundImage: `radial-gradient(circle at 1px 1px, 
           hsl(var(--muted-foreground) / 0.15) 1px, 
@@ -24,90 +22,99 @@ export default function HeroSection() {
           transparent 3px)`,
         backgroundSize: '12px 12px'
       }}></div>
-      
-      {/* YOUR ORIGINAL CONTENT - NO CHANGES */}
-      {/* Web background */}
-      <div className="absolute inset-0 spider-web opacity-10"></div>
-      
-      {/* Animated elements */}
-      <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-spider-red/10 blur-3xl animate-spider-swing"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-spider-blue/10 blur-3xl animate-spider-swing" style={{ animationDelay: '1s' }}></div>
-      
+
       <div className="container mx-auto px-6 text-center relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
         >
-          {/* Spider Logo */}
-          <motion.div
-            className="inline-block p-6 rounded-full bg-black/0 backdrop-blur-sm border border-spider-gray mb-8"
-            whileHover={{ scale: 1.05 }}
-          >
-            <div className="w-40 h-40 mx-auto relative">
-              <div className="absolute inset-0 animate-web-spin">
-                <div className="w-full h-full border-2 border-spider-red/30 rounded-full"></div>
-              </div>
-              <div className="w-full h-full flex items-center justify-center">
-                <div className="w-32 h-32 rounded-full bg-spider-red/20 flex items-center justify-center">
-                  <SpiderLogo className="w-20 h-20" />
-                </div>
-              </div>
+          {/* SPIDER LOGO - NON-INTERACTIVE */}
+          <div className="inline-block mb-6">
+            <div className="p-3">
+              <SpiderLogo className="w-24 h-24" />
             </div>
-          </motion.div>
-          
-          {/* Name & Title */}
-          <h1 className="font-sacramento text-7xl md:text-8xl text-spider-red mb-4">
-            Omar Aburub
-          </h1>
-          
-          <h2 className="font-barrio text-3xl md:text-4xl text-spider-blue mb-6 tracking-wider">
-            SPIDER OF SOFTWARE ENGINEERING
-          </h2>
-          
-          <p className="font-montserrat text-xl text-gray-400 max-w-2xl mx-auto mb-8">
-            UX/UI Designer • HCI Researcher • AI Application Developer
-            <br />
-            <span className="text-lg">Weaving AI, UX, and Secure Code into Digital Experiences</span>
-          </p>
-          
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <motion.a
-              href="#projects"
-              className="px-8 py-3 bg-spider-red text-white rounded-lg font-medium hover:bg-spider-red/90 transition-colors flex items-center justify-center"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              View My Work
-            </motion.a>
-            <motion.a
-              href="#contact"
-              className="px-8 py-3 border border-spider-gray text-gray-450 rounded-lg font-medium hover:border-spider-red hover:text-spider-red transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Get In Touch
-            </motion.a>
           </div>
           
-          {/* Scroll indicator */}
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5 }}
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          {/* NAME */}
+          <motion.h1
+            className="font-barrio text-5xl md:text-8xl text-spider-red mb-2"
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
           >
-            <ChevronDown className="text-gray-500" size={24} />
+            OMAR ABURUB
+          </motion.h1>
+          
+          {/* SUBTITLE */}
+          <motion.div
+            className="inline-block px-4 py-2 bg-spider-blue text-white font-barrio text-xl md:text-2xl tracking-wider rounded-lg mb-6"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.4, type: "spring" }}
+          >
+            SPIDER OF SOFTWARE ENGINEERING
+          </motion.div>
+          
+          {/* TAGLINE */}
+          <motion.div
+            className="max-w-2xl mx-auto mb-20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+          >
+            <div className="font-montserrat text-lg text-muted-foreground mb-4">
+              <span className="text-spider-red font-bold">DESIGN</span> • 
+              <span className="text-spider-blue font-bold"> CODE</span> • 
+              <span className="dark:text-white text-black font-bold"> AI</span>
+            </div>
+            <p className="font-barrio text-xl text-foreground italic">
+              "With great power comes great user experience"
+            </p>
           </motion.div>
         </motion.div>
       </div>
       
-      {/* SIMPLE BOTTOM TRANSITION - JUST ADD THIS */}
+      {/* COMIC TEXT - DYNAMIC COLOR FOR LIGHT/DARK MODE */}
+      <motion.div
+        animate={{ y: [0, 8, 0] }}
+        transition={{ repeat: Infinity, duration: 1.5 }}
+        className="absolute bottom-16 left-0 right-0 text-center px-6"
+      >
+        <div className="flex flex-col items-center justify-center">
+          {/* TEXT WITH DYNAMIC COLOR */}
+          <div 
+            className="font-barrio text-2xl md:text-3xl mb-3"
+            style={{
+              color: 'black', /* Light mode color */
+              textShadow: '2px 2px 0 #e62429, -2px -2px 0 #1a73e8'
+            }}
+          >
+            <span className="dark:hidden">KEEP READING</span>
+            <span 
+              className="hidden dark:inline"
+              style={{
+                color: 'white', /* Dark mode color */
+                textShadow: '2px 2px 0 #e62429, -2px -2px 0 #1a73e8'
+              }}
+            >
+              KEEP READING
+            </span>
+          </div>
+          
+          {/* ANIMATED ARROW */}
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ repeat: Infinity, duration: 1.2, delay: 0.2 }}
+          >
+            <ChevronDown className="w-8 h-8 text-spider-red" />
+          </motion.div>
+        </div>
+      </motion.div>
+      
+      {/* SMOOTH BOTTOM TRANSITION */}
       <div className="absolute bottom-0 left-0 right-0">
-        {/* Gradient fade */}
         <div className="h-32 bg-gradient-to-t from-background to-transparent"></div>
-        
-        {/* Optional: Simple comic panel line */}
         <div className="h-1 bg-gradient-to-r from-transparent via-spider-red to-transparent"></div>
       </div>
     </section>
