@@ -108,7 +108,7 @@ export default function Header() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="hidden lg:flex items-center"
         >
-          <div className="bg-card dark:bg-white border-4 border-spider-gray p-2 comic-shadow-small">
+          <div className="bg-card dark:bg-card border-4 border-spider-gray p-2 comic-shadow-small">
             {navItems.map((item) => {
               const isActive = activeSection === item.href.substring(1)
               return (
@@ -120,7 +120,7 @@ export default function Header() {
                   className={`relative px-4 py-2 font-barrio font-black text-sm uppercase tracking-wide transition-all duration-300 ${
                     isActive
                       ? 'text-spider-red dark:bg-spider-gray/10 bg-spider-gray/5'
-                      : 'dark:text-spider-dark text-foreground hover:text-spider-red'
+                      : 'text-foreground dark:text-foreground hover:text-spider-red'
                   }`}
                 >
                   <span className="relative z-10">{item.name}</span>
