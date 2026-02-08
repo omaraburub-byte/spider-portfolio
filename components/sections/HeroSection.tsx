@@ -7,7 +7,19 @@ import SpiderLogo from '@/components/SpiderLogo'
 export default function HeroSection() {
   return (
     <section id="home" className="min-h-screen relative flex items-center justify-center overflow-hidden bg-background">
-      {/* BEN-DAY DOTS COMIC BACKGROUND */}
+      {/* COMICS PANELS BACKGROUND */}
+      <div 
+        className="absolute inset-0 opacity-10"
+        style={{
+          backgroundImage: 'url(/comics.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          filter: 'grayscale(100%)'
+        }}
+      ></div>
+      
+      {/* BEN-DAY DOTS COMIC BACKGROUND OVERLAY */}
       <div className="absolute inset-0" style={{
         backgroundImage: `radial-gradient(circle at 1px 1px, 
           hsl(var(--muted-foreground) / 0.15) 1px, 
@@ -22,6 +34,9 @@ export default function HeroSection() {
           transparent 3px)`,
         backgroundSize: '12px 12px'
       }}></div>
+
+      {/* DARKEN OVERLAY FOR BETTER READABILITY */}
+      <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-background/10 to-background/30"></div>
 
       <div className="container mx-auto px-6 text-center relative z-10">
         <motion.div
