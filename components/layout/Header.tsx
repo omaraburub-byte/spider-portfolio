@@ -20,17 +20,21 @@ export default function Header() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [activeSection, setActiveSection] = useState('home')
   const [scrolled, setScrolled] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
+    // Wait for preloader to completely finish (3.5s + fade out time)
+    const timer = setTimeout(() => {
+      setIsVisible(true)
+    }, 4000) // 3.5s preloader + 0.5s fade out = 4s total
+    
     const handleScroll = () => {
-      // Check if scrolled
       if (window.scrollY > 50) {
         setScrolled(true)
       } else {
         setScrolled(false)
       }
 
-      // Active section detection
       const sections = ['home', 'projects', 'skills', 'experience', 'journey', 'contact']
       const scrollPosition = window.scrollY + 200
 
@@ -48,7 +52,10 @@ export default function Header() {
     }
 
     window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('scroll', handleScroll)
+    }
   }, [])
 
   const scrollToSection = (href: string) => {
@@ -64,9 +71,13 @@ export default function Header() {
   return (
     <motion.header 
       className="fixed top-0 left-0 right-0 z-50 px-6 py-4"
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      initial={{ y: -100, opacity: 0 }}
+      animate={isVisible ? { y: 0, opacity: 1 } : { y: -100, opacity: 0 }}
+      transition={{ 
+        duration: 0.8, 
+        ease: [0.23, 1, 0.32, 1],
+        delay: 0 // No additional delay, we already waited 4s
+      }}
     >
       {/* Floating header container */}
       <div className="relative">
@@ -84,8 +95,8 @@ export default function Header() {
           {/* SECTION 1: LOGO - LEFT */}
           <motion.div
             initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            animate={isVisible ? { x: 0, opacity: 1 } : { x: -20, opacity: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }} // Slight stagger
             className="flex-shrink-0 z-10"
           >
             <motion.div
@@ -112,8 +123,8 @@ export default function Header() {
           {/* SECTION 2: NAVIGATION - CENTER */}
           <motion.div
             initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            animate={isVisible ? { y: 0, opacity: 1 } : { y: -10, opacity: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }} // Slight stagger
             className="hidden lg:flex items-center z-10"
           >
             <div className="bg-card dark:bg-white border-4 border-spider-gray p-2 comic-shadow-small">
@@ -151,8 +162,8 @@ export default function Header() {
           {/* SECTION 3: ACTIONS - RIGHT */}
           <motion.div
             initial={{ x: 20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            animate={isVisible ? { x: 0, opacity: 1 } : { x: 20, opacity: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }} // Slight stagger
             className="flex items-center gap-3 z-10"
           >
             {/* Theme Toggle */}
