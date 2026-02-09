@@ -57,12 +57,13 @@ export default function Header() {
         top: (element as HTMLElement).offsetTop - 100,
         behavior: 'smooth'
       })
+      setIsOpen(false)
     }
   }
 
   return (
     <motion.header 
-      className="fixed top-0 left-0 right-0 z-50 px-6 py-4"
+      className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-4"
       initial={{ y: -100, opacity: 0 }}
       animate={isVisible ? { y: 0, opacity: 1 } : { y: -100, opacity: 0 }}
       transition={{ 
@@ -82,7 +83,10 @@ export default function Header() {
         >
           <motion.div
             className="bg-card dark:bg-spider-dark border-4 border-spider-red p-3 rotate-[-1deg] comic-shadow-small cursor-pointer group flex items-center gap-4 transition-all hover:rotate-0 hover:scale-105"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+              setIsOpen(false)
+            }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -180,6 +184,7 @@ export default function Header() {
           {/* Resume Button */}
           <motion.a
             href="/resume.pdf"
+            target="_blank"
             className="hidden md:block bg-spider-red text-white px-6 py-3 border-4 border-spider-gray font-barrio font-black text-sm uppercase tracking-wider hover:bg-white hover:text-spider-red transition-all duration-300 comic-shadow-small"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
@@ -192,7 +197,7 @@ export default function Header() {
 
           {/* Mobile menu button */}
           <motion.button
-            className="md:hidden p-3 bg-card border-2 border-spider-gray rounded-lg comic-shadow-small"
+            className="lg:hidden p-3 bg-card border-2 border-spider-gray rounded-lg comic-shadow-small"
             onClick={() => setIsOpen(!isOpen)}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
@@ -204,65 +209,71 @@ export default function Header() {
         </motion.div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation - FIXED POSITIONING */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="md:hidden mt-4 py-6 bg-card border-4 border-spider-red rounded-xl comic-shadow absolute left-6 right-6 z-20"
-            initial={{ opacity: 0, height: 0, scale: 0.9 }}
-            animate={{ opacity: 1, height: 'auto', scale: 1 }}
-            exit={{ opacity: 0, height: 0, scale: 0.9 }}
+            className="lg:hidden fixed top-24 left-4 right-4 z-50"
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="space-y-3 px-4">
-              {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="block py-3 px-4 bg-background border-2 border-spider-gray rounded-lg text-center font-barrio text-sm text-foreground hover:text-spider-red hover:border-spider-red transition-all comic-shadow-small"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </a>
-              ))}
-              
-              {/* Mobile Theme Toggle */}
-              <div className="flex justify-center py-2">
-                <ThemeToggle />
-              </div>
-              
-              {/* Mobile Social Links */}
-              <div className="flex justify-center gap-3 pt-2">
-                <a
-                  href="https://github.com/omaraburub-byte"
-                  className="p-3 bg-background border-2 border-spider-gray rounded-lg text-foreground hover:text-spider-red comic-shadow-small"
-                >
-                  <Github className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/omar-aburub-profile/"
-                  className="p-3 bg-background border-2 border-spider-gray rounded-lg text-foreground hover:text-spider-red comic-shadow-small"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </a>
-                <a
-                  href="mailto:omar.spiderofse@gmail.com"
-                  className="p-3 bg-background border-2 border-spider-gray rounded-lg text-foreground hover:text-spider-red comic-shadow-small"
-                >
-                  <Mail className="w-5 h-5" />
-                </a>
-              </div>
-              
-              {/* Mobile Resume Button */}
-              <a
-                href="/resume.pdf"
-                className="block py-3 px-4 bg-spider-red text-white font-barrio text-center rounded-lg border-2 border-spider-red/50 mt-3 comic-shadow-small"
-              >
-                <div className="flex items-center justify-center gap-2">
-                  <Sparkles className="w-4 h-4" />
-                  <span>DOWNLOAD RESUME</span>
+            <div className="bg-card border-4 border-spider-red rounded-xl comic-shadow overflow-hidden">
+              <div className="space-y-2 p-4">
+                {navItems.map((item) => (
+                  <button
+                    key={item.name}
+                    onClick={() => scrollToSection(item.href)}
+                    className="block w-full py-4 px-4 bg-background border-2 border-spider-gray rounded-lg text-center font-barrio text-sm text-foreground hover:text-spider-red hover:border-spider-red transition-all comic-shadow-small"
+                  >
+                    {item.name}
+                  </button>
+                ))}
+                
+                {/* Mobile Theme Toggle */}
+                <div className="flex justify-center py-3">
+                  <ThemeToggle />
                 </div>
-              </a>
+                
+                {/* Mobile Social Links */}
+                <div className="flex justify-center gap-3 py-3">
+                  <a
+                    href="https://github.com/omaraburub-byte"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 bg-background border-2 border-spider-gray rounded-lg text-foreground hover:text-spider-red comic-shadow-small"
+                  >
+                    <Github className="w-5 h-5" />
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/omar-aburub-profile/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 bg-background border-2 border-spider-gray rounded-lg text-foreground hover:text-spider-red comic-shadow-small"
+                  >
+                    <Linkedin className="w-5 h-5" />
+                  </a>
+                  <a
+                    href="mailto:omar.spiderofse@gmail.com"
+                    className="p-3 bg-background border-2 border-spider-gray rounded-lg text-foreground hover:text-spider-red comic-shadow-small"
+                  >
+                    <Mail className="w-5 h-5" />
+                  </a>
+                </div>
+                
+                {/* Mobile Resume Button */}
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  className="block w-full py-4 px-4 bg-spider-red text-white font-barrio text-center rounded-lg border-2 border-spider-red/50 hover:bg-white hover:text-spider-red transition-all comic-shadow-small"
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <Sparkles className="w-4 h-4" />
+                    <span>DOWNLOAD RESUME</span>
+                  </div>
+                </a>
+              </div>
             </div>
           </motion.div>
         )}
