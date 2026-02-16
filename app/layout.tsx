@@ -1,12 +1,7 @@
 ﻿import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
 import './globals.css'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
-import Preloader from '@/components/sections/Preloader'
-import { ThemeProvider } from '@/components/providers/ThemeProvider'
-import CursorTrail from '@/components/effects/CursorTrail'
-import HoverSense from '@/components/effects/HoverSense'
+import ClientLayout from './ClientLayout'
 
 const montserrat = Montserrat({ subsets: ['latin'] })
 
@@ -50,24 +45,9 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={`${montserrat.className} antialiased relative`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Preloader />
-          <CursorTrail />
-          <HoverSense />
-          {/* CRITICAL: This wrapper prevents horizontal overflow */}
-          <div className="min-h-screen flex flex-col overflow-clip">
-            <Header />
-            <main className="flex-1 relative z-10">
-              {children}
-            </main>
-            <Footer />
-          </div>
-        </ThemeProvider>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   )
