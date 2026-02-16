@@ -106,7 +106,7 @@ export default function ComicSection() {
           </div>
 
           {/* Panels */}
-          <div className="space-y-12">
+          <div className="space-y-8 md:space-y-12">
             {comicPanels.map((panel, index) => {
               const isLeft = panel.position === 'left'
               
@@ -117,21 +117,21 @@ export default function ComicSection() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className={`flex items-center gap-8 ${
+                  className={`flex items-center gap-4 md:gap-8 ${
                     isLeft ? 'flex-row' : 'flex-row-reverse'
                   }`}
                 >
                   {/* Content side */}
                   <div className="w-1/2">
-                    <div className={`${isLeft ? 'pr-8' : 'pl-8'}`}>
+                    <div className={`${isLeft ? 'pr-4 md:pr-8' : 'pl-4 md:pl-8'}`}>
                       {/* Card with solid shadow */}
                       <div className="relative">
                         {/* Solid shadow */}
-                        <div className="absolute inset-0 bg-black dark:bg-[#161616] rounded-xl translate-x-2 translate-y-2"></div>
+                        <div className="absolute inset-0 bg-black dark:bg-[#161616] rounded-xl translate-x-1 md:translate-x-2 translate-y-1 md:translate-y-2"></div>
                         
-                        {/* Card */}
+                        {/* Card - much smaller on mobile */}
                         <div 
-                          className={`relative bg-white dark:bg-[#0A0A0A] border-2 ${panel.color} dark:border-[#282727] rounded-xl p-4 md:p-6 overflow-visible`}
+                          className={`relative bg-white dark:bg-[#0A0A0A] border-2 ${panel.color} dark:border-[#282727] rounded-xl p-2 md:p-6 overflow-visible`}
                         >
                           {/* Subtle halftone dots */}
                           <div 
@@ -150,24 +150,24 @@ export default function ComicSection() {
                           {/* Content */}
                           <div className="relative z-10">
                             {/* Year tag */}
-                            <div className={`inline-block px-2 md:px-3 py-1 bg-white dark:bg-[#161616] border ${panel.color} dark:border-[#282727] font-mono text-xs mb-2 md:mb-3 ${panel.textColor}`}>
+                            <div className={`inline-block px-1.5 md:px-3 py-0.5 md:py-1 bg-white dark:bg-[#161616] border ${panel.color} dark:border-[#282727] font-mono text-[10px] md:text-xs mb-0.5 md:mb-3 ${panel.textColor}`}>
                               {panel.year}
                             </div>
                             
                             {/* Title */}
-                            <h3 className={`font-barrio text-base md:text-lg mb-1 md:mb-2 ${panel.textColor}`}>
+                            <h3 className={`font-barrio text-xs md:text-lg mb-0 md:mb-2 ${panel.textColor}`}>
                               {panel.title}
                             </h3>
                             
-                            {/* Description */}
-                            <p className="font-montserrat text-xs md:text-sm text-gray-600 dark:text-[#b0b0b0] leading-relaxed">
+                            {/* Description - super tight */}
+                            <p className="font-montserrat text-[10px] md:text-sm text-gray-600 dark:text-[#b0b0b0] leading-[1.2] md:leading-relaxed">
                               {panel.description}
                             </p>
                           </div>
                           
                           {/* Icon */}
-                          <div className={`absolute -top-3 md:-top-4 -right-3 md:-right-4 p-1.5 md:p-2 bg-white dark:bg-[#161616] border-2 ${panel.color} dark:border-[#282727] rounded-full z-20`}>
-                            <panel.icon className={`w-3 h-3 md:w-4 md:h-4 ${panel.textColor}`} />
+                          <div className={`absolute -top-1.5 md:-top-4 -right-1.5 md:-right-4 p-1 md:p-2 bg-white dark:bg-[#161616] border-2 ${panel.color} dark:border-[#282727] rounded-full z-20`}>
+                            <panel.icon className={`w-2 h-2 md:w-4 md:h-4 ${panel.textColor}`} />
                           </div>
                         </div>
                       </div>
@@ -176,7 +176,7 @@ export default function ComicSection() {
 
                   {/* Timeline dot - centered */}
                   <div className="relative z-10">
-                    <div className={`w-3 h-3 rounded-full bg-white dark:bg-[#2a2a2a] border-2 ${
+                    <div className={`w-2 h-2 md:w-3 md:h-3 rounded-full bg-white dark:bg-[#2a2a2a] border-2 ${
                       index % 2 === 0 ? 'border-spider-red' : 'border-spider-blue'
                     }`}></div>
                   </div>
@@ -193,14 +193,14 @@ export default function ComicSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mt-16"
+            className="text-center mt-12 md:mt-16"
           >
             <div className="relative inline-block">
               {/* Solid shadow */}
-              <div className="absolute inset-0 bg-black dark:bg-[#161616] rounded-xl translate-x-2 translate-y-2"></div>
+              <div className="absolute inset-0 bg-black dark:bg-[#161616] rounded-xl translate-x-1 md:translate-x-2 translate-y-1 md:translate-y-2"></div>
               
               {/* Main panel */}
-              <div className="relative bg-white dark:bg-[#0A0A0A] border-2 border-spider-red dark:border-[#282727] rounded-xl px-4 md:px-6 py-2 md:py-3 overflow-hidden">
+              <div className="relative bg-white dark:bg-[#0A0A0A] border-2 border-spider-red dark:border-[#282727] rounded-xl px-3 md:px-6 py-1 md:py-3 overflow-hidden">
                 {/* Subtle dots */}
                 <div 
                   className="absolute inset-0 opacity-5 dark:opacity-10"
@@ -214,7 +214,7 @@ export default function ComicSection() {
                     backgroundSize: '16px 16px',
                   }}
                 />
-                <div className="relative z-10 font-barrio text-sm md:text-lg text-spider-red">TO BE CONTINUED</div>
+                <div className="relative z-10 font-barrio text-xs md:text-lg text-spider-red">TO BE CONTINUED</div>
               </div>
             </div>
           </motion.div>
