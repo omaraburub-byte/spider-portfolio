@@ -26,20 +26,16 @@ export default function HeroSection() {
 
   // Listen for preloader completion
   useEffect(() => {
-    // Check if preloader is still present
     const checkPreloader = () => {
       const preloader = document.querySelector('.fixed.inset-0.z-\\[999\\]')
       setIsPreloaderDone(!preloader)
     }
 
-    // Initial check
     checkPreloader()
 
-    // Watch for preloader removal
     const observer = new MutationObserver(checkPreloader)
     observer.observe(document.body, { childList: true, subtree: true })
 
-    // Also listen for a custom event (if you want to emit one from preloader)
     const handlePreloaderComplete = () => setIsPreloaderDone(true)
     window.addEventListener('preloaderComplete', handlePreloaderComplete)
 
@@ -65,7 +61,7 @@ export default function HeroSection() {
   }
 
   const handleMouseEnter = () => {
-    if (isMobile) return // Don't use hover on mobile
+    if (isMobile) return
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
     }
@@ -73,7 +69,7 @@ export default function HeroSection() {
   }
 
   const handleMouseLeave = () => {
-    if (isMobile) return // Don't use hover on mobile
+    if (isMobile) return
     timeoutRef.current = setTimeout(() => {
       setShowSuggestions(false)
     }, 200)
@@ -81,7 +77,6 @@ export default function HeroSection() {
 
   const handleClick = () => {
     if (isMobile) {
-      // On mobile, toggle on click
       setShowSuggestions(!showSuggestions)
     }
   }
@@ -128,11 +123,11 @@ export default function HeroSection() {
       {/* DARKEN OVERLAY FOR BETTER READABILITY */}
       <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-background/10 to-background/30"></div>
 
-      {/* SPIDER SLIDING DOWN ON DRAGLINE - POSITIONED OFF-CENTER */}
+      {/* SPIDER SLIDING DOWN ON DRAGLINE */}
       <motion.div 
         className="absolute left-[15%] z-30"
         initial={{ top: -150 }}
-        animate={isPreloaderDone ? { top: isMobile ? "22vh" : "28vh" } : { top: -150 }}
+        animate={isPreloaderDone ? { top: isMobile ? "20vh" : "26vh" } : { top: -150 }}
         transition={{ 
           duration: 1.8,
           ease: "easeOut",
@@ -140,7 +135,7 @@ export default function HeroSection() {
         }}
         style={{ position: 'absolute' }}
       >
-        {/* DRAGLINE (WEB STRAND) */}
+        {/* DRAGLINE */}
         <div 
           className="absolute w-[2px] bg-gradient-to-b from-spider-red to-spider-red/40 dark:from-spider-red/60 dark:to-spider-red/20"
           style={{ 
@@ -185,8 +180,8 @@ export default function HeroSection() {
             transition={{ type: "spring", stiffness: 100, damping: 20, delay: 1.5 }}
             className="absolute z-20"
             style={{
-              top: isMobile ? '7rem' : '10rem',
-              right: '2rem',
+              top: isMobile ? '8rem' : '10rem',
+              right: isMobile ? '1rem' : '2rem',
             }}
           >
             <div className="relative">
@@ -194,7 +189,7 @@ export default function HeroSection() {
               <div className="absolute inset-0 bg-[#DA1C22] dark:bg-[#9a1519] translate-x-2 translate-y-2"></div>
               
               {/* Main bubble */}
-              <div className="relative bg-white dark:bg-[#1a1a1a] border-2 border-[#32355D] dark:border-[#4a4d7a] p-4 min-w-[250px]">
+              <div className="relative bg-white dark:bg-[#1a1a1a] border-2 border-[#32355D] dark:border-[#4a4d7a] p-4 w-[260px] sm:w-[280px]">
                 {/* Comic corner accents */}
                 <div className="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-[#32355D] dark:border-[#4a4d7a]"></div>
                 <div className="absolute -top-2 -right-2 w-4 h-4 border-t-2 border-r-2 border-[#32355D] dark:border-[#4a4d7a]"></div>
@@ -205,7 +200,7 @@ export default function HeroSection() {
                 <motion.p 
                   animate={{ rotate: [0, 1, -1, 0] }}
                   transition={{ repeat: Infinity, duration: 3 }}
-                  className="font-barrio text-base mb-1 tracking-wider"
+                  className="font-barrio text-base sm:text-lg mb-2 tracking-wider"
                   style={{ 
                     color: '#F7E720',
                     textShadow: `
@@ -215,7 +210,6 @@ export default function HeroSection() {
                       1.5px 1.5px 0 #32355D,
                       3px 3px 0 #DA1C22
                     `,
-                    fontSize: '1.1rem',
                     letterSpacing: '1px'
                   }}
                 >
@@ -225,7 +219,7 @@ export default function HeroSection() {
                 <motion.p 
                   animate={{ x: [0, -2, 2, 0] }}
                   transition={{ repeat: Infinity, duration: 4 }}
-                  className="font-montserrat text-xs text-[#32355D] dark:text-white"
+                  className="font-montserrat text-xs sm:text-sm text-[#32355D] dark:text-white"
                 >
                   not everything you click might work
                 </motion.p>
@@ -237,7 +231,7 @@ export default function HeroSection() {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      className="font-montserrat text-[10px] mt-2 italic font-bold"
+                      className="font-montserrat text-xs mt-3 italic font-bold"
                       style={{ color: '#DA1C22' }}
                     >
                       See?
@@ -248,7 +242,7 @@ export default function HeroSection() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="font-montserrat text-[10px] mt-2 italic"
+                      className="font-montserrat text-xs mt-3 italic"
                       style={{ color: '#DA1C22' }}
                     >
                       working on it ...
@@ -272,7 +266,7 @@ export default function HeroSection() {
               <motion.div
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ repeat: Infinity, duration: 5 }}
-                className="absolute -bottom-8 -right-2 text-xs"
+                className="absolute -bottom-8 -right-2 text-sm"
                 style={{ color: '#32355D' }}
               >
                 🕸️
@@ -282,18 +276,18 @@ export default function HeroSection() {
         )}
       </AnimatePresence>
 
-      <div className="container mx-auto px-6 text-center relative z-10 pt-32 md:pt-28 pb-32">
+      <div className="container mx-auto px-6 text-center relative z-10 pt-52 md:pt-28 pb-32">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={isPreloaderDone ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
           transition={{ duration: 0.8 }}
         >
-          {/* SPIDER LOGO */}
-          <div className="inline-block mb-6">
-            <div className="p-2">
-              <SpiderLogo className="w-20 h-20 md:w-24 md:h-24" />
-            </div>
-          </div>
+        {/* SPIDER LOGO */}
+<div className="inline-block mb-6 md:mb-6 mt-8 md:mt-0">
+  <div className="p-2">
+    <SpiderLogo className="w-20 h-20 md:w-24 md:h-24" />
+  </div>
+</div>
           
           {/* THE SPECTACULAR OMAR-ABURUB PNG LOGO */}
           <motion.div
@@ -317,17 +311,17 @@ export default function HeroSection() {
             transition={{ delay: 0.4, type: "spring" }}
           >
             <div className="border-4 border-black dark:border-[#121D3D] bg-spider-blue dark:bg-spider-blue/80 shadow-[8px_8px_0px_0px_rgba(0,0,0)] dark:shadow-[8px_8px_0px_0px_rgba(18,29,61,0.3)]">
-  <div className="px-5 py-2">
-    <span className="font-barrio text-white text-lg md:text-xl tracking-wider whitespace-nowrap">
-      SPIDER OF SOFTWARE ENGINEERING
-    </span>
-  </div>
-</div>
+              <div className="px-5 py-2">
+                <span className="font-barrio text-white text-lg md:text-xl tracking-wider whitespace-nowrap">
+                  SPIDER OF SOFTWARE ENGINEERING
+                </span>
+              </div>
+            </div>
           </motion.div>
           
           {/* TAGLINE WITH INTERACTIVE "USER EXPERIENCE" */}
           <motion.div
-            className="max-w-4xl mx-auto mb-16 relative"
+            className="max-w-4xl mx-auto mb-16 relative px-2"
             initial={{ opacity: 0 }}
             animate={isPreloaderDone ? { opacity: 1 } : { opacity: 0 }}
             transition={{ delay: 0.6 }}
@@ -339,7 +333,7 @@ export default function HeroSection() {
             </div>
             
             <div className="relative inline-block" ref={suggestionsRef}>
-              <p className="font-barrio text-xl md:text-2xl text-foreground font-bold whitespace-nowrap">
+              <p className="font-barrio text-xl md:text-2xl text-foreground font-bold">
                 "With great power comes great{' '}
                 <span 
                   className="font-black underline decoration-wavy decoration-spider-blue underline-offset-4 dark:decoration-spider-blue/80 cursor-pointer relative"
@@ -352,58 +346,60 @@ export default function HeroSection() {
                 "
               </p>
 
-              {/* Suggestions Popup */}
-              <AnimatePresence>
-                {showSuggestions && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                    className="absolute left-1/2 transform -translate-x-1/2 mt-2 z-50"
-                    style={{ 
-                      top: '100%',
-                      width: 'max-content',
-                      minWidth: '220px',
-                      maxWidth: '300px'
-                    }}
-                  >
-                    {/* Shadow */}
-                    <div className="absolute inset-0 bg-black dark:bg-[#161616] rounded-lg translate-x-1 translate-y-1"></div>
-                    
-                    {/* Popup box */}
-                    <div className="relative bg-white dark:bg-[#0A0A0A] border-2 border-[#32355D] dark:border-[#4a4d7a] rounded-lg p-3">
-                      {/* Comic corner accents */}
-                      <div className="absolute -top-1 -left-1 w-2 h-2 border-t-2 border-l-2 border-[#32355D] dark:border-[#4a4d7a]"></div>
-                      <div className="absolute -top-1 -right-1 w-2 h-2 border-t-2 border-r-2 border-[#32355D] dark:border-[#4a4d7a]"></div>
-                      <div className="absolute -bottom-1 -left-1 w-2 h-2 border-b-2 border-l-2 border-[#32355D] dark:border-[#4a4d7a]"></div>
-                      <div className="absolute -bottom-1 -right-1 w-2 h-2 border-b-2 border-r-2 border-[#32355D] dark:border-[#4a4d7a]"></div>
-                      
-                      {/* Suggestions list */}
-                      <div className="space-y-1">
-                        {suggestions.map((suggestion, index) => (
-                          <motion.div
-                            key={index}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.05 }}
-                            className={`px-3 py-1.5 text-sm font-montserrat ${suggestion.color} dark:opacity-90 hover:bg-gray-100 dark:hover:bg-[#1a1a1a] cursor-default rounded transition-colors text-left`}
-                          >
-                            {suggestion.text}
-                          </motion.div>
-                        ))}
-                      </div>
-                      
-                      {/* Tiny instruction */}
-                      <div className="mt-2 pt-1 border-t border-gray-200 dark:border-gray-700 text-[8px] text-gray-400 dark:text-gray-500 text-center">
-                        alternative suggestions
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {/* Suggestions Popup - FIXED FOR MOBILE */}
+<AnimatePresence>
+  {showSuggestions && (
+    <motion.div
+      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="absolute mt-2 z-50"
+      style={{ 
+        top: '100%',
+        left: isMobile ? '10%' : '50%',
+        transform: isMobile ? 'none' : 'translateX(-50%)',
+        width: 'max-content',
+        minWidth: isMobile ? '280px' : '250px',
+        maxWidth: isMobile ? '300px' : '350px',
+      }}
+    >
+      {/* Shadow */}
+      <div className="absolute inset-0 bg-black dark:bg-[#161616] rounded-lg translate-x-1 translate-y-1"></div>
+      
+      {/* Popup box */}
+      <div className="relative bg-white dark:bg-[#0A0A0A] border-2 border-[#32355D] dark:border-[#4a4d7a] rounded-lg p-3">
+        {/* Comic corner accents */}
+        <div className="absolute -top-1 -left-1 w-2 h-2 border-t-2 border-l-2 border-[#32355D] dark:border-[#4a4d7a]"></div>
+        <div className="absolute -top-1 -right-1 w-2 h-2 border-t-2 border-r-2 border-[#32355D] dark:border-[#4a4d7a]"></div>
+        <div className="absolute -bottom-1 -left-1 w-2 h-2 border-b-2 border-l-2 border-[#32355D] dark:border-[#4a4d7a]"></div>
+        <div className="absolute -bottom-1 -right-1 w-2 h-2 border-b-2 border-r-2 border-[#32355D] dark:border-[#4a4d7a]"></div>
+        
+        {/* Suggestions list */}
+        <div className="space-y-1">
+          {suggestions.map((suggestion, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className={`px-3 py-1.5 text-sm font-montserrat ${suggestion.color} dark:opacity-90 hover:bg-gray-100 dark:hover:bg-[#1a1a1a] cursor-default rounded transition-colors text-left`}
+            >
+              {suggestion.text}
+            </motion.div>
+          ))}
+        </div>
+        
+        {/* Tiny instruction */}
+        <div className="mt-2 pt-1 border-t border-gray-200 dark:border-gray-700 text-[8px] text-gray-400 dark:text-gray-500 text-center">
+          alternative suggestions
+        </div>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
             </div>
           </motion.div>
         </motion.div>
