@@ -211,7 +211,7 @@ export default function PrayerTimes({ className = '', style = {} }: PrayerTimesP
             
             {/* Ramadan greeting */}
             <div className="mt-2 text-[8px] text-center text-muted-foreground font-mono tracking-wider">
-              RAMADAN MUBARAK • 1446
+              RAMADAN MUBARAK • 1447
             </div>
           </div>
           
