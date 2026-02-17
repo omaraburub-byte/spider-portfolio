@@ -171,7 +171,7 @@ export default function HeroSection() {
         </motion.div>
       </motion.div>
 
-      {/* RETRO UNDER CONSTRUCTION NOTE - Original position */}
+      {/* RETRO UNDER CONSTRUCTION NOTE - Smaller on mobile */}
       <AnimatePresence>
         {showNote && (
           <motion.div
@@ -181,27 +181,27 @@ export default function HeroSection() {
             transition={{ type: "spring", stiffness: 100, damping: 20, delay: 1.5 }}
             className="absolute z-20"
             style={{
-              top: isMobile ? '8rem' : '10rem',
-              right: isMobile ? '1rem' : '2rem',
+              top: isMobile ? '7rem' : '10rem',
+              right: isMobile ? '0.5rem' : '2rem',
             }}
           >
             <div className="relative">
-              {/* Solid shadow */}
-              <div className="absolute inset-0 bg-[#DA1C22] dark:bg-[#9a1519] translate-x-2 translate-y-2"></div>
+              {/* Solid shadow - smaller on mobile */}
+              <div className={`absolute inset-0 bg-[#DA1C22] dark:bg-[#9a1519] ${isMobile ? 'translate-x-1 translate-y-1' : 'translate-x-2 translate-y-2'}`}></div>
               
-              {/* Main bubble */}
-              <div className="relative bg-white dark:bg-[#1a1a1a] border-2 border-[#32355D] dark:border-[#4a4d7a] p-4 w-[260px] sm:w-[280px]">
-                {/* Comic corner accents */}
-                <div className="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-[#32355D] dark:border-[#4a4d7a]"></div>
-                <div className="absolute -top-2 -right-2 w-4 h-4 border-t-2 border-r-2 border-[#32355D] dark:border-[#4a4d7a]"></div>
-                <div className="absolute -bottom-2 -left-2 w-4 h-4 border-b-2 border-l-2 border-[#32355D] dark:border-[#4a4d7a]"></div>
-                <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-[#32355D] dark:border-[#4a4d7a]"></div>
+              {/* Main bubble - smaller on mobile */}
+              <div className={`relative bg-white dark:bg-[#1a1a1a] border-2 border-[#32355D] dark:border-[#4a4d7a] ${isMobile ? 'p-2 w-[200px]' : 'p-4 w-[260px] sm:w-[280px]'}`}>
+                {/* Comic corner accents - smaller on mobile */}
+                <div className={`absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-[#32355D] dark:border-[#4a4d7a] ${isMobile ? 'scale-75' : ''}`}></div>
+                <div className={`absolute -top-2 -right-2 w-4 h-4 border-t-2 border-r-2 border-[#32355D] dark:border-[#4a4d7a] ${isMobile ? 'scale-75' : ''}`}></div>
+                <div className={`absolute -bottom-2 -left-2 w-4 h-4 border-b-2 border-l-2 border-[#32355D] dark:border-[#4a4d7a] ${isMobile ? 'scale-75' : ''}`}></div>
+                <div className={`absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-[#32355D] dark:border-[#4a4d7a] ${isMobile ? 'scale-75' : ''}`}></div>
                 
                 {/* Content */}
                 <motion.p 
                   animate={{ rotate: [0, 1, -1, 0] }}
                   transition={{ repeat: Infinity, duration: 3 }}
-                  className="font-barrio text-base sm:text-lg mb-2 tracking-wider"
+                  className={`font-barrio ${isMobile ? 'text-sm' : 'text-base sm:text-lg'} mb-1 tracking-wider`}
                   style={{ 
                     color: '#F7E720',
                     textShadow: `
@@ -220,7 +220,7 @@ export default function HeroSection() {
                 <motion.p 
                   animate={{ x: [0, -2, 2, 0] }}
                   transition={{ repeat: Infinity, duration: 4 }}
-                  className="font-montserrat text-xs sm:text-sm text-[#32355D] dark:text-white"
+                  className={`font-montserrat ${isMobile ? 'text-[10px]' : 'text-xs sm:text-sm'} text-[#32355D] dark:text-white`}
                 >
                   not everything you click might work
                 </motion.p>
@@ -232,7 +232,7 @@ export default function HeroSection() {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      className="font-montserrat text-xs mt-3 italic font-bold"
+                      className={`font-montserrat ${isMobile ? 'text-[8px]' : 'text-xs'} mt-2 italic font-bold`}
                       style={{ color: '#DA1C22' }}
                     >
                       See?
@@ -243,7 +243,7 @@ export default function HeroSection() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="font-montserrat text-xs mt-3 italic"
+                      className={`font-montserrat ${isMobile ? 'text-[8px]' : 'text-xs'} mt-2 italic`}
                       style={{ color: '#DA1C22' }}
                     >
                       working on it ...
@@ -251,15 +251,15 @@ export default function HeroSection() {
                   )}
                 </AnimatePresence>
 
-                {/* X BUTTON */}
+                {/* X BUTTON - smaller on mobile */}
                 <motion.button
                   onClick={handleXClick}
-                  className="absolute -top-3 -right-3 z-40 bg-white dark:bg-[#2a2a2a] border-2 border-[#32355D] dark:border-[#4a4d7a] p-1"
+                  className={`absolute -top-2 -right-2 z-40 bg-white dark:bg-[#2a2a2a] border-2 border-[#32355D] dark:border-[#4a4d7a] ${isMobile ? 'p-0.5' : 'p-1'}`}
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
-                  style={{ boxShadow: '2px 2px 0 #DA1C22 dark:2px 2px 0 #9a1519' }}
+                  style={{ boxShadow: isMobile ? '1px 1px 0 #DA1C22' : '2px 2px 0 #DA1C22 dark:2px 2px 0 #9a1519' }}
                 >
-                  <X size={14} className="text-[#DA1C22] dark:text-white" />
+                  <X size={isMobile ? 10 : 14} className="text-[#DA1C22] dark:text-white" />
                 </motion.button>
               </div>
               
@@ -267,7 +267,7 @@ export default function HeroSection() {
               <motion.div
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ repeat: Infinity, duration: 5 }}
-                className="absolute -bottom-8 -right-2 text-sm"
+                className={`absolute -bottom-8 -right-2 ${isMobile ? 'text-[10px]' : 'text-sm'}`}
                 style={{ color: '#32355D' }}
               >
                 🕸️
@@ -277,15 +277,15 @@ export default function HeroSection() {
         )}
       </AnimatePresence>
 
-  {/* PRAYER TIMES - Perfectly positioned */}
-<PrayerTimes 
-  className="absolute z-10"
-  style={{
-    top: isMobile ? '7.5rem' : '22rem', // Desktop: 22rem (a little higher than 24rem)
-    left: isMobile ? '1rem' : 'auto',
-    right: isMobile ? 'auto' : '2rem',
-  }}
-/>
+      {/* PRAYER TIMES - Perfectly positioned */}
+      <PrayerTimes 
+        className="absolute z-10"
+        style={{
+          top: isMobile ? '7.5rem' : '22rem',
+          left: isMobile ? '1rem' : 'auto',
+          right: isMobile ? 'auto' : '2rem',
+        }}
+      />
 
       <div className="container mx-auto px-6 text-center relative z-10 pt-52 md:pt-28 pb-32">
         <motion.div

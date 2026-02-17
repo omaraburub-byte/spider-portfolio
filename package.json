@@ -8,6 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@fontsource/bangers": "^5.2.8",
+    "@fontsource/comic-neue": "^5.2.7",
     "@formspree/react": "^3.0.0",
     "framer-motion": "^11.0.0",
     "lucide-react": "^0.344.0",

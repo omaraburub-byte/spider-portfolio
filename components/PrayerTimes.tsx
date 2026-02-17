@@ -152,7 +152,8 @@ export default function PrayerTimes({ className = '', style = {} }: PrayerTimesP
                   className="absolute -inset-1 border border-spider-red/30 rounded-full"
                 />
               </div>
-              <span className="font-barrio text-sm text-spider-red dark:text-spider-blue tracking-wider">
+              {/* THICKER: added font-black and increased size */}
+              <span className="font-barrio font-black text-base text-spider-red dark:text-spider-blue tracking-wider">
                 RAMADAN PRAYERS
               </span>
               {/* Spinning SpiderLogo instead of lightning */}
@@ -202,14 +203,15 @@ export default function PrayerTimes({ className = '', style = {} }: PrayerTimesP
                 
                 <div className="flex items-center justify-center gap-1 text-[10px]">
                   <Clock className="w-3 h-3 text-spider-red dark:text-spider-blue" />
-                  <span className="font-barrio text-spider-red dark:text-spider-blue tracking-wider">
+                  {/* THICKER: added font-black */}
+                  <span className="font-barrio font-black text-spider-red dark:text-spider-blue tracking-wider">
                     NEXT: {nextPrayer.toUpperCase()}
                   </span>
                 </div>
               </div>
             )}
             
-            {/* Ramadan greeting */}
+            {/* Ramadan greeting - no changes needed here */}
             <div className="mt-2 text-[8px] text-center text-muted-foreground font-mono tracking-wider">
               RAMADAN MUBARAK • 1447
             </div>
