@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { BookOpen, Zap, Target, Award, Users, Star } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 const comicPanels = [
   {
@@ -74,6 +75,18 @@ const SpiderIcon = () => (
 )
 
 export default function ComicSection() {
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Check for mobile/tablet
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   return (
     <section id="journey" className="py-24 bg-background relative overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
@@ -101,8 +114,8 @@ export default function ComicSection() {
             <div className="relative z-20 -mt-2">
               <SpiderIcon />
             </div>
-            {/* Line */}
-            <div className="w-0.5 flex-1 bg-black dark:bg-[#4a4a4a]"></div>
+            {/* Line - stops 80px before the bottom */}
+            <div className="w-0.5 bg-black dark:bg-[#4a4a4a]" style={{ height: 'calc(100% - 40px)' }}></div>
           </div>
 
           {/* Panels */}
@@ -188,19 +201,19 @@ export default function ComicSection() {
             })}
           </div>
 
-          {/* End panel */}
+          {/* End panel - sits in the 80px gap */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mt-12 md:mt-16"
+            className="text-center relative z-10 mt-8 md:mt-12"
           >
             <div className="relative inline-block">
               {/* Solid shadow */}
               <div className="absolute inset-0 bg-black dark:bg-[#161616] rounded-xl translate-x-1 md:translate-x-2 translate-y-1 md:translate-y-2"></div>
               
               {/* Main panel */}
-              <div className="relative bg-white dark:bg-[#0A0A0A] border-2 border-spider-red dark:border-[#282727] rounded-xl px-3 md:px-6 py-1 md:py-3 overflow-hidden">
+              <div className="relative bg-white dark:bg-[#0A0A0A] border-2 border-spider-red dark:border-[#282727] rounded-xl px-3 md:px-6 py-3 md:py-3 overflow-hidden">
                 {/* Subtle dots */}
                 <div 
                   className="absolute inset-0 opacity-5 dark:opacity-10"
@@ -214,7 +227,9 @@ export default function ComicSection() {
                     backgroundSize: '16px 16px',
                   }}
                 />
-                <div className="relative z-10 font-barrio text-xs md:text-lg text-spider-red">TO BE CONTINUED</div>
+                <div className="relative z-10 font-barrio text-xs md:text-lg text-spider-red">
+                  TO BE CONTINUED
+                </div>
               </div>
             </div>
           </motion.div>
