@@ -16,9 +16,12 @@ export default function Preloader() {
   const [glitch, setGlitch] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isMobile, setIsMobile] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   // Check for mobile/tablet
   useEffect(() => {
+    setMounted(true)
+    
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024)
     }
@@ -87,6 +90,8 @@ export default function Preloader() {
       return () => timer && clearTimeout(timer)
     }
   }, [isMobile])
+
+  if (!mounted) return null
 
   return (
     <AnimatePresence>
@@ -284,7 +289,7 @@ function SignatureSVG({ isMobile }: { isMobile: boolean }) {
           pathOffset: 0
         }}
         transition={{
-          duration: isMobile ? 2.4 : 3, // 2.4s on mobile (slightly faster), 3s on desktop
+          duration: isMobile ? 2.4 : 3,
           ease: "easeInOut",
           delay: 0
         }}

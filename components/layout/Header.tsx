@@ -20,8 +20,11 @@ export default function Header() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [activeSection, setActiveSection] = useState('home')
   const [isVisible, setIsVisible] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+    
     const timer = setTimeout(() => {
       setIsVisible(true)
     }, 4000)
@@ -59,6 +62,10 @@ export default function Header() {
       })
       setIsOpen(false)
     }
+  }
+
+  if (!mounted) {
+    return null
   }
 
   return (

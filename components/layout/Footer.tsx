@@ -3,13 +3,21 @@
 import { motion } from 'framer-motion'
 import { Heart, Zap, Copyright, Sparkles, ArrowUp } from 'lucide-react'
 import SpiderLogo from '@/components/SpiderLogo'
+import { useEffect, useState } from 'react'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
+  const [mounted, setMounted] = useState(false)
+  
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+  
+  if (!mounted) return null
   
   return (
     <footer className="bg-card border-t-4 border-spider-red mt-20 comic-border">

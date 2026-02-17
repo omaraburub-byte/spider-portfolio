@@ -7,6 +7,7 @@ import Preloader from '@/components/sections/Preloader'
 import CursorTrail from '@/components/effects/CursorTrail'
 import HoverSense from '@/components/effects/HoverSense'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function ClientLayout({
   children,
@@ -14,14 +15,30 @@ export default function ClientLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
-  
-  // Check for all possible 404 path variations
-  const is404 = pathname === '/404' || 
-                pathname === '/not-found' || 
-                pathname?.includes('/404') || 
-                pathname?.includes('/not-found')
+  const [mounted, setMounted] = useState(false)
+  const [is404, setIs404] = useState(false)
 
-  console.log('Current pathname:', pathname) // Add this to debug
+  useEffect(() => {
+    setMounted(true)
+    // Check for 404 after mounting
+    setIs404(pathname === '/404' || pathname === '/not-found' || pathname === '/oi')
+  }, [pathname])
+
+  // During SSR and initial hydration, render a minimal version
+  if (!mounted) {
+    return (
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="dark"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <div className="min-h-screen">
+          {children}
+        </div>
+      </ThemeProvider>
+    )
+  }
 
   return (
     <ThemeProvider
@@ -31,12 +48,10 @@ export default function ClientLayout({
       disableTransitionOnChange
     >
       {is404 ? (
-        // 404 page - just the content
         <div className="min-h-screen">
           {children}
         </div>
       ) : (
-        // Normal page with all the goodies
         <>
           <Preloader />
           <CursorTrail />
