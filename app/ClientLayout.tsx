@@ -14,7 +14,14 @@ export default function ClientLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
-  const is404 = pathname === '/404'
+  
+  // Check for all possible 404 path variations
+  const is404 = pathname === '/404' || 
+                pathname === '/not-found' || 
+                pathname?.includes('/404') || 
+                pathname?.includes('/not-found')
+
+  console.log('Current pathname:', pathname) // Add this to debug
 
   return (
     <ThemeProvider
