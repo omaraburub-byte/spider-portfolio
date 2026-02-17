@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, X } from 'lucide-react'
 import SpiderLogo from '@/components/SpiderLogo'
+import PrayerTimes from '@/components/PrayerTimes'
 import { useState, useEffect, useRef } from 'react'
 
 export default function HeroSection() {
@@ -170,7 +171,7 @@ export default function HeroSection() {
         </motion.div>
       </motion.div>
 
-      {/* RETRO UNDER CONSTRUCTION NOTE */}
+      {/* RETRO UNDER CONSTRUCTION NOTE - Original position */}
       <AnimatePresence>
         {showNote && (
           <motion.div
@@ -275,6 +276,16 @@ export default function HeroSection() {
           </motion.div>
         )}
       </AnimatePresence>
+
+  {/* PRAYER TIMES - Perfectly positioned */}
+<PrayerTimes 
+  className="absolute z-10"
+  style={{
+    top: isMobile ? '7.5rem' : '22rem', // Desktop: 22rem (a little higher than 24rem)
+    left: isMobile ? '1rem' : 'auto',
+    right: isMobile ? 'auto' : '2rem',
+  }}
+/>
 
       <div className="container mx-auto px-6 text-center relative z-10 pt-52 md:pt-28 pb-32">
         <motion.div
