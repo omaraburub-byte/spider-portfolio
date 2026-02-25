@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Heart, Zap, Copyright, Sparkles, ArrowUp } from 'lucide-react'
+import { Heart, Sparkles, ArrowUp } from 'lucide-react'
 import SpiderLogo from '@/components/SpiderLogo'
 import { useEffect, useState } from 'react'
 
@@ -14,16 +14,19 @@ export default function Footer() {
   }, [])
   
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
   }
   
   if (!mounted) return null
   
   return (
-    <footer className="bg-card border-t-4 border-spider-red mt-20 comic-border">
+    <footer className="bg-white dark:bg-[#0A0A0A] border-t border-gray-200 dark:border-gray-800 pb-10">
       <div className="container mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-          {/* Comic Book Logo Area with Your Spider Logo */}
+          {/* Logo Area */}
           <motion.div 
             className="text-center md:text-left"
             initial={{ opacity: 0, y: 20 }}
@@ -31,31 +34,25 @@ export default function Footer() {
             viewport={{ once: true }}
           >
             <div className="inline-flex items-center space-x-3 mb-3">
-              <div className="relative">
-                <div className="w-12 h-12 bg-background border-4 border-spider-red rounded-lg flex items-center justify-center">
-                  {/* YOUR SPIDER LOGO SVG */}
-                  <SpiderLogo className="w-8 h-8 text-spider-red" />
-                </div>
-                {/* Comic "bam" effect */}
-                <div className="absolute -inset-2 border-2 border-spider-blue/30 rounded-xl animate-pulse"></div>
+              <div className="w-10 h-10 relative">
+                <SpiderLogo className="w-full h-full opacity-80 dark:opacity-80" />
               </div>
               <div>
-                <div className="font-barrio text-2xl text-foreground tracking-wider">
-                  SPIDER-PORTFOLIO
+                <div className="text-sm font-montserrat text-gray-400 dark:text-gray-500 tracking-[0.2em] uppercase">
+                  OMAR ABURUB
                 </div>
-                <div className="font-montserrat text-sm text-muted-foreground flex items-center">
-                  <Zap className="w-3 h-3 mr-1 text-spider-blue" />
-                  FINAL ISSUE
+                <div className="text-xs font-mono text-gray-300 dark:text-gray-600">
+                  Spider of Software Engineering
                 </div>
               </div>
             </div>
             
-            <div className="font-montserrat text-sm text-muted-foreground max-w-xs">
-              "With great power comes great user experience." - Omar Aburub, The Spider of Software Engineering
+            <div className="text-xs text-gray-400 dark:text-gray-500 max-w-xs font-light leading-relaxed">
+              "With great power comes great user experience."
             </div>
           </motion.div>
 
-          {/* Comic Book Info Panel */}
+          {/* Info Panel */}
           <motion.div 
             className="text-center md:text-right"
             initial={{ opacity: 0, y: 20 }}
@@ -63,101 +60,52 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
           >
-            {/* Comic book credits panel */}
-            <div className="bg-background border-2 border-spider-gray rounded-xl p-6 mb-4 relative">
-              {/* Comic dots background */}
-              <div className="absolute inset-0 rounded-xl opacity-5 comic-dots" />
-              
-              <div className="space-y-2">
-                <div className="flex items-center justify-center md:justify-end space-x-2">
-                  <Copyright className="w-4 h-4 text-muted-foreground" />
-                  <span className="font-barrio text-sm text-foreground">
-                    {currentYear} OMAR ABURUB
-                  </span>
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  ALL RIGHTS RESERVED
-                </div>
-                <div className="h-px bg-border my-3"></div>
-                <div className="text-xs text-muted-foreground">
-                  PUBLISHED IN AMMAN, JORDAN
-                </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-center md:justify-end space-x-2">
+                <span className="text-xs font-mono text-gray-400 dark:text-gray-500">
+                  © {currentYear}
+                </span>
+                <span className="text-xs text-gray-300 dark:text-gray-600">•</span>
+                <span className="text-xs font-mono text-gray-400 dark:text-gray-500">
+                  Amman, Jordan
+                </span>
               </div>
               
-              {/* Comic book staple effect */}
-              <div className="absolute -top-1 left-6 w-8 h-2 bg-spider-gray rounded-b-lg"></div>
-              <div className="absolute -top-1 right-6 w-8 h-2 bg-spider-gray rounded-b-lg"></div>
-            </div>
-
-            {/* Built with love section */}
-            <div className="flex items-center justify-center md:justify-end space-x-2 text-sm text-muted-foreground">
-              <span>BUILT WITH</span>
-              <Heart className="w-4 h-4 text-spider-red fill-spider-red" />
-              <span>USING</span>
-              <motion.span 
-                className="px-2 py-1 bg-background border border-border rounded text-xs font-mono"
-                whileHover={{ scale: 1.05 }}
-              >
-                NEXT.JS
-              </motion.span>
-              <motion.span 
-                className="px-2 py-1 bg-background border border-border rounded text-xs font-mono"
-                whileHover={{ scale: 1.05 }}
-              >
-                TAILWIND
-              </motion.span>
+              <div className="h-px w-16 mx-auto md:mx-0 md:ml-auto bg-gradient-to-r from-transparent via-gray-200 to-transparent dark:via-gray-800" />
+              
+              <div className="flex items-center justify-center md:justify-end space-x-2 text-xs text-gray-400 dark:text-gray-500">
+                <span>crafted with</span>
+                <Heart className="w-3 h-3 text-gray-300 dark:text-gray-600" />
+                <span>•</span>
+                <span className="font-mono">next.js</span>
+                <span className="font-mono">tailwind</span>
+              </div>
             </div>
           </motion.div>
         </div>
 
-        {/* Comic book bottom border with Back to Top button */}
-        <div className="mt-12 pt-6 border-t-2 border-dashed border-border relative">
+        {/* Bottom section with Back to Top */}
+        <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-800">
           <div className="flex justify-between items-center">
-            {/* Left: Comic page info */}
-            <div className="text-xs text-muted-foreground">
-              <div className="flex items-center">
-                <Sparkles className="w-3 h-3 mr-1" />
-                TO BE CONTINUED...
-              </div>
+            {/* Left */}
+            <div className="text-[10px] font-mono text-gray-300 dark:text-gray-600">
+              <Sparkles className="w-3 h-3 inline mr-1" />
+              final issue
             </div>
             
-            {/* Center: Comic book reading direction */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <div className="bg-background border-2 border-border rounded-full w-8 h-8 flex items-center justify-center">
-                <div className="text-xs font-bold text-foreground">↓</div>
-              </div>
-            </div>
-            
-            {/* Right: Back to Top Button */}
+            {/* Modern Back to Top Button */}
             <motion.button
               onClick={scrollToTop}
-              className="group relative"
-              whileHover={{ scale: 1.05 }}
+              className="flex items-center space-x-2 px-3 py-1.5 text-xs font-mono text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border border-gray-200 dark:border-gray-800 rounded-full hover:border-gray-300 dark:hover:border-gray-700"
+              whileHover={{ y: -2 }}
               whileTap={{ scale: 0.95 }}
             >
-              {/* Main button */}
-              <div className="flex items-center space-x-2 px-4 py-2 bg-background border-2 border-spider-red rounded-lg">
-                <ArrowUp className="w-4 h-4 text-spider-red" />
-                <span className="font-barrio text-sm text-foreground">BACK TO TOP</span>
-              </div>
-                            
-              {/* Tooltip */}
-              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-card border border-spider-red rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                <div className="text-xs text-foreground">Return to start</div>
-                <div className="absolute -bottom-1 left-1/2 w-2 h-2 bg-card border-b border-r border-spider-red transform rotate-45"></div>
-              </div>
+              <span>BACK TO TOP</span>
+              <ArrowUp className="w-3 h-3" />
             </motion.button>
-          </div>
-          
-          {/* Page number at bottom right */}
-          <div className="text-right mt-4">
-            <div className="font-mono text-xs text-muted-foreground inline-block px-2 py-1 bg-background border border-border rounded">
-              PAGE 01
-            </div>
           </div>
         </div>
       </div>
-      
     </footer>
   )
 }

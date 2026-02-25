@@ -1,9 +1,8 @@
+// PrayerTimes.tsx - Fixed location (Riyadh, KSA) - NO PERMISSION ASKED
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Moon, Sun, Clock, Star } from 'lucide-react'
-import SpiderLogo from '@/components/SpiderLogo'
+import { motion } from 'framer-motion'
 
 interface PrayerTimesProps {
   className?: string
@@ -33,22 +32,9 @@ export default function PrayerTimes({ className = '', style = {} }: PrayerTimesP
 
   const fetchPrayerTimes = async () => {
     try {
-      // Try to get user's location, fallback to Amman
-      let url = 'https://api.aladhan.com/v1/timingsByCity?city=Amman&country=Jordan&method=2'
+      // FIXED LOCATION: Riyadh, Saudi Arabia - NO GEOLOCATION PERMISSION NEEDED
+      const url = 'https://api.aladhan.com/v1/timingsByCity?city=Riyadh&country=Saudi%20Arabia&method=4'
       
-      try {
-        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
-        })
-        
-        if (position) {
-          const { latitude, longitude } = position.coords
-          url = `https://api.aladhan.com/v1/timings/${Math.floor(Date.now() / 1000)}?latitude=${latitude}&longitude=${longitude}&method=2`
-        }
-      } catch (geoError) {
-        // Use fallback, silently continue
-      }
-
       const response = await fetch(url)
       const data = await response.json()
       
@@ -63,7 +49,6 @@ export default function PrayerTimes({ className = '', style = {} }: PrayerTimesP
           Isha: timings.Isha,
         })
         
-        // Find next prayer
         const now = new Date()
         const currentTime = now.getHours() * 60 + now.getMinutes()
         
@@ -93,138 +78,114 @@ export default function PrayerTimes({ className = '', style = {} }: PrayerTimesP
   }
 
   if (!mounted) return null
-  if (loading) return (
-    <div className={className} style={style}>
-      <div className="relative">
-        <div className="absolute inset-0 bg-black dark:bg-[#161616] rounded-xl translate-x-2 translate-y-2"></div>
-        <div className="relative bg-white dark:bg-[#0A0A0A] border-2 border-spider-gray rounded-xl p-4 w-64">
-          <div className="font-barrio text-sm text-muted-foreground animate-pulse">LOADING PRAYER TIMES...</div>
+  
+  if (loading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className={className}
+        style={style}
+      >
+        <div className="bg-white dark:bg-[#1A1B1E] border border-[#e62429]/20 dark:border-white/5 rounded-2xl p-4 w-64 shadow-sm dark:shadow-none">
+          <div className="flex items-center justify-between mb-3">
+            <div className="h-4 w-24 bg-gradient-to-r from-[#e62429]/20 to-[#1a73e8]/20 rounded animate-pulse" />
+            <div className="h-4 w-4 bg-gradient-to-r from-[#e62429]/20 to-[#1a73e8]/20 rounded-full animate-pulse" />
+          </div>
+          <div className="space-y-2">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="flex justify-between">
+                <div className="h-3 w-12 bg-gradient-to-r from-[#e62429]/20 to-[#1a73e8]/20 rounded animate-pulse" />
+                <div className="h-3 w-10 bg-gradient-to-r from-[#e62429]/20 to-[#1a73e8]/20 rounded animate-pulse" />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </div>
-  )
+      </motion.div>
+    )
+  }
   
   if (error || !prayers) return null
 
+  const prayerNames = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
+
   return (
     <motion.div
-      initial={{ opacity: 0, x: 100 }}
+      initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20 }}
+      transition={{ duration: 0.6 }}
       className={className}
       style={style}
     >
-      <div className="relative">
-        {/* Solid shadow - COMIC STYLE */}
-        <div className="absolute inset-0 bg-black dark:bg-[#161616] rounded-xl translate-x-2 translate-y-2"></div>
+      <div className="relative group">
+        {/* Subtle glow effect on hover */}
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-[#e62429] to-[#1a73e8] rounded-2xl opacity-0 group-hover:opacity-20 dark:group-hover:opacity-30 blur transition duration-500" />
         
-        {/* Main bubble */}
-        <div className="relative bg-white dark:bg-[#0A0A0A] border-2 border-spider-red dark:border-[#4a4d7a] rounded-xl p-4 w-64 overflow-visible">
-          {/* Comic corner accents */}
-          <div className="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-spider-red dark:border-[#4a4d7a]"></div>
-          <div className="absolute -top-2 -right-2 w-4 h-4 border-t-2 border-r-2 border-spider-red dark:border-[#4a4d7a]"></div>
-          <div className="absolute -bottom-2 -left-2 w-4 h-4 border-b-2 border-l-2 border-spider-red dark:border-[#4a4d7a]"></div>
-          <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-spider-red dark:border-[#4a4d7a]"></div>
-          
-          {/* Halftone dots background */}
-          <div 
-            className="absolute inset-0 opacity-5 dark:opacity-10 rounded-xl overflow-hidden pointer-events-none"
-            style={{
-              backgroundImage: `
-                radial-gradient(circle at 2px 2px, 
-                  ${nextPrayer ? '#ef4444' : '#3b82f6'} 1.5px, 
-                  transparent 1.5px
-                )
-              `,
-              backgroundSize: '12px 12px',
-            }}
-          />
-          
-          {/* Content */}
-          <div className="relative z-10">
-            {/* Header - with spinning SpiderLogo */}
-            <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-spider-red/30 dark:border-spider-blue/30">
-              <div className="relative">
-                <Moon className="w-4 h-4 text-spider-red dark:text-spider-blue" />
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-                  className="absolute -inset-1 border border-spider-red/30 rounded-full"
-                />
-              </div>
-              {/* THICKER: added font-black and increased size */}
-              <span className="font-barrio font-black text-base text-spider-red dark:text-spider-blue tracking-wider">
-                RAMADAN PRAYERS
-              </span>
-              {/* Spinning SpiderLogo instead of lightning */}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-                className="ml-auto"
-              >
-                <SpiderLogo className="w-5 h-5 text-spider-blue dark:text-spider-red" />
-              </motion.div>
+        {/* Main card */}
+        <div className="relative bg-white dark:bg-[#1A1B1E] border border-[#e62429]/20 dark:border-white/5 rounded-2xl p-5 w-64 shadow-sm dark:shadow-none backdrop-blur-sm">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#e62429]/20 dark:border-white/5">
+            <div>
+              <h3 className="font-montserrat text-xs text-[#1a73e8] dark:text-white/40 tracking-[0.2em]">RAMADAN</h3>
+              <p className="font-montserrat text-xs text-[#1a73e8]/60 dark:text-white/20">1447 AH</p>
             </div>
-            
-            {/* Prayer times grid */}
-            <div className="space-y-2">
-              {Object.entries(prayers).map(([name, time]) => {
-                const isNext = nextPrayer === name
-                return (
-                  <motion.div 
-                    key={name} 
-                    className={`flex justify-between items-center text-xs p-1 ${
-                      isNext ? 'bg-spider-red/10 dark:bg-spider-blue/10 rounded border border-spider-red/30' : ''
-                    }`}
-                    animate={isNext ? { 
-                      scale: [1, 1.02, 1],
-                      borderColor: ['rgba(230,36,41,0.3)', 'rgba(230,36,41,0.8)', 'rgba(230,36,41,0.3)']
-                    } : {}}
-                    transition={isNext ? { repeat: Infinity, duration: 1.5 } : {}}
-                  >
-                    <span className={`font-montserrat ${isNext ? 'text-spider-red dark:text-spider-blue font-bold' : 'text-gray-600 dark:text-gray-400'}`}>
-                      {name}
-                    </span>
-                    <span className={`font-mono ${isNext ? 'text-spider-red dark:text-spider-blue font-bold' : 'text-gray-800 dark:text-gray-200'}`}>
-                      {time}
-                    </span>
-                  </motion.div>
-                )
-              })}
-            </div>
-            
-            {/* Next prayer indicator */}
-            {nextPrayer && (
-              <div className="relative mt-3 pt-2 border-t-2 border-dashed border-spider-red/30 dark:border-spider-blue/30">
-                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4">
-                  <div className="w-0.5 h-2 bg-spider-red/50 rotate-45 absolute left-1/2"></div>
-                  <div className="w-0.5 h-2 bg-spider-red/50 -rotate-45 absolute left-1/2"></div>
-                </div>
-                
-                <div className="flex items-center justify-center gap-1 text-[10px]">
-                  <Clock className="w-3 h-3 text-spider-red dark:text-spider-blue" />
-                  {/* THICKER: added font-black */}
-                  <span className="font-barrio font-black text-spider-red dark:text-spider-blue tracking-wider">
-                    NEXT: {nextPrayer.toUpperCase()}
-                  </span>
-                </div>
-              </div>
-            )}
-            
-            {/* Ramadan greeting - no changes needed here */}
-            <div className="mt-2 text-[8px] text-center text-muted-foreground font-mono tracking-wider">
-              RAMADAN MUBARAK • 1447
+            <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[#e62429] to-[#1a73e8] flex items-center justify-center">
+              <span className="text-white text-xs">✦</span>
             </div>
           </div>
-          
-          {/* Tiny spider decoration */}
-          <motion.div
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ repeat: Infinity, duration: 5 }}
-            className="absolute -bottom-3 -right-3 text-xs opacity-50"
-          >
-            🕷️
-          </motion.div>
+
+          {/* Location indicator - NO PERMISSION NEEDED, just displaying the fixed location */}
+          <div className="mb-3 pb-2 border-b border-[#e62429]/10 dark:border-white/5">
+            <div className="flex items-center gap-1.5">
+              <svg className="w-3 h-3 text-[#1a73e8]/60 dark:text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span className="text-[10px] font-mono text-[#1a73e8]/60 dark:text-white/40">
+                Riyadh, KSA
+              </span>
+            </div>
+          </div>
+
+          {/* Prayer times */}
+          <div className="space-y-2.5">
+            {prayerNames.map((name) => {
+              const isNext = nextPrayer === name
+              const time = prayers[name as keyof PrayerTimesData]
+              
+              return (
+                <div
+                  key={name}
+                  className={`flex justify-between items-center ${
+                    isNext 
+                      ? 'text-[#1a73e8] dark:text-white' 
+                      : 'text-[#1a73e8]/60 dark:text-white/40'
+                  }`}
+                >
+                  <span className={`font-montserrat text-xs ${isNext ? 'font-medium' : ''}`}>
+                    {name}
+                  </span>
+                  <span className={`font-mono text-xs ${isNext ? 'text-[#e62429]' : ''}`}>
+                    {time}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Next prayer indicator */}
+          {nextPrayer && (
+            <div className="mt-4 pt-3 border-t border-[#e62429]/20 dark:border-white/5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-montserrat text-[#1a73e8]/40 dark:text-white/20 tracking-wider">
+                  NEXT PRAYER
+                </span>
+                <span className="text-xs font-mono text-[#e62429]">
+                  {nextPrayer}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </motion.div>
