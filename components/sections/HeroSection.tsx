@@ -341,6 +341,9 @@ export default function HeroSection() {
                             >
                               <File size={14} className="text-gray-400" />
                               <span className="text-sm text-gray-600 dark:text-gray-400">ijspc-2026.md</span>
+                              <span className="ml-2 text-[8px] text-gray-400 dark:text-gray-600 font-mono">
+                                (click to explore)
+                              </span>
                             </button>
                           </li>
                         </ul>
