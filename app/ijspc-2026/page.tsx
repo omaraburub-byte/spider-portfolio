@@ -7,7 +7,7 @@ import {
   Clock, Download, Search, PenTool, Lightbulb, GraduationCap,
   CheckCircle, Target, Zap, Globe, Mail, MessageSquare, Video,
   FileCode, BarChart, Cpu, Brain, Shield, Rocket, Sparkles, Heart,
-  Users2
+  Users2, Youtube
 } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -55,7 +55,7 @@ export default function IJSPC2026Page() {
       items: [
         { name: "Overleaf (LaTeX)", description: "Online LaTeX editor with IEEE templates", url: "https://overleaf.com" },
         { name: "Grammarly", description: "Grammar and style checker", url: "https://grammarly.com" },
-        { name: "LaTeX IEEE Template", description: "Official IEEE conference template", url: "#" },
+        { name: "LaTeX IEEE Template", description: "Official IEEE conference template", url: "/IEEE-conference-template.zip" },
         { name: "Zotero", description: "Reference management", url: "https://zotero.org" },
         { name: "Mendeley", description: "Reference manager and PDF organizer", url: "https://mendeley.com" }
       ]
@@ -76,7 +76,7 @@ export default function IJSPC2026Page() {
       icon: <BarChart size={18} />,
       items: [
         { name: "Python/Colab", description: "Data analysis and prototyping", url: "https://colab.research.google.com" },
-        { name: "MATLAB", description: "Technical computing environment", url: "#" },
+        { name: "MATLAB", description: "Technical computing environment", url: "https://ww2.mathworks.cn/en/" },
         { name: "Tableau Public", description: "Data visualization", url: "https://public.tableau.com" },
         { name: "OriginLab", description: "Scientific graphing and analysis", url: "https://originlab.com" },
         { name: "Draw.io", description: "Create diagrams and flowcharts", url: "https://draw.io" }
@@ -311,13 +311,17 @@ export default function IJSPC2026Page() {
                 <FileText className="w-5 h-5 text-purple-500 mb-3" />
                 <h3 className="text-xs font-mono text-gray-500 dark:text-gray-400 mb-1">SUBMISSION</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Microsoft CMT Service</p>
-                <Link href="#" className="inline-flex items-center gap-1 text-xs text-red-500 hover:underline">
+                <Link 
+                  href="https://cmt3.research.microsoft.com/User/Login?ReturnUrl=%2FIJSPC2026%2FTrack%2F1%2FSubmission%2FCreate" 
+                  target="_blank"
+                  className="inline-flex items-center gap-1 text-xs text-red-500 hover:underline"
+                >
                   Submission Link <ExternalLink size={10} />
                 </Link>
               </div>
             </div>
 
-            {/* Training Sessions */}
+            {/* Training Sessions - Simplified */}
             <div>
               <h2 className="text-sm font-mono text-gray-500 dark:text-gray-400 mb-4 flex items-center gap-2">
                 <Users size={16} />
@@ -336,6 +340,16 @@ export default function IJSPC2026Page() {
                   </div>
                 ))}
               </div>
+              <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                <Link 
+                  href="https://www.youtube.com/@IEEEJordanSection/playlists" 
+                  target="_blank"
+                  className="inline-flex items-center gap-2 text-sm text-red-500 hover:underline"
+                >
+                  <Youtube size={16} />
+                  View all recordings on IEEE Jordan Section YouTube Channel
+                </Link>
+              </div>
             </div>
 
             {/* Competition Tracks with Icons */}
@@ -353,17 +367,47 @@ export default function IJSPC2026Page() {
 
             {/* Important Documents */}
             <div className="flex flex-wrap gap-4 justify-center">
-              <Link href="#" className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-700 rounded-full text-sm hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+              <Link 
+                href="https://docs.google.com/document/d/142c0sbY5ahJmB7Epse74vszZG7TJ9bB8/edit?usp=drive_link&ouid=115328394863361936040&rtpof=true&sd=true" 
+                target="_blank"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-700 rounded-full text-sm hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+              >
                 <Download size={14} />
                 Template Paper
               </Link>
-              <Link href="#" className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-700 rounded-full text-sm hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+              <Link 
+                href="https://aeect.net/author-kit/" 
+                target="_blank"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-700 rounded-full text-sm hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+              >
                 <Download size={14} />
                 Authors Instructions
               </Link>
-              <Link href="#" className="inline-flex items-center gap-2 px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-full text-sm hover:opacity-80 transition-opacity">
+              <Link 
+                href="https://ahmadrob.github.io/sentient_ui/" 
+                target="_blank"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-full text-sm hover:opacity-80 transition-opacity"
+              >
                 <FileText size={14} />
-                Sample Papers
+                Sample Paper: Sentient UI
+              </Link>
+            </div>
+
+            {/* IJSPC Links */}
+            <div className="flex flex-wrap gap-4 justify-center mt-4">
+              <Link 
+                href="https://jordan.ieee.org/ijspc2026/" 
+                target="_blank"
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs text-gray-600 dark:text-gray-400 hover:text-red-500 transition-colors"
+              >
+                IJSPC 2026 Official Page <ExternalLink size={10} />
+              </Link>
+              <Link 
+                href="https://jordan.ieee.org/ijspc2025/" 
+                target="_blank"
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs text-gray-600 dark:text-gray-400 hover:text-red-500 transition-colors"
+              >
+                IJSPC 2025 Results <ExternalLink size={10} />
               </Link>
             </div>
           </motion.div>
@@ -507,13 +551,13 @@ export default function IJSPC2026Page() {
                   Email Me
                 </Link>
                 <Link 
-  href="https://chat.whatsapp.com/FawSunKpyqf80PZzFvg7Ew" 
-  target="_blank"
-  className="inline-flex items-center gap-2 px-4 py-2 bg-[#075E54] text-white text-sm rounded-full hover:bg-[#054640] transition-colors"
->
-  <MessageSquare size={14} />
-  Jordan Level Group
-</Link>
+                  href="https://chat.whatsapp.com/FawSunKpyqf80PZzFvg7Ew" 
+                  target="_blank"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#075E54] text-white rounded-full text-sm hover:bg-[#054640] transition-colors"
+                >
+                  <MessageSquare size={14} />
+                  Jordan Level Group
+                </Link>
                 <Link
                   href="https://chat.whatsapp.com/LoQy5atSH0F3cvFuvYkpfQ"
                   target="_blank"

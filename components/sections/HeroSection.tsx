@@ -11,7 +11,7 @@ export default function HeroSection() {
   const [hoveredWord, setHoveredWord] = useState(false)
   const [hoveredFile, setHoveredFile] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<string | null>('button.tsx')
-  const [openFolders, setOpenFolders] = useState<string[]>(['src', 'app', 'components', 'ui', 'lib', 'IJSPC-2026', 'Elite-Board'])
+  const [openFolders, setOpenFolders] = useState<string[]>(['src', 'app', 'components', 'ui', 'lib', 'IJSPC-2026' /* 'Elite-Board' */])
   const [showMobileTree, setShowMobileTree] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
 
@@ -60,13 +60,14 @@ export default function HeroSection() {
   const isOpen = (folder: string) => openFolders.includes(folder)
 
   const handleFileClick = (file: string) => {
-  setSelectedFile(file)
-  if (file === 'ijspc-2026.md') {
-    window.location.href = '/ijspc-2026'
-  } else if (file === 'elite-board.md') {
-    window.location.href = '/elite-board'
+    setSelectedFile(file)
+    if (file === 'ijspc-2026.md') {
+      window.location.href = '/ijspc-2026'
+    }
+    // else if (file === 'elite-board.md') {
+    //   window.location.href = '/elite-board'
+    // }
   }
-}
 
   const BackgroundPattern = () => (
     <motion.div 
@@ -347,8 +348,8 @@ export default function HeroSection() {
                       )}
                     </li>
 
-                    {/* Elite Board - New Page */}
-                    <li>
+                    {/* Elite Board - Commented out for now */}
+                    {/* <li>
                       <button
                         onClick={() => toggleFolder('Elite-Board')}
                         className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer"
@@ -380,7 +381,7 @@ export default function HeroSection() {
                           </li>
                         </ul>
                       )}
-                    </li>
+                    </li> */}
                   </ul>
                 )}
               </li>
@@ -399,289 +400,289 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Desktop File Tree - left side - SIMPLIFIED AND CLICKABLE */}
-<div
-  className="absolute left-8 hidden xl:block"
-  style={{ 
-    top: '45%', 
-    transform: 'translateY(-50%)',
-    zIndex: 9999,
-    position: 'absolute'
-  }}
->
-  <div className="w-72 border border-gray-200 dark:border-gray-800 rounded-lg p-6 bg-white dark:bg-[#0A0A0A] shadow-sm">
-    <ul className="space-y-1">
-      {/* src folder */}
-      <li>
-        <button
-          onClick={() => toggleFolder('src')}
-          className="flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer"
-          type="button"
-        >
-          {isOpen('src') ? (
-            <FolderOpen size={16} className="text-gray-500" />
-          ) : (
-            <Folder size={16} className="text-gray-500" />
-          )}
-          <ChevronRight 
-            size={14} 
-            className={`text-gray-400 transition-transform duration-200 ${isOpen('src') ? 'rotate-90' : ''}`} 
-          />
-          <span className="text-sm text-gray-700 dark:text-gray-300">src</span>
-        </button>
-        
-        {isOpen('src') && (
-          <ul className="ml-6 pl-4 border-l border-gray-200 dark:border-gray-800 space-y-1 mt-1">
-            {/* app folder */}
+      {/* Desktop File Tree - left side */}
+      <div
+        className="absolute left-8 hidden xl:block"
+        style={{ 
+          top: '45%', 
+          transform: 'translateY(-50%)',
+          zIndex: 9999,
+          position: 'absolute'
+        }}
+      >
+        <div className="w-72 border border-gray-200 dark:border-gray-800 rounded-lg p-6 bg-white dark:bg-[#0A0A0A] shadow-sm">
+          <ul className="space-y-1">
+            {/* src folder */}
             <li>
               <button
-                onClick={() => toggleFolder('app')}
+                onClick={() => toggleFolder('src')}
                 className="flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer"
                 type="button"
               >
-                {isOpen('app') ? (
-                  <FolderOpen size={14} className="text-gray-500" />
+                {isOpen('src') ? (
+                  <FolderOpen size={16} className="text-gray-500" />
                 ) : (
-                  <Folder size={14} className="text-gray-500" />
+                  <Folder size={16} className="text-gray-500" />
                 )}
                 <ChevronRight 
-                  size={12} 
-                  className={`text-gray-400 transition-transform duration-200 ${isOpen('app') ? 'rotate-90' : ''}`} 
+                  size={14} 
+                  className={`text-gray-400 transition-transform duration-200 ${isOpen('src') ? 'rotate-90' : ''}`} 
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">app</span>
+                <span className="text-sm text-gray-700 dark:text-gray-300">src</span>
               </button>
               
-              {isOpen('app') && (
+              {isOpen('src') && (
                 <ul className="ml-6 pl-4 border-l border-gray-200 dark:border-gray-800 space-y-1 mt-1">
+                  {/* app folder */}
                   <li>
                     <button
-                      onClick={() => handleFileClick('layout.tsx')}
-                      className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
-                        selectedFile === 'layout.tsx' ? 'bg-gray-100 dark:bg-gray-800' : ''
-                      }`}
-                      type="button"
-                    >
-                      <File size={14} className="text-gray-400" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">layout.tsx</span>
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => handleFileClick('page.tsx')}
-                      className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
-                        selectedFile === 'page.tsx' ? 'bg-gray-100 dark:bg-gray-800' : ''
-                      }`}
-                      type="button"
-                    >
-                      <File size={14} className="text-gray-400" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">page.tsx</span>
-                    </button>
-                  </li>
-                </ul>
-              )}
-            </li>
-
-            {/* components folder */}
-            <li>
-              <button
-                onClick={() => toggleFolder('components')}
-                className="flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer"
-                type="button"
-              >
-                {isOpen('components') ? (
-                  <FolderOpen size={14} className="text-gray-500" />
-                ) : (
-                  <Folder size={14} className="text-gray-500" />
-                )}
-                <ChevronRight 
-                  size={12} 
-                  className={`text-gray-400 transition-transform duration-200 ${isOpen('components') ? 'rotate-90' : ''}`} 
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">components</span>
-              </button>
-              
-              {isOpen('components') && (
-                <ul className="ml-6 pl-4 border-l border-gray-200 dark:border-gray-800 space-y-1 mt-1">
-                  {/* ui folder */}
-                  <li>
-                    <button
-                      onClick={() => toggleFolder('ui')}
+                      onClick={() => toggleFolder('app')}
                       className="flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer"
                       type="button"
                     >
-                      {isOpen('ui') ? (
+                      {isOpen('app') ? (
                         <FolderOpen size={14} className="text-gray-500" />
                       ) : (
                         <Folder size={14} className="text-gray-500" />
                       )}
                       <ChevronRight 
                         size={12} 
-                        className={`text-gray-400 transition-transform duration-200 ${isOpen('ui') ? 'rotate-90' : ''}`} 
+                        className={`text-gray-400 transition-transform duration-200 ${isOpen('app') ? 'rotate-90' : ''}`} 
                       />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">ui</span>
+                      <span className="text-sm text-gray-700 dark:text-gray-300">app</span>
                     </button>
                     
-                    {isOpen('ui') && (
+                    {isOpen('app') && (
                       <ul className="ml-6 pl-4 border-l border-gray-200 dark:border-gray-800 space-y-1 mt-1">
                         <li>
                           <button
-                            onClick={() => handleFileClick('button.tsx')}
+                            onClick={() => handleFileClick('layout.tsx')}
                             className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
-                              selectedFile === 'button.tsx' ? 'bg-gray-100 dark:bg-gray-800' : ''
+                              selectedFile === 'layout.tsx' ? 'bg-gray-100 dark:bg-gray-800' : ''
                             }`}
                             type="button"
                           >
                             <File size={14} className="text-gray-400" />
-                            <span className="text-sm text-gray-600 dark:text-gray-400">button.tsx</span>
+                            <span className="text-sm text-gray-600 dark:text-gray-400">layout.tsx</span>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            onClick={() => handleFileClick('page.tsx')}
+                            className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
+                              selectedFile === 'page.tsx' ? 'bg-gray-100 dark:bg-gray-800' : ''
+                            }`}
+                            type="button"
+                          >
+                            <File size={14} className="text-gray-400" />
+                            <span className="text-sm text-gray-600 dark:text-gray-400">page.tsx</span>
                           </button>
                         </li>
                       </ul>
                     )}
                   </li>
-                  <li>
-                    <button
-                      onClick={() => handleFileClick('header.tsx')}
-                      className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
-                        selectedFile === 'header.tsx' ? 'bg-gray-100 dark:bg-gray-800' : ''
-                      }`}
-                      type="button"
-                    >
-                      <File size={14} className="text-gray-400" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">header.tsx</span>
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => handleFileClick('footer.tsx')}
-                      className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
-                        selectedFile === 'footer.tsx' ? 'bg-gray-100 dark:bg-gray-800' : ''
-                      }`}
-                      type="button"
-                    >
-                      <File size={14} className="text-gray-400" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">footer.tsx</span>
-                    </button>
-                  </li>
-                </ul>
-              )}
-            </li>
 
-            {/* lib folder */}
-            <li>
-              <button
-                onClick={() => toggleFolder('lib')}
-                className="flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer"
-                type="button"
-              >
-                {isOpen('lib') ? (
-                  <FolderOpen size={14} className="text-gray-500" />
-                ) : (
-                  <Folder size={14} className="text-gray-500" />
-                )}
-                <ChevronRight 
-                  size={12} 
-                  className={`text-gray-400 transition-transform duration-200 ${isOpen('lib') ? 'rotate-90' : ''}`} 
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">lib</span>
-              </button>
-              
-              {isOpen('lib') && (
-                <ul className="ml-6 pl-4 border-l border-gray-200 dark:border-gray-800 space-y-1 mt-1">
+                  {/* components folder */}
                   <li>
                     <button
-                      onClick={() => handleFileClick('utils.ts')}
-                      className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
-                        selectedFile === 'utils.ts' ? 'bg-gray-100 dark:bg-gray-800' : ''
-                      }`}
+                      onClick={() => toggleFolder('components')}
+                      className="flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer"
                       type="button"
                     >
-                      <File size={14} className="text-gray-400" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">utils.ts</span>
+                      {isOpen('components') ? (
+                        <FolderOpen size={14} className="text-gray-500" />
+                      ) : (
+                        <Folder size={14} className="text-gray-500" />
+                      )}
+                      <ChevronRight 
+                        size={12} 
+                        className={`text-gray-400 transition-transform duration-200 ${isOpen('components') ? 'rotate-90' : ''}`} 
+                      />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">components</span>
                     </button>
+                    
+                    {isOpen('components') && (
+                      <ul className="ml-6 pl-4 border-l border-gray-200 dark:border-gray-800 space-y-1 mt-1">
+                        {/* ui folder */}
+                        <li>
+                          <button
+                            onClick={() => toggleFolder('ui')}
+                            className="flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer"
+                            type="button"
+                          >
+                            {isOpen('ui') ? (
+                              <FolderOpen size={14} className="text-gray-500" />
+                            ) : (
+                              <Folder size={14} className="text-gray-500" />
+                            )}
+                            <ChevronRight 
+                              size={12} 
+                              className={`text-gray-400 transition-transform duration-200 ${isOpen('ui') ? 'rotate-90' : ''}`} 
+                            />
+                            <span className="text-sm text-gray-700 dark:text-gray-300">ui</span>
+                          </button>
+                          
+                          {isOpen('ui') && (
+                            <ul className="ml-6 pl-4 border-l border-gray-200 dark:border-gray-800 space-y-1 mt-1">
+                              <li>
+                                <button
+                                  onClick={() => handleFileClick('button.tsx')}
+                                  className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
+                                    selectedFile === 'button.tsx' ? 'bg-gray-100 dark:bg-gray-800' : ''
+                                  }`}
+                                  type="button"
+                                >
+                                  <File size={14} className="text-gray-400" />
+                                  <span className="text-sm text-gray-600 dark:text-gray-400">button.tsx</span>
+                                </button>
+                              </li>
+                            </ul>
+                          )}
+                        </li>
+                        <li>
+                          <button
+                            onClick={() => handleFileClick('header.tsx')}
+                            className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
+                              selectedFile === 'header.tsx' ? 'bg-gray-100 dark:bg-gray-800' : ''
+                            }`}
+                            type="button"
+                          >
+                            <File size={14} className="text-gray-400" />
+                            <span className="text-sm text-gray-600 dark:text-gray-400">header.tsx</span>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            onClick={() => handleFileClick('footer.tsx')}
+                            className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
+                              selectedFile === 'footer.tsx' ? 'bg-gray-100 dark:bg-gray-800' : ''
+                            }`}
+                            type="button"
+                          >
+                            <File size={14} className="text-gray-400" />
+                            <span className="text-sm text-gray-600 dark:text-gray-400">footer.tsx</span>
+                          </button>
+                        </li>
+                      </ul>
+                    )}
                   </li>
-                </ul>
-              )}
-            </li>
 
-            {/* IJSPC 2026 - New Page */}
-            <li>
-              <button
-                onClick={() => toggleFolder('IJSPC-2026')}
-                className="flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer"
-                type="button"
-              >
-                {isOpen('IJSPC-2026') ? (
-                  <FolderOpen size={14} className="text-gray-500" />
-                ) : (
-                  <Folder size={14} className="text-gray-500" />
-                )}
-                <ChevronRight 
-                  size={12} 
-                  className={`text-gray-400 transition-transform duration-200 ${isOpen('IJSPC-2026') ? 'rotate-90' : ''}`} 
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">IJSPC-2026</span>
-              </button>
-              
-              {isOpen('IJSPC-2026') && (
-                <ul className="ml-6 pl-4 border-l border-gray-200 dark:border-gray-800 space-y-1 mt-1">
+                  {/* lib folder */}
                   <li>
                     <button
-                      onClick={() => handleFileClick('ijspc-2026.md')}
-                      className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
-                        selectedFile === 'ijspc-2026.md' ? 'bg-gray-100 dark:bg-gray-800' : ''
-                      }`}
+                      onClick={() => toggleFolder('lib')}
+                      className="flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer"
                       type="button"
                     >
-                      <File size={14} className="text-gray-400" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">ijspc-2026.md</span>
+                      {isOpen('lib') ? (
+                        <FolderOpen size={14} className="text-gray-500" />
+                      ) : (
+                        <Folder size={14} className="text-gray-500" />
+                      )}
+                      <ChevronRight 
+                        size={12} 
+                        className={`text-gray-400 transition-transform duration-200 ${isOpen('lib') ? 'rotate-90' : ''}`} 
+                      />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">lib</span>
                     </button>
+                    
+                    {isOpen('lib') && (
+                      <ul className="ml-6 pl-4 border-l border-gray-200 dark:border-gray-800 space-y-1 mt-1">
+                        <li>
+                          <button
+                            onClick={() => handleFileClick('utils.ts')}
+                            className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
+                              selectedFile === 'utils.ts' ? 'bg-gray-100 dark:bg-gray-800' : ''
+                            }`}
+                            type="button"
+                          >
+                            <File size={14} className="text-gray-400" />
+                            <span className="text-sm text-gray-600 dark:text-gray-400">utils.ts</span>
+                          </button>
+                        </li>
+                      </ul>
+                    )}
                   </li>
-                </ul>
-              )}
-            </li>
 
-            {/* Elite Board - New Page */}
-            <li>
-              <button
-                onClick={() => toggleFolder('Elite-Board')}
-                className="flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer"
-                type="button"
-              >
-                {isOpen('Elite-Board') ? (
-                  <FolderOpen size={14} className="text-gray-500" />
-                ) : (
-                  <Folder size={14} className="text-gray-500" />
-                )}
-                <ChevronRight 
-                  size={12} 
-                  className={`text-gray-400 transition-transform duration-200 ${isOpen('Elite-Board') ? 'rotate-90' : ''}`} 
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Elite-Board</span>
-              </button>
-              
-              {isOpen('Elite-Board') && (
-                <ul className="ml-6 pl-4 border-l border-gray-200 dark:border-gray-800 space-y-1 mt-1">
+                  {/* IJSPC 2026 - New Page */}
                   <li>
                     <button
-                      onClick={() => handleFileClick('elite-board.md')}
-                      className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
-                        selectedFile === 'elite-board.md' ? 'bg-gray-100 dark:bg-gray-800' : ''
-                      }`}
+                      onClick={() => toggleFolder('IJSPC-2026')}
+                      className="flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer"
                       type="button"
                     >
-                      <File size={14} className="text-gray-400" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">elite-board.md</span>
+                      {isOpen('IJSPC-2026') ? (
+                        <FolderOpen size={14} className="text-gray-500" />
+                      ) : (
+                        <Folder size={14} className="text-gray-500" />
+                      )}
+                      <ChevronRight 
+                        size={12} 
+                        className={`text-gray-400 transition-transform duration-200 ${isOpen('IJSPC-2026') ? 'rotate-90' : ''}`} 
+                      />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">IJSPC-2026</span>
                     </button>
+                    
+                    {isOpen('IJSPC-2026') && (
+                      <ul className="ml-6 pl-4 border-l border-gray-200 dark:border-gray-800 space-y-1 mt-1">
+                        <li>
+                          <button
+                            onClick={() => handleFileClick('ijspc-2026.md')}
+                            className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
+                              selectedFile === 'ijspc-2026.md' ? 'bg-gray-100 dark:bg-gray-800' : ''
+                            }`}
+                            type="button"
+                          >
+                            <File size={14} className="text-gray-400" />
+                            <span className="text-sm text-gray-600 dark:text-gray-400">ijspc-2026.md</span>
+                          </button>
+                        </li>
+                      </ul>
+                    )}
                   </li>
+
+                  {/* Elite Board - Commented out for now */}
+                  {/* <li>
+                    <button
+                      onClick={() => toggleFolder('Elite-Board')}
+                      className="flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer"
+                      type="button"
+                    >
+                      {isOpen('Elite-Board') ? (
+                        <FolderOpen size={14} className="text-gray-500" />
+                      ) : (
+                        <Folder size={14} className="text-gray-500" />
+                      )}
+                      <ChevronRight 
+                        size={12} 
+                        className={`text-gray-400 transition-transform duration-200 ${isOpen('Elite-Board') ? 'rotate-90' : ''}`} 
+                      />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">Elite-Board</span>
+                    </button>
+                    
+                    {isOpen('Elite-Board') && (
+                      <ul className="ml-6 pl-4 border-l border-gray-200 dark:border-gray-800 space-y-1 mt-1">
+                        <li>
+                          <button
+                            onClick={() => handleFileClick('elite-board.md')}
+                            className={`flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer ${
+                              selectedFile === 'elite-board.md' ? 'bg-gray-100 dark:bg-gray-800' : ''
+                            }`}
+                            type="button"
+                          >
+                            <File size={14} className="text-gray-400" />
+                            <span className="text-sm text-gray-600 dark:text-gray-400">elite-board.md</span>
+                          </button>
+                        </li>
+                      </ul>
+                    )}
+                  </li> */}
                 </ul>
               )}
             </li>
           </ul>
-        )}
-      </li>
-    </ul>
-  </div>
-</div>
+        </div>
+      </div>
 
       {/* Desktop Prayer Times - right side */}
       <motion.div
