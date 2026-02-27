@@ -74,7 +74,6 @@ export default function HeroSection() {
       className="absolute inset-0 overflow-hidden"
       style={{ opacity: gradientOpacity }}
     >
-      {/* Main radial gradient */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center_top,_var(--tw-gradient-stops))] from-neutral-200/30 via-transparent to-transparent dark:from-gray-800/40 dark:via-transparent dark:to-transparent" />
     </motion.div>
   )
@@ -635,6 +634,9 @@ export default function HeroSection() {
                           >
                             <File size={14} className="text-gray-400" />
                             <span className="text-sm text-gray-600 dark:text-gray-400">ijspc-2026.md</span>
+                            <span className="ml-2 text-[8px] text-gray-400 dark:text-gray-600 font-mono">
+                              (click to explore)
+                            </span>
                           </button>
                         </li>
                       </ul>
@@ -706,7 +708,6 @@ export default function HeroSection() {
             className="mb-4 sm:mb-6"
           >
             <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-light tracking-tight flex items-center justify-center text-gray-900 dark:text-white">
-              {/* First O with spider */}
               <div className="relative">
                 <span className="text-gray-900 dark:text-white">O</span>
                 <motion.div 
@@ -723,16 +724,11 @@ export default function HeroSection() {
                   </div>
                 </motion.div>
               </div>
-              
-              {/* Rest of the name */}
               <span>MAR</span>
             </h1>
-            
-            {/* Minimal divider */}
             <div className="w-12 h-px mx-auto mt-4 sm:mt-6 bg-gray-200 dark:bg-gray-800" />
           </motion.div>
 
-          {/* Title with pronunciation */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={isPreloaderDone ? { opacity: 1 } : {}}
@@ -747,7 +743,6 @@ export default function HeroSection() {
             </p>
           </motion.div>
 
-          {/* The one clever interaction */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isPreloaderDone ? { opacity: 1, y: 0 } : {}}
@@ -764,8 +759,6 @@ export default function HeroSection() {
                 <span className="relative z-10 text-gray-900 dark:text-white">
                   user experience
                 </span>
-                
-                {/* Subtle reveal on hover */}
                 <motion.span
                   className="absolute bottom-0 left-0 right-0 h-[1px] bg-gray-900 dark:bg-white"
                   initial={{ scaleX: 0 }}
@@ -777,7 +770,6 @@ export default function HeroSection() {
               "
             </p>
 
-            {/* Hidden message - appears on hover */}
             <motion.div
               className="absolute -bottom-12 left-1/2 -translate-x-1/2 whitespace-nowrap z-30"
               initial={{ opacity: 0, y: -5 }}
@@ -795,7 +787,6 @@ export default function HeroSection() {
             </motion.div>
           </motion.div>
 
-          {/* Simple personal note */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={isPreloaderDone ? { opacity: 1 } : {}}
