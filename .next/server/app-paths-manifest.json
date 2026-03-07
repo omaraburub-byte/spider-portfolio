@@ -1,4 +1,5 @@
 {
-  "/page": "app/page.js",
-  "/ijspc-2026/page": "app/ijspc-2026/page.js"
+  "/ijspc-2026/page": "app/ijspc-2026/page.js",
+  "/landing/page": "app/landing/page.js",
+  "/spider/page": "app/spider/page.js"
 }

@@ -1,13 +1,20 @@
+// components/SpiderLogo.tsx
 'use client'
 
 import { motion } from 'framer-motion'
 
-export default function SpiderLogo({ className = "w-10 h-10" }: { className?: string }) {
+export default function SpiderLogo({ 
+  className = "w-10 h-10",
+  spin = true // Add spin prop with default
+}: { 
+  className?: string
+  spin?: boolean // Add this to the type
+}) {
   return (
     <motion.div
       className={className}
-      animate={{ rotate: 360 }}
-      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+      animate={spin ? { rotate: 360 } : {}}
+      transition={spin ? { duration: 20, repeat: Infinity, ease: "linear" } : {}}
     >
       <svg
         width="100%"
@@ -16,6 +23,7 @@ export default function SpiderLogo({ className = "w-10 h-10" }: { className?: st
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
+        {/* SVG path stays the same */}
         <g clipPath="url(#clip0_30_32)">
           <mask
             id="mask0_30_32"

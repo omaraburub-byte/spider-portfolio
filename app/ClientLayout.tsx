@@ -1,3 +1,4 @@
+// app/ClientLayout.tsx
 'use client'
 
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
@@ -20,11 +21,19 @@ export default function ClientLayout({
 
   useEffect(() => {
     setMounted(true)
-    // Check for 404 after mounting
-    setIs404(pathname === '/404' || pathname === '/not-found' || pathname === '/oi')
+    setIs404(pathname === '/404' || pathname === '/not-found')
   }, [pathname])
 
-  // During SSR and initial hydration, render a minimal version
+  // Define pages that should NOT show the full layout with header/footer/preloader
+  const isSpecialPage = pathname === '/landing' || 
+                       pathname === '/soul' || 
+                       pathname === '/404' || 
+                       pathname === '/not-found' ||
+                       pathname?.startsWith('/oi')
+
+  // Check if we're on the spider page to force show preloader
+  const isSpiderPage = pathname === '/spider'
+
   if (!mounted) {
     return (
       <ThemeProvider
@@ -47,13 +56,16 @@ export default function ClientLayout({
       enableSystem
       disableTransitionOnChange
     >
-      {is404 ? (
+      {isSpecialPage ? (
+        // For special pages, render children without the full layout
         <div className="min-h-screen">
           {children}
         </div>
       ) : (
+        // For all other pages (including /spider), show the full layout with preloader
         <>
-          <Preloader />
+          {/* Force show preloader on spider page */}
+          <Preloader forceShow={isSpiderPage} />
           <CursorTrail />
           <HoverSense />
           <div className="min-h-screen flex flex-col overflow-clip">

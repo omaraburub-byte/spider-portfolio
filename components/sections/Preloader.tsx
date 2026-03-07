@@ -1,3 +1,4 @@
+// components/sections/Preloader.tsx
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
@@ -11,7 +12,11 @@ const bebasNeue = Bebas_Neue({
   variable: '--font-bebas'
 })
 
-export default function Preloader() {
+interface PreloaderProps {
+  forceShow?: boolean;
+}
+
+export default function Preloader({ forceShow = false }: PreloaderProps) {
   const [show, setShow] = useState(false)
   const [glitch, setGlitch] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -27,29 +32,45 @@ export default function Preloader() {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  // Handle preloader display - ONLY ON HOME PAGE
+  // Handle preloader display
   useEffect(() => {
-    if (window.location.pathname === '/') {
+    // If forceShow is true, always show the preloader
+    if (forceShow) {
       setShow(true)
-      // Hide scrollbar when preloader shows
       document.documentElement.style.overflow = 'hidden'
       document.body.style.overflow = 'hidden'
       
       const timer = setTimeout(() => {
         setShow(false)
-        // Restore scrollbar when preloader hides
         document.documentElement.style.overflow = 'auto'
         document.body.style.overflow = 'auto'
       }, 3500)
       
       return () => {
         clearTimeout(timer)
-        // Cleanup in case component unmounts
+        document.documentElement.style.overflow = 'auto'
+        document.body.style.overflow = 'auto'
+      }
+    } 
+    // Otherwise, only show on homepage
+    else if (window.location.pathname === '/') {
+      setShow(true)
+      document.documentElement.style.overflow = 'hidden'
+      document.body.style.overflow = 'hidden'
+      
+      const timer = setTimeout(() => {
+        setShow(false)
+        document.documentElement.style.overflow = 'auto'
+        document.body.style.overflow = 'auto'
+      }, 3500)
+      
+      return () => {
+        clearTimeout(timer)
         document.documentElement.style.overflow = 'auto'
         document.body.style.overflow = 'auto'
       }
     }
-  }, [])
+  }, [forceShow])
 
   // Video playback
   useEffect(() => {

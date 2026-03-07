@@ -6,9 +6,10 @@ import { Github, Linkedin, Mail, Sparkles, Sun, Moon } from 'lucide-react'
 import SpiderLogo from '@/components/SpiderLogo'
 import ThemeToggle from '@/components/ThemeToggle'
 import { useTheme } from 'next-themes'
+import { useRouter } from 'next/navigation'
 
 const navItems = [
-  { name: 'HOME', href: '#home' },
+  { name: 'HOME', href: '#home', isHome: true },
   { name: 'PROJECTS', href: '#projects' },
   { name: 'SKILLS', href: '#skills' },
   { name: 'EXPERIENCE', href: '#experience' },
@@ -17,6 +18,7 @@ const navItems = [
 ]
 
 export default function Header() {
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
   const [isVisible, setIsVisible] = useState(false)
@@ -119,11 +121,32 @@ export default function Header() {
     }
   }, [])
 
-  const scrollToSection = (href: string) => {
+  const handleNavigation = (item: typeof navItems[0]) => {
+    // Special handling for HOME button - go to landing page
+    if (item.name === 'HOME') {
+      router.push('/landing')
+      setIsOpen(false)
+      return
+    }
+
+    // For other navigation items
+    const href = item.href
     const sectionId = href.substring(1) // Remove the #
     
+    // Check if we're on the spider page
+    if (window.location.pathname === '/spider') {
+      // On spider page - scroll directly within the spider page
+      const element = document.getElementById(sectionId)
+      if (element) {
+        window.scrollTo({
+          top: element.offsetTop - 100,
+          behavior: 'smooth'
+        })
+        setActiveSection(sectionId)
+      }
+    } 
     // Check if we're on the home page
-    if (window.location.pathname === '/') {
+    else if (window.location.pathname === '/') {
       // On home page - scroll directly
       const element = document.getElementById(sectionId)
       if (element) {
@@ -141,6 +164,15 @@ export default function Header() {
     setIsOpen(false)
   }
 
+  const scrollToTop = () => {
+    // Scroll to top of current page
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+    setIsOpen(false)
+  }
+
   if (!mounted) {
     return null
   }
@@ -154,12 +186,9 @@ export default function Header() {
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <div className="flex items-center relative">
-        {/* PART 1: LOGO SECTION */}
+        {/* PART 1: LOGO SECTION - Scroll to top of current page */}
         <motion.button
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-            setIsOpen(false)
-          }}
+          onClick={scrollToTop}
           className="flex items-center gap-3 bg-white dark:bg-[#1a1a1a] px-4 py-2 rounded-full border border-gray-200 dark:border-[#333] shadow-lg dark:shadow-2xl whitespace-nowrap"
           whileHover={{ opacity: 0.8 }}
           whileTap={{ scale: 0.98 }}
@@ -271,9 +300,9 @@ export default function Header() {
                     {navItems.map((item) => (
                       <button
                         key={item.name}
-                        onClick={() => scrollToSection(item.href)}
+                        onClick={() => handleNavigation(item)}
                         className={`block w-full px-3 py-3 text-left text-sm rounded-xl transition-all ${
-                          activeSection === item.href.substring(1)
+                          activeSection === item.href.substring(1) && item.name !== 'HOME'
                             ? 'bg-black/5 dark:bg-white/10 text-black dark:text-white'
                             : 'text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
                         }`}

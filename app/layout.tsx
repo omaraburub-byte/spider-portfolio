@@ -7,7 +7,7 @@ import ClientLayout from './ClientLayout'
 const montserrat = Montserrat({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Omar Aburub | The Spider of Software Engineering',
+  title: 'Omar Aburub | The World',
   description: 'UX/UI Designer • HCI Researcher • AI Application Developer | Weaving digital experiences with code, design, and AI.',
   manifest: '/site.webmanifest',
   icons: {
