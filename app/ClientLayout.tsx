@@ -34,21 +34,7 @@ export default function ClientLayout({
   // Check if we're on the spider page to force show preloader
   const isSpiderPage = pathname === '/spider'
 
-  if (!mounted) {
-    return (
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <div className="min-h-screen">
-          {children}
-        </div>
-      </ThemeProvider>
-    )
-  }
-
+  // Always render the same component structure
   return (
     <ThemeProvider
       attribute="class"
@@ -64,10 +50,10 @@ export default function ClientLayout({
       ) : (
         // For all other pages (including /spider), show the full layout with preloader
         <>
-          {/* Force show preloader on spider page */}
-          <Preloader forceShow={isSpiderPage} />
-          <CursorTrail />
-          <HoverSense />
+          {/* Force show preloader on spider page - but only when mounted */}
+          {mounted && <Preloader forceShow={isSpiderPage} />}
+          {mounted && <CursorTrail />}
+          {mounted && <HoverSense />}
           <div className="min-h-screen flex flex-col overflow-clip">
             <Header />
             <main className="flex-1 relative z-10">
