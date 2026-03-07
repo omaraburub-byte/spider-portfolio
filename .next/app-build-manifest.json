@@ -21,21 +21,6 @@
       "static/chunks/main-app.js",
       "static/chunks/app/landing/page.js"
     ],
-    "/_not-found/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
-    ],
-    "/404/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/404/page.js"
-    ],
-    "/404/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/404/layout.js"
-    ],
     "/spider/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",

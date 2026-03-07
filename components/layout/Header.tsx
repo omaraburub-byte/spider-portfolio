@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Github, Linkedin, Mail, Sparkles, Sun, Moon } from 'lucide-react'
+import { Github, Linkedin, Mail, Sun, Moon } from 'lucide-react'
 import SpiderLogo from '@/components/SpiderLogo'
 import ThemeToggle from '@/components/ThemeToggle'
 import { useTheme } from 'next-themes'
@@ -18,6 +18,7 @@ const navItems = [
 ]
 
 export default function Header() {
+  // All hooks MUST be called unconditionally at the top level
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
@@ -31,9 +32,12 @@ export default function Header() {
   const buttonRef = useRef<HTMLButtonElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
 
+  // All effects must be called unconditionally
   useEffect(() => {
     setMounted(true)
-    
+  }, [])
+
+  useEffect(() => {
     // Only delay on homepage
     const isHomePage = window.location.pathname === '/'
     
@@ -173,16 +177,13 @@ export default function Header() {
     setIsOpen(false)
   }
 
-  if (!mounted) {
-    return null
-  }
-
+  // Instead of returning null early, we render with conditional animations
   return (
     <motion.div 
       ref={headerRef}
       className="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-4 pb-8"
       initial={{ y: 100, opacity: 0 }}
-      animate={isVisible ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
+      animate={mounted && isVisible ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <div className="flex items-center relative">
