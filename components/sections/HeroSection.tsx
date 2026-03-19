@@ -2,7 +2,8 @@
 
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import { ChevronDown, ChevronRight, File, Folder, FolderOpen } from 'lucide-react'
+import Link from 'next/link'
+import { ChevronDown, ChevronRight, File, Folder, FolderOpen, Grid } from 'lucide-react'
 import PrayerTimes from '@/components/PrayerTimes'
 import SpiderLogo from '@/components/SpiderLogo'
 
@@ -63,6 +64,8 @@ export default function HeroSection() {
     setSelectedFile(file)
     if (file === 'ijspc-2026.md') {
       window.location.href = '/ijspc-2026'
+    } else if (file === 'portal') {
+      window.location.href = '/landing'
     }
     // else if (file === 'elite-board.md') {
     //   window.location.href = '/elite-board'
@@ -132,6 +135,22 @@ export default function HeroSection() {
           </div>
           <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 bg-white dark:bg-[#0A0A0A]">
             <ul className="space-y-1">
+              {/* PORTAL LINK - Add this at the top */}
+              <li className="mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                <button
+                  onClick={() => handleFileClick('portal')}
+                  className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer group"
+                >
+                  <Grid size={16} className="text-yellow-500 dark:text-yellow-500/80 group-hover:text-yellow-600 transition-colors" />
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-yellow-600 dark:group-hover:text-yellow-500 transition-colors">
+                    PORTAL
+                  </span>
+                  <span className="ml-auto text-[8px] text-gray-400 dark:text-gray-600 font-mono">
+                    ← back
+                  </span>
+                </button>
+              </li>
+
               {/* src folder - Mobile version */}
               <li>
                 <button
@@ -414,6 +433,22 @@ export default function HeroSection() {
       >
         <div className="w-72 border border-gray-200 dark:border-gray-800 rounded-lg p-6 bg-white dark:bg-[#0A0A0A] shadow-sm">
           <ul className="space-y-1">
+            {/* PORTAL LINK - Add this at the top of desktop tree too */}
+            <li className="mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+              <button
+                onClick={() => handleFileClick('portal')}
+                className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer group"
+              >
+                <Grid size={16} className="text-yellow-500 dark:text-yellow-500/80 group-hover:text-yellow-600 transition-colors" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-yellow-600 dark:group-hover:text-yellow-500 transition-colors">
+                  PORTAL
+                </span>
+                <span className="ml-auto text-[8px] text-gray-400 dark:text-gray-600 font-mono">
+                  ← back
+                </span>
+              </button>
+            </li>
+
             {/* src folder */}
             <li>
               <button

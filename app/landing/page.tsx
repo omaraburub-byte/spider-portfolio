@@ -1,468 +1,673 @@
-// app/landing/page.tsx
+// app/landing/page.tsx - RACING PORTAL with ARABIC SUPPORT
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import StaticSpiderLogo from '@/components/StaticSpiderLogo'
-import { 
-  ArrowRight, 
-  Award,
-  ExternalLink,
-  ChevronDown,
-  MessageSquare,
-  Mail,
-  BookOpen,
-  Calendar
-} from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { ArrowRight, Sun, Moon, ChevronDown, Smartphone, Tablet, Monitor, Maximize2, RefreshCw, Languages } from 'lucide-react'
+import Preloader from '@/components/PPreloader'
 
-export default function LandingPage() {
+export default function RacingPortalPage() {
   const [mounted, setMounted] = useState(false)
-  const [hoveredWorld, setHoveredWorld] = useState<string | null>(null)
-  const [showIJSPC, setShowIJSPC] = useState(false)
+  const [hoveredPortal, setHoveredPortal] = useState<string | null>(null)
+  const [isLightMode, setIsLightMode] = useState(false)
   const [showPreloader, setShowPreloader] = useState(true)
+  const [activeSection, setActiveSection] = useState('hero')
+  const [language, setLanguage] = useState<'en' | 'ar'>('en')
+  
+  // Separate states for each portal's view mode
+  const [spiderViewMode, setSpiderViewMode] = useState<'mobile' | 'tablet' | 'desktop'>('desktop')
+  const [soulViewMode, setSoulViewMode] = useState<'mobile' | 'tablet' | 'desktop'>('desktop')
+  const [isRefreshing, setIsRefreshing] = useState<string | null>(null)
+  
+  const spiderIframeRef = useRef<HTMLIFrameElement>(null)
+  const soulIframeRef = useRef<HTMLIFrameElement>(null)
+  
+  const heroRef = useRef<HTMLDivElement>(null)
+  const aboutRef = useRef<HTMLDivElement>(null)
+  const portalsRef = useRef<HTMLDivElement>(null)
+
+  const viewportSizes = {
+    mobile: { width: '375px', height: '500px' },
+    tablet: { width: '640px', height: '600px' },
+    desktop: { width: '100%', height: '400px' }
+  }
+
+  // Translations
+  const t = {
+    en: {
+      hero: {
+        title: 'OMAR',
+        subtitle: 'Makes portals. Code meets consciousness.'
+      },
+      about: {
+        portal: 'PORTAL',
+        line1: 'A doorway. A threshold.',
+        line2: 'here → there',
+        line3: 'Between dimensions.',
+        line4: 'Between minds.',
+        line5: 'Between what is and what could be.',
+        line6: 'Two exist.',
+        line7: 'choose one'
+      },
+      portals: {
+        spider: 'SPIDER-VERSE',
+        soul: 'SOUL WORLD',
+        spiderDesc: 'comic dimension · dynamic · playful',
+        soulDesc: 'warmth · intention · minimal',
+        dimension: 'DIMENSION',
+        stability: 'STABILITY',
+        enter: 'ENTER DIMENSION',
+        mobile: 'Mobile',
+        tablet: 'Tablet',
+        desktop: 'Desktop',
+        footer: '·  TWO WORLDS · ONE PORTAL  ·'
+      },
+      nav: ['HERO', 'ABOUT', 'PORTALS']
+    },
+    ar: {
+      hero: {
+        title: 'عمر',
+        subtitle: 'صانع بوابات. حيث يلتقي الكود بالوعي.'
+      },
+      about: {
+        portal: 'بَوَّابَة',
+        line1: 'مَدخل. عَتَبَة.',
+        line2: 'هنا ← هناك',
+        line3: 'بين الأبعاد.',
+        line4: 'بين العقول.',
+        line5: 'بين ما هو وما يمكن أن يكون.',
+        line6: 'اثنان موجودان.',
+        line7: 'اختر واحدة'
+      },
+      portals: {
+        spider: 'عَالَمُ العَنْكَبُوت',
+        soul: 'عَالَمُ الرُّوح',
+        spiderDesc: 'بعد كوميدي · ديناميكي · مرح',
+        soulDesc: 'دفء · نية · بساطة',
+        dimension: 'البُعْد',
+        stability: 'الثَّبَات',
+        enter: 'ادْخُلِ البُعْد',
+        mobile: 'جوال',
+        tablet: 'لوحي',
+        desktop: 'مكتبي',
+        footer: '·  عَالَمَان · بَوَّابَة وَاحِدَة  ·'
+      },
+      nav: ['الرَّئِيسِيَّة', 'عَنِ', 'البَوَّابَات']
+    }
+  }
+
+  const currentLang = t[language]
 
   useEffect(() => {
     setMounted(true)
-    // Preloader disappears after animation
+    const savedMode = localStorage.getItem('portal-theme')
+    if (savedMode) {
+      setIsLightMode(savedMode === 'light')
+    }
+    
+    const savedLang = localStorage.getItem('portal-language')
+    if (savedLang) {
+      setLanguage(savedLang as 'en' | 'ar')
+    }
+    
     const timer = setTimeout(() => {
       setShowPreloader(false)
     }, 2800)
     return () => clearTimeout(timer)
   }, [])
 
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem('portal-theme', isLightMode ? 'light' : 'dark')
+    }
+  }, [isLightMode, mounted])
+
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem('portal-language', language)
+      // Set document direction for Arabic
+      document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr'
+    }
+  }, [language, mounted])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY
+      if (scrollY < 300) {
+        setActiveSection('hero')
+      } else if (scrollY < 800) {
+        setActiveSection('about')
+      } else {
+        setActiveSection('portals')
+      }
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
+    ref.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const handleRefresh = (portal: string) => {
+    setIsRefreshing(portal)
+    if (portal === 'spider' && spiderIframeRef.current) {
+      spiderIframeRef.current.src = spiderIframeRef.current.src
+    }
+    if (portal === 'soul' && soulIframeRef.current) {
+      soulIframeRef.current.src = soulIframeRef.current.src
+    }
+    setTimeout(() => setIsRefreshing(null), 800)
+  }
+
+  const openFullscreen = (iframeRef: React.RefObject<HTMLIFrameElement>) => {
+    if (iframeRef.current?.requestFullscreen) {
+      iframeRef.current.requestFullscreen()
+    }
+  }
+
+  const toggleLanguage = () => {
+    setLanguage(prev => prev === 'en' ? 'ar' : 'en')
+  }
+
   if (!mounted) return null
 
-  const worlds = [
+  const portals = [
     {
       id: 'spider',
-      name: 'spider',
+      name: currentLang.portals.spider,
       path: '/spider',
-      icon: <StaticSpiderLogo className="w-12 h-12 text-white/80" />,
       color: '#e62429',
-      description: 'Comic book dimension · Dynamic · Playful',
-      available: true
+      accent: '#FFE500',
+      description: currentLang.portals.spiderDesc,
+      dimension: 'χ-23',
+      stability: '98.4%',
+      iframeRef: spiderIframeRef,
+      viewMode: spiderViewMode,
+      setViewMode: setSpiderViewMode
     },
     {
       id: 'soul',
-      name: 'soul',
+      name: currentLang.portals.soul,
       path: '/soul',
-      icon: <span className="text-4xl text-white/40">◌</span>,
       color: '#BB8F4F',
-      description: 'Warmth · Intention · Coming soon',
-      available: false
+      accent: '#FFE500',
+      description: currentLang.portals.soulDesc,
+      dimension: 'θ-47',
+      stability: '99.7%',
+      iframeRef: soulIframeRef,
+      viewMode: soulViewMode,
+      setViewMode: setSoulViewMode
     }
   ]
 
+  const viewModeButtons = [
+    { icon: Smartphone, mode: 'mobile', label: currentLang.portals.mobile },
+    { icon: Tablet, mode: 'tablet', label: currentLang.portals.tablet },
+    { icon: Monitor, mode: 'desktop', label: currentLang.portals.desktop }
+  ] as const
+
   return (
     <>
-      {/* Glassmorphic Preloader */}
-      <AnimatePresence>
-        {showPreloader && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="fixed inset-0 z-[100] flex items-center justify-center"
-            style={{
-              background: 'radial-gradient(circle at center, rgba(255,255,255,0.03) 0%, rgba(10,10,10,0.95) 100%)',
-              backdropFilter: 'blur(20px)'
-            }}
-          >
-            <div className="relative">
-              {/* Animated glass rings */}
-              <motion.div
-                className="absolute inset-0 rounded-full"
-                style={{
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  boxShadow: '0 0 40px rgba(255,255,255,0.1)',
-                  backdropFilter: 'blur(10px)'
-                }}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: [0.8, 1.5, 2], opacity: [0, 0.2, 0] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              />
-              <motion.div
-                className="absolute inset-0 rounded-full"
-                style={{
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  boxShadow: '0 0 60px rgba(255,255,255,0.05)',
-                  backdropFilter: 'blur(10px)'
-                }}
-                initial={{ scale: 1, opacity: 0 }}
-                animate={{ scale: [1, 2, 2.5], opacity: [0, 0.15, 0] }}
-                transition={{ duration: 2.5, repeat: Infinity, delay: 0.5, ease: "easeInOut" }}
-              />
-              
-              {/* Glass core with SVG */}
-              <motion.div
-                className="relative w-32 h-32 rounded-full flex items-center justify-center"
-                style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  boxShadow: '0 0 60px rgba(255,255,255,0.1)'
-                }}
-                animate={{ 
-                  scale: [1, 1.05, 1],
-                  boxShadow: [
-                    '0 0 40px rgba(255,255,255,0.1)',
-                    '0 0 80px rgba(255,255,255,0.2)',
-                    '0 0 40px rgba(255,255,255,0.1)'
-                  ]
-                }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                {/* Your SVG - the letter O */}
-                <svg width="60" height="60" viewBox="0 0 442 455" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-80">
-                  <path d="M213.281 0C219.531 0 225.781 0.195312 232.031 0.585938C274.219 4.49219 308.789 11.9141 335.742 22.8516C363.086 33.3984 384.18 48.0469 399.023 66.7969C414.258 85.1562 425 107.812 431.25 134.766C437.5 161.719 440.625 193.359 440.625 229.688C441.016 274.609 434.375 313.867 420.703 347.461C407.031 381.055 386.328 407.227 358.594 425.977C330.859 444.727 296.484 454.297 255.469 454.688C237.109 454.688 218.164 453.125 198.633 450C179.102 446.484 159.766 441.211 140.625 434.18C121.484 426.758 103.516 417.773 86.7188 407.227C69.9219 396.68 54.8828 384.375 41.6016 370.312C28.7109 355.859 18.5547 339.648 11.1328 321.68C3.71094 303.711 0 283.984 0 262.5C0 213.672 9.17969 169.531 27.5391 130.078C45.5078 90.2344 70.3125 58.7891 101.953 35.7422C133.984 12.6953 171.094 0.78125 213.281 0ZM257.227 26.9531C243.945 26.9531 231.641 28.3203 220.312 31.0547C208.984 33.7891 199.023 38.2812 190.43 44.5312C173.633 45.7031 155.273 52.1484 135.352 63.8672C115.82 75.5859 97.4609 93.9453 80.2734 118.945C63.4766 143.945 51.1719 176.758 43.3594 217.383C40.625 238.477 41.9922 258.594 47.4609 277.734V278.32C56.0547 303.32 69.1406 324.609 86.7188 342.188C104.297 359.766 124.023 373.438 145.898 383.203C168.164 392.969 191.016 399.219 214.453 401.953C250.391 405.859 282.617 401.758 311.133 389.648C324.805 383.398 336.523 375.391 346.289 365.625C356.445 355.469 363.672 343.555 367.969 329.883C383.203 315.43 394.922 297.852 403.125 277.148C411.719 256.445 417.188 234.57 419.531 211.523C422.266 188.086 421.875 165.82 418.359 144.727C415.234 123.242 409.375 105.078 400.781 90.2344C394.922 80.0781 386.719 71.0937 376.172 63.2812C365.625 55.4688 353.711 49.0234 340.43 43.9453C313.477 32.6172 285.742 26.9531 257.227 26.9531ZM258.398 32.2266C276.367 32.2266 294.531 34.7656 312.891 39.8438C331.641 44.5312 348.438 51.3672 363.281 60.3516C378.516 69.3359 389.844 80.0781 397.266 92.5781C405.469 106.641 411.133 124.219 414.258 145.312C417.383 166.016 417.773 187.891 415.43 210.938C413.086 233.594 407.617 255.273 399.023 275.977C390.82 296.289 379.297 313.281 364.453 326.953L365.039 325.781C385.352 278.516 393.359 232.617 389.062 188.086C385.938 161.523 379.688 140.625 370.312 125.391C361.328 109.766 350.977 97.0703 339.258 87.3047C318.164 71.2891 296.484 60.7422 274.219 55.6641C252.344 50.5859 230.664 48.2422 209.18 48.6328C205.664 48.6328 202.344 48.8281 199.219 49.2188C198.047 49.2188 196.68 49.2188 195.117 49.2188H193.359C201.172 43.3594 210.547 39.0625 221.484 36.3281C232.812 33.2031 245.117 31.8359 258.398 32.2266ZM193.359 49.2188L192.188 50.3906C171.875 64.8438 154.883 81.6406 141.211 100.781C127.93 119.531 118.359 140.234 112.5 162.891C108.984 181.25 107.227 197.461 107.227 211.523C107.617 225.195 109.18 237.109 111.914 247.266C115.039 257.422 118.945 266.406 123.633 274.219C128.711 282.031 134.18 289.062 140.039 295.312C156.445 313.281 175 327.148 195.703 336.914C216.797 346.289 238.086 351.953 259.57 353.906C281.055 356.25 300.977 354.883 319.336 349.805C337.695 344.727 352.344 337.305 363.281 327.539L364.453 326.953C357.812 348.438 344.727 365.234 325.195 377.344C305.664 389.062 282.617 395.898 256.055 397.852C229.492 399.805 202.539 396.68 175.195 388.477C148.242 380.273 123.828 366.992 101.953 348.633C80.0781 329.883 63.8672 305.859 53.3203 276.562C47.8516 257.812 46.6797 238.477 49.8047 218.555C57.2266 177.93 69.3359 145.508 86.1328 121.289C102.93 96.6797 121.094 78.7109 140.625 67.3828C160.156 56.0547 177.734 50 193.359 49.2188ZM210.352 53.9062C231.445 53.5156 252.539 55.8594 273.633 60.9375C295.117 65.625 316.211 75.5859 336.914 90.8203C344.336 97.0703 351.367 104.297 358.008 112.5C364.648 120.703 370.312 130.664 375 142.383C379.688 154.102 383.008 168.75 384.961 186.328C388.867 230.859 380.469 276.953 359.766 324.609C349.609 333.203 335.742 339.648 318.164 343.945C300.586 348.242 281.445 349.414 260.742 347.461C240.039 345.508 219.531 340.234 199.219 331.641C178.906 322.656 160.742 309.375 144.727 291.797C137.305 283.594 130.664 274.219 124.805 263.672C119.336 253.125 115.625 239.844 113.672 223.828C112.109 207.812 113.672 187.891 118.359 164.062C129.297 119.922 154.492 83.2031 193.945 53.9062C199.414 53.9062 204.883 53.9062 210.352 53.9062ZM253.125 78.5156C230.859 78.5156 210.547 83.9844 192.188 94.9219C173.828 105.859 159.18 120.508 148.242 138.867C137.305 157.227 131.836 177.539 131.836 199.805C131.836 222.07 137.305 242.383 148.242 260.742C159.18 278.711 173.828 293.164 192.188 304.102C210.547 315.039 230.859 320.508 253.125 320.508C275.391 320.508 295.703 315.039 314.062 304.102C332.422 293.164 347.07 278.711 358.008 260.742C368.945 242.383 374.414 222.07 374.414 199.805C374.414 177.539 368.945 157.227 358.008 138.867C347.07 120.508 332.422 105.859 314.062 94.9219C295.703 83.9844 275.391 78.5156 253.125 78.5156ZM253.125 83.2031C274.219 83.2031 293.555 88.4766 311.133 99.0234C328.711 109.57 342.773 123.633 353.32 141.211C363.867 158.789 369.141 178.32 369.141 199.805C369.141 220.898 363.867 240.234 353.32 257.812C342.773 275.391 328.711 289.453 311.133 300C293.555 310.547 274.219 315.82 253.125 315.82C231.641 315.82 212.109 310.547 194.531 300C176.953 289.453 162.891 275.391 152.344 257.812C142.188 240.234 137.109 220.898 137.109 199.805C137.109 178.32 142.188 158.789 152.344 141.211C162.891 123.633 176.953 109.57 194.531 99.0234C212.109 88.4766 231.641 83.2031 253.125 83.2031Z" fill="white" fillOpacity="0.9"/>
-                </svg>
-              </motion.div>
+      <Preloader isLightMode={isLightMode} showPreloader={showPreloader} />
 
-{/* Text - centered below core with more space */}
-<motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.5 }}
-  className="absolute inset-x-0 mx-auto text-center"
-  style={{ top: 'calc(50% + 100px)' }}
->
-  <p className="text-white/20 text-sm font-mono whitespace-nowrap uppercase">
-    ENTERING THE PORTAL
-  </p>
-</motion.div>
+      <style jsx global>{`
+        ::-webkit-scrollbar {
+          width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: ${isLightMode ? '#00000020' : '#FFFFFF20'};
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: #FFE500;
+        }
+        
+        /* Tajawal font for Arabic */
+        .font-tajawal {
+          font-family: 'Tajawal', sans-serif;
+        }
+        
+        /* Apply Tajawal when Arabic is active */
+        ${language === 'ar' ? `
+          body, h1, h2, h3, p, span, button, a, .font-mono {
+            font-family: 'Tajawal', sans-serif !important;
+          }
+        ` : ''}
+      `}</style>
 
-              {/* Glass progress dots */}
-              <div className="absolute -bottom-28 left-1/2 -translate-x-1/2 flex gap-3">
-                {[0, 1, 2].map((i) => (
-                  <motion.div
-                    key={i}
-                    className="w-2 h-2 rounded-full"
-                    style={{
-                      background: 'rgba(255,255,255,0.1)',
-                      backdropFilter: 'blur(4px)',
-                      border: '1px solid rgba(255,255,255,0.1)'
-                    }}
-                    animate={{ 
-                      scale: [1, 1.3, 1], 
-                      opacity: [0.3, 0.6, 0.3],
-                      boxShadow: [
-                        '0 0 10px rgba(255,255,255,0.1)',
-                        '0 0 20px rgba(255,255,255,0.2)',
-                        '0 0 10px rgba(255,255,255,0.1)'
-                      ]
-                    }}
-                    transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}
-                  />
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Main Content */}
-      <div className="relative min-h-screen w-full overflow-y-auto bg-[#0A0A0A] scrollbar-thin scrollbar-track-white/5 scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20">
-        {/* Custom Scrollbar Styles */}
-        <style jsx global>{`
-          ::-webkit-scrollbar {
-            width: 6px;
-          }
-          
-          ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-          }
-          
-          ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-          }
-          
-          ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.15);
-          }
-        `}</style>
-
-        {/* Background Image */}
+      <div className={`relative min-h-screen w-full ${
+        isLightMode ? 'bg-white' : 'bg-[#0A0A0A]'
+      } ${language === 'ar' ? 'font-tajawal' : ''}`}>
+        {/* Background */}
         <div className="fixed inset-0">
-          <Image
-            src="/bg.png"
-            alt=""
-            fill
-            className="object-cover opacity-30"
-            priority
-          />
+          <div className={`absolute inset-0 bg-gradient-to-br transition-colors duration-500 ${
+            isLightMode 
+              ? 'from-white via-zinc-50 to-white' 
+              : 'from-[#0A0A0A] via-zinc-900 to-[#0A0A0A]'
+          }`} />
+          
+          <div className="absolute inset-0 overflow-hidden">
+            {[...Array(10)].map((_, i) => (
+              <motion.div
+                key={`yellow-${i}`}
+                className="absolute h-[200%]"
+                style={{
+                  left: `${i * 10}%`,
+                  transform: 'rotate(65deg) translateY(-50%)',
+                  top: '-50%',
+                  width: '2px',
+                  background: `linear-gradient(to bottom, transparent, ${isLightMode ? '#FFE500' : '#FFE50040'}, transparent)`,
+                }}
+                animate={{ opacity: [0.25, 0.7, 0.25] }}
+                transition={{ duration: 3, repeat: Infinity, repeatType: "loop", delay: i * 0.2 }}
+              />
+            ))}
+          </div>
+
+          {isLightMode && (
+            <div className="absolute inset-0 overflow-hidden">
+              {[...Array(10)].map((_, i) => (
+                <motion.div
+                  key={`black-${i}`}
+                  className="absolute h-[200%]"
+                  style={{
+                    left: `${i * 10 + 0.3}%`,
+                    transform: 'rotate(65deg) translateY(-50%)',
+                    top: '-50%',
+                    width: '1px',
+                    background: `linear-gradient(to bottom, transparent, #00000060, transparent)`,
+                  }}
+                  animate={{ opacity: [0.15, 0.3, 0.15] }}
+                  transition={{ duration: 3, repeat: Infinity, repeatType: "loop", delay: i * 0.2 + 0.1 }}
+                />
+              ))}
+            </div>
+          )}
+
+          <div className={`absolute inset-0 transition-colors duration-500 ${
+            isLightMode 
+              ? 'bg-radial-gradient from-transparent to-white/90' 
+              : 'bg-radial-gradient from-transparent to-[#0A0A0A]/90'
+          }`} />
         </div>
 
-        {/* Scrollable Content */}
-        <div className="relative z-10 min-h-screen">
-          {/* Minimal Header */}
-          <header className="absolute top-0 left-0 right-0 z-40 px-8 py-8">
-            <div className="max-w-7xl mx-auto flex justify-between items-center">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-white/20 text-xs font-mono tracking-[0.3em] uppercase"
-              >
-                the portal
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                className="flex gap-1.5"
-              >
-                {[0, 1, 2].map((i) => (
-                  <motion.div
-                    key={i}
-                    className="w-1 h-1 rounded-full bg-white/20"
-                    animate={{ opacity: [0.2, 0.5, 0.2] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      delay: i * 0.3,
-                      ease: "easeInOut"
-                    }}
-                  />
-                ))}
-              </motion.div>
-            </div>
-          </header>
-
-          {/* Main Content Container */}
-          <div className="container mx-auto px-6 py-24 md:py-32">
-            {/* Welcome Sentence */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-center mb-12"
-            >
-              <h1 className="text-white/90 text-xl md:text-2xl font-light tracking-wide">
-                Welcome to the Portal of OMAR
-              </h1>
-              <p className="text-white/40 text-sm font-mono mt-2">
-                choose your world
-              </p>
-            </motion.div>
-
-            {/* Centered Glass Tab */}
-            <div className="flex justify-center mb-16">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-              >
-                <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl px-12 py-8 shadow-2xl relative">
-                  {/* Three dots */}
-                  <div className="absolute top-3 right-3 flex gap-1.5">
-                    {[0, 1, 2].map((i) => (
-                      <motion.div
-                        key={i}
-                        className="w-1.5 h-1.5 rounded-full bg-white/30"
-                        animate={{ opacity: [0.3, 0.6, 0.3] }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          delay: i * 0.2,
-                          ease: "easeInOut"
-                        }}
-                      />
-                    ))}
-                  </div>
-
-                  {/* OMAR SVG */}
-                  <svg 
-                    width="200"
-                    height="160"
-                    viewBox="0 0 1433 1154"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-32 h-28 md:w-40 md:h-36 lg:w-48 lg:h-40"
-                  >
-                    <path d="M213.281 365.695C219.531 365.695 225.781 365.891 232.031 366.281C274.219 370.188 308.789 377.609 335.742 388.547C363.086 399.094 384.18 413.742 399.023 432.492C414.258 450.852 425 473.508 431.25 500.461C437.5 527.414 440.625 559.055 440.625 595.383C441.016 640.305 434.375 679.562 420.703 713.156C407.031 746.75 386.328 772.922 358.594 791.672C330.859 810.422 296.484 819.992 255.469 820.383C237.109 820.383 218.164 818.82 198.633 815.695C179.102 812.18 159.766 806.906 140.625 799.875C121.484 792.453 103.516 783.469 86.7188 772.922C69.9219 762.375 54.8828 750.07 41.6016 736.008C28.7109 721.555 18.5547 705.344 11.1328 687.375C3.71094 669.406 0 649.68 0 628.195C0 579.367 9.17969 535.227 27.5391 495.773C45.5078 455.93 70.3125 424.484 101.953 401.438C133.984 378.391 171.094 366.477 213.281 365.695ZM257.227 392.648C243.945 392.648 231.641 394.016 220.312 396.75C208.984 399.484 199.023 403.977 190.43 410.227C173.633 411.398 155.273 417.844 135.352 429.562C115.82 441.281 97.4609 459.641 80.2734 484.641C63.4766 509.641 51.1719 542.453 43.3594 583.078C40.625 604.172 41.9922 624.289 47.4609 643.43V644.016C56.0547 669.016 69.1406 690.305 86.7188 707.883C104.297 725.461 124.023 739.133 145.898 748.898C168.164 758.664 191.016 764.914 214.453 767.648C250.391 771.555 282.617 767.453 311.133 755.344C324.805 749.094 336.523 741.086 346.289 731.32C356.445 721.164 363.672 709.25 367.969 695.578C383.203 681.125 394.922 663.547 403.125 642.844C411.719 622.141 417.188 600.266 419.531 577.219C422.266 553.781 421.875 531.516 418.359 510.422C415.234 488.937 409.375 470.773 400.781 455.93C394.922 445.773 386.719 436.789 376.172 428.977C365.625 421.164 353.711 414.719 340.43 409.641C313.477 398.313 285.742 392.648 257.227 392.648ZM258.398 397.922C276.367 397.922 294.531 400.461 312.891 405.539C331.641 410.227 348.438 417.063 363.281 426.047C378.516 435.031 389.844 445.773 397.266 458.273C405.469 472.336 411.133 489.914 414.258 511.008C417.383 531.711 417.773 553.586 415.43 576.633C413.086 599.289 407.617 620.969 399.023 641.672C390.82 661.984 379.297 678.977 364.453 692.648L365.039 691.477C385.352 644.211 393.359 598.312 389.062 553.781C385.938 527.219 379.688 506.32 370.312 491.086C361.328 475.461 350.977 462.766 339.258 453C318.164 436.984 296.484 426.438 274.219 421.359C252.344 416.281 230.664 413.937 209.18 414.328C205.664 414.328 202.344 414.523 199.219 414.914C198.047 414.914 196.68 414.914 195.117 414.914H193.359C201.172 409.055 210.547 404.758 221.484 402.023C232.812 398.898 245.117 397.531 258.398 397.922ZM193.359 414.914L192.188 416.086C171.875 430.539 154.883 447.336 141.211 466.477C127.93 485.227 118.359 505.93 112.5 528.586C108.984 546.945 107.227 563.156 107.227 577.219C107.617 590.891 109.18 602.805 111.914 612.961C115.039 623.117 118.945 632.102 123.633 639.914C128.711 647.727 134.18 654.758 140.039 661.008C156.445 678.977 175 692.844 195.703 702.609C216.797 711.984 238.086 717.648 259.57 719.602C281.055 721.945 300.977 720.578 319.336 715.5C337.695 710.422 352.344 703 363.281 693.234L364.453 692.648C357.812 714.133 344.727 730.93 325.195 743.039C305.664 754.758 282.617 761.594 256.055 763.547C229.492 765.5 202.539 762.375 175.195 754.172C148.242 745.969 123.828 732.688 101.953 714.328C80.0781 695.578 63.8672 671.555 53.3203 642.258C47.8516 623.508 46.6797 604.172 49.8047 584.25C57.2266 543.625 69.3359 511.203 86.1328 486.984C102.93 462.375 121.094 444.406 140.625 433.078C160.156 421.75 177.734 415.695 193.359 414.914ZM210.352 419.602C231.445 419.211 252.539 421.555 273.633 426.633C295.117 431.32 316.211 441.281 336.914 456.516C344.336 462.766 351.367 469.992 358.008 478.195C364.648 486.398 370.312 496.359 375 508.078C379.688 519.797 383.008 534.445 384.961 552.023C388.867 596.555 380.469 642.648 359.766 690.305C349.609 698.898 335.742 705.344 318.164 709.641C300.586 713.938 281.445 715.109 260.742 713.156C240.039 711.203 219.531 705.93 199.219 697.336C178.906 688.352 160.742 675.07 144.727 657.492C137.305 649.289 130.664 639.914 124.805 629.367C119.336 618.82 115.625 605.539 113.672 589.523C112.109 573.508 113.672 553.586 118.359 529.758C129.297 485.617 154.492 448.898 193.945 419.602C199.414 419.602 204.883 419.602 210.352 419.602ZM253.125 444.211C230.859 444.211 210.547 449.68 192.188 460.617C173.828 471.555 159.18 486.203 148.242 504.562C137.305 522.922 131.836 543.234 131.836 565.5C131.836 587.766 137.305 608.078 148.242 626.438C159.18 644.406 173.828 658.859 192.188 669.797C210.547 680.734 230.859 686.203 253.125 686.203C275.391 686.203 295.703 680.734 314.062 669.797C332.422 658.859 347.07 644.406 358.008 626.438C368.945 608.078 374.414 587.766 374.414 565.5C374.414 543.234 368.945 522.922 358.008 504.562C347.07 486.203 332.422 471.555 314.062 460.617C295.703 449.68 275.391 444.211 253.125 444.211ZM253.125 448.898C274.219 448.898 293.555 454.172 311.133 464.719C328.711 475.266 342.773 489.328 353.32 506.906C363.867 524.484 369.141 544.016 369.141 565.5C369.141 586.594 363.867 605.93 353.32 623.508C342.773 641.086 328.711 655.148 311.133 665.695C293.555 676.242 274.219 681.516 253.125 681.516C231.641 681.516 212.109 676.242 194.531 665.695C176.953 655.148 162.891 641.086 152.344 623.508C142.188 605.93 137.109 586.594 137.109 565.5C137.109 544.016 142.188 524.484 152.344 506.906C162.891 489.328 176.953 475.266 194.531 464.719C212.109 454.172 231.641 448.898 253.125 448.898Z" fill="white" fillOpacity="0.9"/>
-                    <path d="M755.289 325.078C755.934 325.078 756.578 325.078 757.223 325.078L759.156 325.4H759.479L782.682 326.045C790.416 326.475 795.787 328.301 798.795 331.523C801.803 334.531 803.736 338.076 804.596 342.158C820.709 414.131 831.451 482.988 836.822 548.73C842.193 614.473 845.738 678.174 847.457 739.834C848.316 759.385 849.068 778.721 849.713 797.842C849.928 802.783 848.746 807.295 846.168 811.377C843.805 815.244 841.119 817.178 838.111 817.178C819.42 817.607 800.299 816.533 780.748 813.955C774.947 812.236 772.369 807.725 773.014 800.42L769.146 414.346C761.197 439.912 753.893 466.23 747.232 493.301C740.357 521.445 732.73 548.838 724.352 575.479C716.188 601.904 705.875 626.074 693.414 647.988C687.828 657.012 680.523 662.061 671.5 663.135C662.691 664.209 654.205 660.234 646.041 651.211C629.068 625 615.855 598.682 606.402 572.256C596.949 545.83 588.893 519.512 582.232 493.301C575.357 467.09 567.301 440.986 558.062 414.99C562.145 534.658 563.863 659.16 563.219 788.496C563.219 788.926 563.219 789.355 563.219 789.785C563.004 791.719 562.359 793.76 561.285 795.908C560.426 798.057 558.277 800.312 554.84 802.676C554.625 802.676 554.518 802.783 554.518 802.998C554.518 802.998 554.41 802.998 554.195 802.998C552.047 804.287 549.791 805.039 547.428 805.254C531.744 805.684 516.598 804.932 501.988 802.998C497.477 802.568 493.824 801.816 491.031 800.742C486.09 798.379 483.512 793.867 483.297 787.207C484.586 759.492 485.768 731.67 486.842 703.74C488.775 651.748 491.461 599.434 494.898 546.797C498.336 493.945 504.029 440.127 511.979 385.342C512.408 381.904 512.945 378.359 513.59 374.707C513.805 374.707 513.912 374.707 513.912 374.707C513.912 374.492 513.912 374.385 513.912 374.385C516.061 362.354 520.25 351.504 526.48 341.836C532.926 331.953 542.057 326.689 553.873 326.045C559.889 325.615 565.904 325.83 571.92 326.689C578.15 327.334 583.199 327.979 587.066 328.623C588.355 328.838 589.43 329.053 590.289 329.268C590.504 329.268 590.611 329.268 590.611 329.268C598.561 331.631 603.932 335.391 606.725 340.547C609.732 345.918 611.881 351.182 613.17 356.338C613.6 357.627 614.029 358.916 614.459 360.205C616.393 366.436 620.045 379.004 625.416 397.91C630.787 416.602 636.588 437.012 642.818 459.141C649.264 481.27 654.85 500.498 659.576 516.826C664.303 532.939 666.881 541.748 667.311 543.252C668.6 544.111 672.574 535.41 679.234 517.148C685.895 498.887 693.521 476.758 702.115 450.762C710.924 424.551 718.98 400.166 726.285 377.607C733.59 354.834 738.424 339.365 740.787 331.201C741.861 327.549 746.695 325.508 755.289 325.078ZM1004.08 317.344C1005.58 317.344 1007.09 317.451 1008.59 317.666C1033.3 321.318 1054.24 328.193 1071.43 338.291C1080.03 343.018 1087.65 348.711 1094.31 355.371C1101.19 361.816 1106.24 370.303 1109.46 380.83C1109.89 382.764 1110.21 384.697 1110.43 386.631C1115.15 433.467 1117.52 475.684 1117.52 513.281C1117.52 550.664 1116.76 586.543 1115.26 620.918C1112.47 669.258 1112.04 722.217 1113.97 779.795C1114.19 788.604 1111.39 795.371 1105.59 800.098C1099.79 804.824 1092.38 807.402 1083.36 807.832C1074.12 808.262 1066.28 806.436 1059.83 802.354C1053.6 798.057 1050.16 791.504 1049.52 782.695C1049.52 750.898 1049.95 721.035 1050.81 693.105C1050.59 693.105 1050.48 693.105 1050.48 693.105C1050.7 689.668 1050.48 687.09 1049.84 685.371C1049.41 683.652 1048.77 682.471 1047.91 681.826C1047.05 681.182 1046.08 680.645 1045.01 680.215C1044.58 680 1044.04 679.785 1043.39 679.57C1032.44 675.918 1019.65 674.092 1005.04 674.092C990.436 674.092 976.363 674.844 962.828 676.348C960.035 676.777 958.639 678.818 958.639 682.471C959.713 717.49 961.002 753.154 962.506 789.463C962.506 798.486 959.605 805.361 953.805 810.088C948.004 814.6 940.592 817.07 931.568 817.5C922.33 817.93 914.596 816.104 908.365 812.021C902.135 807.725 898.697 801.064 898.053 792.041C891.822 650.889 890.533 517.9 894.186 393.076C894.4 388.564 895.475 384.268 897.408 380.186C901.275 371.592 906.217 363.213 912.232 355.049C918.463 346.885 926.197 339.795 935.436 333.779C954.127 322.178 977.008 316.699 1004.08 317.344ZM1001.5 381.797C989.898 382.012 981.52 383.193 976.363 385.342C976.148 385.342 975.934 385.449 975.719 385.664C971.422 387.598 967.555 390.283 964.117 393.721C960.895 397.158 958.961 402.744 958.316 410.479C956.598 473.428 956.168 538.203 957.027 604.805C957.457 611.68 960.25 615.439 965.406 616.084C986.246 617.373 1007.09 616.299 1027.93 612.861C1044.04 609.424 1052.63 597.93 1053.71 578.379C1055.21 526.172 1052.96 466.768 1046.94 400.166C1046.72 398.447 1045.97 396.514 1044.68 394.365C1043.39 392.217 1041.68 390.605 1039.53 389.531C1030.29 384.805 1017.61 382.227 1001.5 381.797ZM1234.18 330.557C1249.64 330.557 1264.9 330.986 1279.94 331.846C1293.69 332.275 1307.44 333.672 1321.19 336.035C1322.91 336.25 1324.73 336.572 1326.67 337.002C1326.67 337.002 1326.77 337.002 1326.99 337.002C1338.8 339.365 1349.76 342.803 1359.86 347.314C1374.04 354.404 1384.24 363.857 1390.47 375.674C1396.71 387.275 1400.14 400.596 1400.79 415.635C1403.79 455.166 1404.55 495.879 1403.04 537.773C1403.04 539.277 1403.04 540.889 1403.04 542.607C1402.83 545.186 1402.72 547.764 1402.72 550.342C1402.72 558.506 1401.97 566.133 1400.46 573.223C1397.67 583.965 1393.38 592.451 1387.57 598.682C1381.77 604.912 1375.44 610.391 1368.56 615.117C1366.41 616.621 1364.26 618.232 1362.12 619.951C1387.25 628.115 1402.4 637.461 1407.55 647.988C1412.93 658.301 1414.97 669.258 1413.68 680.859C1413.68 684.082 1413.68 687.197 1413.68 690.205L1414.64 824.912C1414.64 831.572 1413.03 836.084 1409.81 838.447C1406.8 840.811 1403.04 842.1 1398.53 842.314C1377.26 845.107 1355.88 844.785 1334.4 841.348C1331.39 841.133 1328.81 840.059 1326.67 838.125C1324.73 836.406 1324.09 832.861 1324.73 827.49C1328.17 782.373 1330.43 741.445 1331.5 704.707C1331.5 702.773 1331.61 700.84 1331.82 698.906C1331.82 698.691 1331.82 698.369 1331.82 697.939C1332.25 691.279 1331.82 685.479 1330.53 680.537C1327.96 671.729 1320.11 665.176 1307.01 660.879C1290.89 656.797 1274.78 656.367 1258.67 659.59C1258.45 695.898 1260.39 740.049 1264.47 792.041C1264.68 794.189 1264.9 796.445 1265.11 798.809C1265.33 802.246 1265.01 805.469 1264.15 808.477C1262.64 814.707 1256.63 817.393 1246.1 816.533C1230.63 816.104 1214.09 815.029 1196.47 813.311C1190.67 812.451 1186.7 810.732 1184.55 808.154C1182.61 805.576 1181.54 802.568 1181.32 799.131L1182.61 352.793C1182.61 346.992 1183.9 342.266 1186.48 338.613C1189.27 334.746 1194.11 332.49 1200.98 331.846C1212.15 330.986 1223.22 330.557 1234.18 330.557ZM1296.05 387.275C1285.31 387.705 1275.32 389.531 1266.08 392.754C1261.35 394.473 1257.92 396.514 1255.77 398.877C1253.62 401.24 1252.01 403.711 1250.93 406.289C1246.85 416.172 1243.84 427.773 1241.91 441.094C1241.05 446.25 1240.73 451.729 1240.94 457.529L1240.62 584.502L1293.47 587.402C1300.56 588.047 1306.47 586.865 1311.2 583.857C1314.85 581.494 1318.18 576.768 1321.19 569.678C1329.35 543.037 1334.72 515.645 1337.3 487.5C1339.88 459.355 1336.98 430.889 1328.6 402.1C1325.59 396.514 1321.19 392.646 1315.39 390.498C1309.59 388.135 1303.14 387.061 1296.05 387.275Z" fill="white" fillOpacity="0.9"/>
-                  </svg>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* World Selection */}
-            <div className="flex flex-col items-center justify-center mb-16">
-              <div className="flex items-center justify-center gap-6 mb-4">
-                {worlds.map((world, index) => (
-                  <motion.div
-                    key={world.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 + 0.4 }}
-                    onHoverStart={() => setHoveredWorld(world.id)}
-                    onHoverEnd={() => setHoveredWorld(null)}
-                  >
-                    {world.available ? (
-                      <Link href={world.path}>
-                        <motion.div
-                          className="relative w-24 h-24 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors duration-300"
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          {/* Subtle glow on hover */}
-                          {hoveredWorld === world.id && (
-                            <motion.div
-                              className="absolute inset-0 rounded-2xl"
-                              style={{
-                                background: `radial-gradient(circle at center, ${world.color}20, transparent 70%)`,
-                              }}
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              transition={{ duration: 0.2 }}
-                            />
-                          )}
-                          {world.icon}
-                        </motion.div>
-                      </Link>
-                    ) : (
-                      <div className="relative w-24 h-24 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/5 flex items-center justify-center cursor-not-allowed opacity-40">
-                        {world.icon}
-                      </div>
-                    )}
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* World Descriptions */}
-              <div className="flex items-center justify-center gap-6">
-                {worlds.map((world) => (
-                  <div key={`desc-${world.id}`} className="w-24 text-center">
-                    <p className="text-[8px] text-white/20 font-mono leading-tight">
-                      {world.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* IJSPC Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="w-full max-w-md mx-auto"
-            >
-              <motion.button
-                onClick={() => setShowIJSPC(!showIJSPC)}
-                className="w-full backdrop-blur-md bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all focus:outline-none focus:ring-0 active:bg-white/5"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Award size={16} className="text-white/60" />
-                    <span className="text-white/80 text-sm">IJSPC 2026 Resources</span>
-                  </div>
-                  <motion.div
-                    animate={{ rotate: showIJSPC ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <ChevronDown size={14} className="text-white/40" />
-                  </motion.div>
-                </div>
-              </motion.button>
-
-              <AnimatePresence>
-                {showIJSPC && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-xl mt-2 p-4">
-                      {/* Quick Links */}
-                      <div className="space-y-2 mb-4">
-                        <Link
-                          href="/ijspc-2026"
-                          className="flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
-                        >
-                          <span className="text-white/80 text-sm">Full Mentoring Guide</span>
-                          <ArrowRight size={14} className="text-white/40" />
-                        </Link>
-                        <Link
-                          href="https://cmt3.research.microsoft.com/User/Login?ReturnUrl=%2FIJSPC2026%2FTrack%2F1%2FSubmission%2FCreate"
-                          target="_blank"
-                          className="flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
-                        >
-                          <span className="text-white/80 text-sm">Submission Portal</span>
-                          <ExternalLink size={14} className="text-white/40" />
-                        </Link>
-                        <Link
-                          href="https://docs.google.com/document/d/142c0sbY5ahJmB7Epse74vszZG7TJ9bB8/edit"
-                          target="_blank"
-                          className="flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
-                        >
-                          <span className="text-white/80 text-sm">Paper Template</span>
-                          <BookOpen size={14} className="text-white/40" />
-                        </Link>
-                      </div>
-
-                      {/* Deadline */}
-                      <div className="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
-                        <Calendar size={14} className="text-white/40" />
-                        <span className="text-white/60 text-xs">Deadline: April 1, 2026</span>
-                      </div>
-
-                      {/* Ambassador Contact */}
-                      <div className="mt-4 pt-3 border-t border-white/10">
-                        <p className="text-white/40 text-xs mb-2 text-center">ASU Ambassador</p>
-                        <div className="flex items-center justify-center gap-3">
-                          <Link 
-                            href="mailto:202311588@students.asu.edu.jo"
-                            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 transition-colors flex items-center justify-center"
-                          >
-                            <Mail size={14} className="text-white/60" />
-                          </Link>
-                          <Link 
-                            href="https://chat.whatsapp.com/FawSunKpyqf80PZzFvg7Ew"
-                            target="_blank"
-                            className="w-8 h-8 rounded-full bg-[#075E54]/20 hover:bg-[#075E54]/30 transition-colors flex items-center justify-center"
-                          >
-                            <MessageSquare size={14} className="text-white/60" />
-                          </Link>
-                          <Link 
-                            href="https://chat.whatsapp.com/LoQy5atSH0F3cvFuvYkpfQ"
-                            target="_blank"
-                            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 transition-colors flex items-center justify-center"
-                          >
-                            <span className="text-white/60 text-xs">ASU</span>
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-
-            {/* Footer Text */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
-              className="text-center text-white/10 text-[8px] font-mono tracking-[0.3em] mt-16"
-            >
-              ·  choose with intention  ·
-            </motion.p>
+        {/* Navigation */}
+        <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50 mix-blend-difference">
+          <div className="flex items-center gap-8">
+            <button onClick={() => scrollToSection(heroRef)} className={`text-xs font-mono ${activeSection === 'hero' ? 'text-white' : 'text-white/30'}`}>00</button>
+            <button onClick={() => scrollToSection(aboutRef)} className={`text-xs font-mono ${activeSection === 'about' ? 'text-white' : 'text-white/30'}`}>01</button>
+            <button onClick={() => scrollToSection(portalsRef)} className={`text-xs font-mono ${activeSection === 'portals' ? 'text-white' : 'text-white/30'}`}>02</button>
           </div>
         </div>
+
+        {/* Theme Toggle & Language Toggle */}
+        <div className="fixed bottom-8 right-8 z-50 flex gap-3 mix-blend-difference">
+          {/* Language Toggle */}
+          <button 
+            onClick={toggleLanguage}
+            className="text-white/60 hover:text-white transition-colors bg-black/20 backdrop-blur-sm rounded-full p-2"
+          >
+            <Languages size={18} />
+          </button>
+          
+          {/* Theme Toggle */}
+          <button 
+            onClick={() => setIsLightMode(!isLightMode)} 
+            className="text-white/60 hover:text-white transition-colors bg-black/20 backdrop-blur-sm rounded-full p-2"
+          >
+            {isLightMode ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
+        </div>
+
+        {/* 00 - HERO */}
+        <section ref={heroRef} className="relative z-10 h-screen flex items-center justify-center px-6">
+          <div className="text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <motion.h1 
+                className={`text-8xl md:text-9xl lg:text-9xl font-black tracking-tighter mb-4 ${
+                  isLightMode ? 'text-black' : 'text-white'
+                } ${language === 'ar' ? 'font-tajawal' : ''}`}
+                initial={{ scale: 0.95 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                {currentLang.hero.title}
+              </motion.h1>
+
+              <motion.p 
+                className={`text-base max-w-md mx-auto leading-relaxed ${
+                  isLightMode ? 'text-black/50' : 'text-white/40'
+                } ${language === 'ar' ? 'font-tajawal' : ''}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                {currentLang.hero.subtitle}
+              </motion.p>
+
+              <motion.div 
+                className={`w-12 h-[2px] mx-auto mt-8 ${
+                  isLightMode ? 'bg-[#FFE500]' : 'bg-[#FFE500]/40'
+                }`}
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              />
+            </motion.div>
+          </div>
+
+          <motion.div 
+            className="absolute bottom-12 left-1/2 -translate-x-1/2"
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity, repeatType: "loop" }}
+          >
+            <ChevronDown size={18} className={isLightMode ? 'text-black/30' : 'text-white/30'} />
+          </motion.div>
+        </section>
+
+        {/* 01 - WHAT IS A PORTAL */}
+        <section ref={aboutRef} className="relative z-10 h-screen flex items-center justify-center px-6">
+          <div className="max-w-4xl mx-auto w-full">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              {/* Left - Minimal door */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="flex flex-col items-center md:items-start"
+              >
+                <div className="relative w-20 h-32 mb-6">
+                  <div className={`absolute inset-0 border ${isLightMode ? 'border-black/20' : 'border-white/20'}`} />
+                  <div className={`absolute top-1/2 -translate-y-1/2 right-2 w-1 h-1 rounded-full ${isLightMode ? 'bg-black/30' : 'bg-white/30'}`} />
+                  <div className={`absolute top-3 bottom-3 left-1/2 w-px ${isLightMode ? 'bg-black/10' : 'bg-white/10'}`} />
+                </div>
+
+                <h2 className={`text-3xl md:text-4xl font-light tracking-wide ${
+                  isLightMode ? 'text-black/60' : 'text-white/50'
+                } ${language === 'ar' ? 'font-tajawal' : ''}`}>
+                  {currentLang.about.portal}
+                </h2>
+              </motion.div>
+
+              {/* Right - Answer */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="space-y-6"
+              >
+                <p className={`text-base md:text-lg leading-relaxed ${
+                  isLightMode ? 'text-black/60' : 'text-white/50'
+                } ${language === 'ar' ? 'font-tajawal' : ''}`}>
+                  {currentLang.about.line1}
+                  <span className={`block mt-2 ${isLightMode ? 'text-[#FFE500]' : 'text-[#FFE500]'} ${language === 'ar' ? 'font-tajawal' : ''}`}>
+                    {currentLang.about.line2}
+                  </span>
+                </p>
+                
+                <p className={`text-base md:text-lg leading-relaxed ${
+                  isLightMode ? 'text-black/60' : 'text-white/50'
+                } ${language === 'ar' ? 'font-tajawal' : ''}`}>
+                  {currentLang.about.line3}
+                  <br />{currentLang.about.line4}
+                  <br />{currentLang.about.line5}
+                </p>
+
+                <div className="pt-4">
+                  <p className={`text-base md:text-lg font-light ${
+                    isLightMode ? 'text-black/80' : 'text-white/70'
+                  } ${language === 'ar' ? 'font-tajawal' : ''}`}>
+                    {currentLang.about.line6}
+                  </p>
+                  <div className="flex items-center gap-3 mt-2">
+                    <div className={`w-8 h-px ${isLightMode ? 'bg-[#FFE500]' : 'bg-[#FFE500]/40'}`} />
+                    <span className={`text-sm font-mono ${isLightMode ? 'text-[#FFE500]' : 'text-[#FFE500]'} ${language === 'ar' ? 'font-tajawal' : ''}`}>
+                      {currentLang.about.line7}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* 02 - PORTALS with IFRAME PREVIEWS */}
+        <section ref={portalsRef} className="relative z-10 min-h-screen flex items-center justify-center px-6 py-24">
+          <div className="w-full max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {portals.map((portal, index) => (
+                <motion.div
+                  key={portal.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.2 }}
+                  viewport={{ once: true }}
+                  className="w-full"
+                >
+                  <div className="relative group h-full flex flex-col">
+                    {/* Glow effect */}
+                    <motion.div
+                      className="absolute -inset-4 rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                      style={{
+                        background: `radial-gradient(circle at center, ${portal.accent}20, transparent 70%)`,
+                        filter: 'blur(20px)',
+                      }}
+                    />
+
+                    {/* Main Card */}
+                    <div 
+                      className={`relative backdrop-blur-sm overflow-hidden transition-all duration-500 flex-1 flex flex-col ${
+                        isLightMode 
+                          ? 'bg-white/95' 
+                          : 'bg-[#0A0A0A]/90'
+                      }`}
+                      style={{
+                        clipPath: 'polygon(0 0, 100% 0, 98% 100%, 0% 100%)',
+                      }}
+                    >
+                      {/* Border system */}
+                      <div className="absolute inset-0 pointer-events-none">
+                        <div 
+                          className={`absolute inset-0 border-2 ${
+                            isLightMode ? 'border-[#FFE500]' : 'border-[#FFE500]/20'
+                          }`} 
+                          style={{ clipPath: 'polygon(0 0, 100% 0, 98% 100%, 0% 100%)', zIndex: 30 }} 
+                        />
+                        
+                        {isLightMode && (
+                          <>
+                            <div 
+                              className="absolute inset-0 border-2 border-black/30" 
+                              style={{ 
+                                clipPath: 'polygon(0 0, 100% 0, 98% 100%, 0% 100%)',
+                                transform: 'translate(2px, 2px)',
+                                zIndex: 20,
+                              }} 
+                            />
+                            <div 
+                              className="absolute inset-0 border border-black/20" 
+                              style={{ 
+                                clipPath: 'polygon(0 0, 100% 0, 98% 100%, 0% 100%)',
+                                transform: 'translate(-1px, -1px)',
+                                zIndex: 10,
+                              }} 
+                            />
+                          </>
+                        )}
+                        
+                        {/* Diagonal accent */}
+                        <div className="absolute top-0 right-0 w-32 h-[2px] bg-[#FFE500] transform rotate-45 translate-x-12 translate-y-12 z-30" />
+                      </div>
+
+                      {/* Content */}
+                      <div className="relative z-40 p-6 flex-1 flex flex-col">
+                        {/* Header */}
+                        <div className="flex items-center justify-between mb-4">
+                          <span className={`text-xs font-mono ${isLightMode ? 'text-black/30' : 'text-white/20'} ${language === 'ar' ? 'font-tajawal' : ''}`}>
+                            {index === 0 ? '01' : '02'}
+                          </span>
+                        </div>
+
+                        {/* Title and description */}
+                        <div className="mb-4">
+                          <h2 className={`text-2xl md:text-3xl font-black tracking-tighter mb-2 ${
+                            isLightMode ? 'text-black' : 'text-white'
+                          } ${language === 'ar' ? 'font-tajawal' : ''}`}>
+                            {portal.name}
+                          </h2>
+                          <p className={`text-xs font-mono ${
+                            isLightMode ? 'text-black/40' : 'text-white/30'
+                          } ${language === 'ar' ? 'font-tajawal' : ''}`}>
+                            {portal.description}
+                          </p>
+                        </div>
+
+                        {/* Device Controls */}
+                        <div className="flex flex-wrap items-center gap-2 mb-4">
+                          {viewModeButtons.map(({ icon: Icon, mode, label }) => (
+                            <button
+                              key={mode}
+                              onClick={() => portal.setViewMode(mode)}
+                              className={`flex items-center gap-1 px-3 py-1.5 text-xs font-mono border rounded transition-all ${
+                                portal.viewMode === mode
+                                  ? isLightMode 
+                                    ? 'bg-[#FFE500] border-[#FFE500] text-black' 
+                                    : 'bg-[#FFE500] border-[#FFE500] text-black'
+                                  : isLightMode 
+                                    ? 'border-black/20 text-black/60 hover:border-[#FFE500]' 
+                                    : 'border-white/20 text-white/60 hover:border-[#FFE500]'
+                              } ${language === 'ar' ? 'font-tajawal' : ''}`}
+                            >
+                              <Icon size={12} />
+                              <span>{label}</span>
+                            </button>
+                          ))}
+                          
+                          <div className="flex items-center gap-1 ml-auto">
+                            <button
+                              onClick={() => handleRefresh(portal.id)}
+                              disabled={isRefreshing === portal.id}
+                              className={`p-1.5 rounded transition-colors ${
+                                isLightMode 
+                                  ? 'border border-black/20 hover:border-[#FFE500] text-black/60 hover:text-[#FFE500]' 
+                                  : 'border border-white/20 hover:border-[#FFE500] text-white/60 hover:text-[#FFE500]'
+                              }`}
+                            >
+                              <RefreshCw size={14} className={isRefreshing === portal.id ? 'animate-spin' : ''} />
+                            </button>
+                            <button
+                              onClick={() => openFullscreen(portal.iframeRef)}
+                              className={`p-1.5 rounded transition-colors ${
+                                isLightMode 
+                                  ? 'border border-black/20 hover:border-[#FFE500] text-black/60 hover:text-[#FFE500]' 
+                                  : 'border border-white/20 hover:border-[#FFE500] text-white/60 hover:text-[#FFE500]'
+                              }`}
+                            >
+                              <Maximize2 size={14} />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Iframe Preview */}
+                        <div className="relative mb-4 bg-black/5 dark:bg-white/5 rounded-lg overflow-hidden">
+                          <div className={`${portal.viewMode !== 'desktop' ? 'flex justify-center' : ''}`}>
+                            <div
+                              style={{
+                                width: viewportSizes[portal.viewMode].width,
+                                maxWidth: '100%',
+                                margin: '0 auto'
+                              }}
+                            >
+                              <iframe
+                                ref={portal.iframeRef}
+                                src={typeof window !== 'undefined' ? window.location.origin + portal.path : ''}
+                                className={`w-full ${
+                                  portal.viewMode === 'mobile' ? 'h-[500px]' : 
+                                  portal.viewMode === 'tablet' ? 'h-[600px]' : 'h-[400px]'
+                                } rounded-lg border ${
+                                  portal.viewMode !== 'desktop' ? 'border-2 border-black/20 dark:border-white/20' : 'border-black/10 dark:border-white/10'
+                                }`}
+                                title={`${portal.name} Preview`}
+                                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                                loading="lazy"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Stats */}
+                        <div className="grid grid-cols-2 gap-3 mb-4">
+                          <div>
+                            <p className={`text-[10px] font-mono mb-1 ${
+                              isLightMode ? 'text-[#FFE500]' : 'text-[#FFE500]/60'
+                            } ${language === 'ar' ? 'font-tajawal' : ''}`}>
+                              {currentLang.portals.dimension}
+                            </p>
+                            <p className={`text-xs font-mono ${
+                              isLightMode ? 'text-black' : 'text-white/80'
+                            } ${language === 'ar' ? 'font-tajawal' : ''}`}>{portal.dimension}</p>
+                          </div>
+                          <div>
+                            <p className={`text-[10px] font-mono mb-1 ${
+                              isLightMode ? 'text-[#FFE500]' : 'text-[#FFE500]/60'
+                            } ${language === 'ar' ? 'font-tajawal' : ''}`}>
+                              {currentLang.portals.stability}
+                            </p>
+                            <p className={`text-xs font-mono ${
+                              isLightMode ? 'text-black' : 'text-white/80'
+                            } ${language === 'ar' ? 'font-tajawal' : ''}`}>{portal.stability}</p>
+                          </div>
+                        </div>
+
+                        {/* Enter Button */}
+                        <Link href={portal.path}>
+                          <motion.div 
+                            className={`flex items-center justify-center gap-2 py-3 px-4 border rounded transition-colors cursor-pointer ${
+                              isLightMode 
+                                ? 'border-black/20 hover:border-[#FFE500] text-black/70 hover:text-[#FFE500]' 
+                                : 'border-white/20 hover:border-[#FFE500] text-white/70 hover:text-[#FFE500]'
+                            }`}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <span className={`text-sm font-mono ${language === 'ar' ? 'font-tajawal' : ''}`}>{currentLang.portals.enter}</span>
+                            <ArrowRight size={16} className={language === 'ar' ? 'rotate-180' : ''} />
+                          </motion.div>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Footer */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              viewport={{ once: true }}
+              className="mt-16 text-center"
+            >
+              <p className={`text-xs font-mono tracking-[0.3em] ${
+                isLightMode ? 'text-black/20' : 'text-white/20'
+              } ${language === 'ar' ? 'font-tajawal' : ''}`}>
+                {currentLang.portals.footer}
+              </p>
+            </motion.div>
+          </div>
+        </section>
       </div>
     </>
   )

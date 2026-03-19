@@ -1,4 +1,6 @@
 // app/(spider)/page.tsx
+'use client'
+
 import HeroSection from '@/components/sections/HeroSection'
 import PanelsSection from '@/components/sections/PanelsSection'
 import SpideyScreenSection from '@/components/sections/SpideyScreenSection'

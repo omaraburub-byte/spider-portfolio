@@ -1,7 +1,8 @@
+// components/sections/SpideyScreenSection.tsx
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { RefreshCw, Smartphone, Tablet, Monitor, Maximize2, Tv, MessageSquare } from 'lucide-react'
+import { RefreshCw, Smartphone, Tablet, Monitor, Maximize2, MessageSquare } from 'lucide-react'
 
 type ViewMode = 'mobile' | 'tablet' | 'desktop'
 
@@ -47,20 +48,14 @@ export default function SpideyScreenSection() {
         {/* Header with comic speech bubble */}
         <div className="mb-12 text-center relative">
           <div className="flex items-center justify-center gap-3 mb-6">
-            {/* Tv icon with solid shadows like the text */}
-            {/* <div className="relative">
-              <Tv className="w-12 h-12 text-foreground relative z-10" />
-              <Tv className="w-12 h-12 text-[#E62429] absolute top-0 left-0 translate-x-[1px] translate-y-[1px]" />
-              <Tv className="w-12 h-12 text-[#1A73E8] absolute top-0 left-0 -translate-x-[1px] -translate-y-[1px]" />
-            </div> */}
             <h2 className="font-barrio text-4xl text-foreground [text-shadow:1px_1px_0_#E62429,-1px_-1px_0_#1A73E8] dark:[text-shadow:1px_1px_0_#E62429,-1px_-1px_0_#1A73E8]">
               SPIDEY-SCREEN
             </h2>
           </div>
-                <p className="text-muted-foreground font-mono max-w-2xl mx-auto text-md">
+          <p className="text-muted-foreground font-mono max-w-2xl mx-auto text-md">
             <span className="text-[#E62429]">A meta showcase:</span> this portfolio viewing itself. Interactive preview with device simulation. this is called <span className=" font-mono text-[#E62429]">recursive rendering</span>
           </p>
-          {/* Comic speech bubble - minimal but stylish */}
+          {/* Comic speech bubble */}
           <div className="mt-6 relative inline-block">
             <div className="relative bg-white dark:bg-gray-900 border-2 border-black dark:border-white rounded-lg px-4 py-3 shadow-[2px_2px_0_0_rgba(0,0,0,0.3)]">
               <div className="flex items-center gap-2">
@@ -131,7 +126,7 @@ export default function SpideyScreenSection() {
                   <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
                 </div>
                 <div className="font-mono text-xs text-muted-foreground truncate dark:text-muted-foreground">
-                  {hasLoaded ? window.location.origin : 'Loading...'}
+                  {hasLoaded ? window.location.origin + '/spider' : 'Loading...'}
                 </div>
               </div>
               <div className="text-xs font-barrio bg-[#E62429] text-white px-2 py-1 rounded dark:bg-[#E62429]">
@@ -144,25 +139,25 @@ export default function SpideyScreenSection() {
               {hasLoaded ? (
                 <div className={`${viewMode !== 'desktop' ? 'flex justify-center' : ''}`}>
                   <iframe
-                    ref={iframeRef}
-                    src={typeof window !== 'undefined' ? window.location.origin : ''}
-                    className={`
-                      transition-all duration-300
-                      ${viewMode === 'mobile' ? 'border-[16px] border-black rounded-[32px] shadow-xl' : ''}
-                      ${viewMode === 'tablet' ? 'border-[20px] border-black rounded-[40px] shadow-2xl' : ''}
-                      ${viewMode === 'desktop' ? 'rounded-lg' : ''}
-                    `}
-                    style={{
-                      width: viewportSizes[viewMode].width,
-                      height: viewportSizes[viewMode].height,
-                      maxWidth: '100%',
-                      border: viewMode === 'desktop' ? '1px solid var(--border)' : 'none',
-                    }}
-                    title="Portfolio Preview"
-                    sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                    loading="lazy"
-                    onLoad={() => setIsRefreshing(false)}
-                  />
+  ref={iframeRef}
+  src="/spider"
+  className={`
+    transition-all duration-300 bg-white
+    ${viewMode === 'mobile' ? 'border-[16px] border-black rounded-[32px] shadow-xl' : ''}
+    ${viewMode === 'tablet' ? 'border-[20px] border-black rounded-[40px] shadow-2xl' : ''}
+    ${viewMode === 'desktop' ? 'rounded-lg border border-gray-200 dark:border-gray-700' : ''}
+  `}
+  style={{
+    width: viewportSizes[viewMode].width,
+    height: viewportSizes[viewMode].height,
+    maxWidth: '100%',
+    margin: '0 auto'
+  }}
+  title="Spider-Verse Preview"
+  sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+  loading="eager"
+  onLoad={() => setIsRefreshing(false)}
+/>
                 </div>
               ) : (
                 <div 

@@ -3,7 +3,6 @@ import { Montserrat } from 'next/font/google'
 import './globals.css'
 import ClientLayout from './ClientLayout'
 
-
 const montserrat = Montserrat({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -44,8 +43,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/site.webmanifest" />
+        <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
       </head>
-      <body className={`${montserrat.className} antialiased relative`}>
+      <body className={`${montserrat.className} antialiased relative`} suppressHydrationWarning>
         <ClientLayout>
           {children}
         </ClientLayout>

@@ -1,5 +1,7 @@
 {
+  "/spider/page": "app/spider/page.js",
   "/landing/page": "app/landing/page.js",
-  "/page": "app/page.js",
-  "/spider/page": "app/spider/page.js"
+  "/soul/page": "app/soul/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/404/page": "app/404/page.js"
 }

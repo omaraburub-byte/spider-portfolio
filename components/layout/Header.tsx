@@ -248,14 +248,14 @@ export default function Header() {
             </motion.a>
           </div>
 
-          {/* Theme Toggle */}
+          {/* Theme Toggle - FIXED */}
           <motion.button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             className="text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            {mounted ? (theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />) : <div className="w-[18px] h-[18px]" />}
           </motion.button>
 
           {/* Menu Button */}

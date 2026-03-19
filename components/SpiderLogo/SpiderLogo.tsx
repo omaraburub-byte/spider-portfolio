@@ -1,21 +1,35 @@
 // components/SpiderLogo.tsx
 'use client'
 
-import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 
 export default function SpiderLogo({ 
   className = "w-10 h-10",
-  spin = true // Add spin prop with default
+  spin = true
 }: { 
   className?: string
-  spin?: boolean // Add this to the type
+  spin?: boolean
 }) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Return null during SSR, only render on client
+  if (!mounted) return null
+
   return (
-    <motion.div
+    <div
       className={className}
-      animate={spin ? { rotate: 360 } : {}}
-      transition={spin ? { duration: 20, repeat: Infinity, ease: "linear" } : {}}
+      style={spin ? { animation: 'spin 20s linear infinite' } : undefined}
     >
+      <style jsx>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
       <svg
         width="100%"
         height="100%"
@@ -23,7 +37,6 @@ export default function SpiderLogo({
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* SVG path stays the same */}
         <g clipPath="url(#clip0_30_32)">
           <mask
             id="mask0_30_32"
@@ -48,6 +61,6 @@ export default function SpiderLogo({
           </clipPath>
         </defs>
       </svg>
-    </motion.div>
+    </div>
   )
 }
