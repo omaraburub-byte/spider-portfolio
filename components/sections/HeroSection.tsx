@@ -738,12 +738,13 @@ export default function HeroSection() {
       {/* Main content */}
       <div className="container mx-auto px-4 sm:px-6 relative z-20 flex items-center justify-center" style={{ minHeight: '100vh' }}>
         <div className="max-w-3xl mx-auto text-center px-2 sm:px-0" style={{ marginTop: '-2rem' }}>
-          {/* Name with integrated spider */}
+          {/* Name with integrated spider - ADDED dir="ltr" to fix RTL flipping */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isPreloaderDone ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8 }}
             className="mb-4 sm:mb-6"
+            dir="ltr"
           >
             <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-light tracking-tight flex items-center justify-center text-gray-900 dark:text-white">
               <div className="relative">
