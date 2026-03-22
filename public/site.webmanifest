@@ -1,5 +1,5 @@
 {
-  "name": "OMAR",
+  "name": "Omar's World",
   "short_name": "OMAR",
   "icons": [
     {
@@ -16,6 +16,6 @@
     }
   ],
   "theme_color": "#000000",
-  "background_color": "#373737",
+  "background_color": "#000000",
   "display": "standalone"
 }

@@ -382,11 +382,37 @@ export default function RacingPortalPage() {
       } rugged-overlay`}>
         {/* Background */}
         <div className="fixed inset-0">
+          {/* Vintage World Map Background - ovmap.jpg with improved light mode styling */}
+          <div className="absolute inset-0">
+            <Image
+              src="/ovmap.jpg"
+              alt="Vintage World Map"
+              fill
+              className="object-cover"
+              priority
+              quality={100}
+              style={{
+                opacity: isLightMode ? 0.25 : 0.6,
+                filter: isLightMode ? 'sepia(0.3) contrast(1.2) brightness(1.1)' : 'sepia(0.2) contrast(1.1)',
+              }}
+              onError={(e) => {
+                console.error('Failed to load /ovmap.jpg');
+              }}
+            />
+            {/* Softer overlay for light mode */}
+            <div className={`absolute inset-0 ${
+              isLightMode 
+                ? 'bg-gradient-to-br from-white/85 via-white/70 to-white/85' 
+                : 'bg-[#0A0A0A]/70'
+            }`} />
+          </div>
+          
+          {/* Original gradient overlays - adjusted for light mode */}
           <div className={`absolute inset-0 bg-gradient-to-br transition-colors duration-500 ${
             isLightMode 
-              ? 'from-white via-zinc-50 to-white' 
+              ? 'from-white/30 via-transparent to-white/30' 
               : 'from-[#0A0A0A] via-zinc-900 to-[#0A0A0A]'
-          }`} />
+          } ${isLightMode ? 'opacity-100' : 'opacity-40'}`} />
           
           {/* Compass-inspired decorative lines */}
           <div className="absolute inset-0 opacity-10">
@@ -405,7 +431,7 @@ export default function RacingPortalPage() {
                   transform: 'rotate(65deg) translateY(-50%)',
                   top: '-50%',
                   width: '2px',
-                  background: `linear-gradient(to bottom, transparent, ${isLightMode ? '#FFE500' : '#FFE50040'}, transparent)`,
+                  background: `linear-gradient(to bottom, transparent, ${isLightMode ? '#FFE50060' : '#FFE50040'}, transparent)`,
                 }}
                 animate={{ opacity: [0.25, 0.7, 0.25] }}
                 transition={{ duration: 3, repeat: Infinity, repeatType: "loop", delay: i * 0.2 }}
@@ -424,9 +450,9 @@ export default function RacingPortalPage() {
                     transform: 'rotate(65deg) translateY(-50%)',
                     top: '-50%',
                     width: '1px',
-                    background: `linear-gradient(to bottom, transparent, #00000060, transparent)`,
+                    background: `linear-gradient(to bottom, transparent, #00000030, transparent)`,
                   }}
-                  animate={{ opacity: [0.15, 0.3, 0.15] }}
+                  animate={{ opacity: [0.1, 0.2, 0.1] }}
                   transition={{ duration: 3, repeat: Infinity, repeatType: "loop", delay: i * 0.2 + 0.1 }}
                 />
               ))}
@@ -435,7 +461,7 @@ export default function RacingPortalPage() {
 
           <div className={`absolute inset-0 transition-colors duration-500 ${
             isLightMode 
-              ? 'bg-radial-gradient from-transparent to-white/90' 
+              ? 'bg-radial-gradient from-transparent via-white/20 to-white/60' 
               : 'bg-radial-gradient from-transparent to-[#0A0A0A]/90'
           }`} />
         </div>
