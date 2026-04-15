@@ -10,227 +10,214 @@ interface PreloaderProps {
 }
 
 export default function PPreloader({ isLightMode, showPreloader }: PreloaderProps) {
-  const [currentWordIndex, setCurrentWordIndex] = useState(0)
-  const words = ['OMAR', 'ARTIST', 'ARCHITECT', 'SPIDER', 'SOUL']
+  const bg = isLightMode ? '#F8F6F0' : '#0A0A0A'
+  const primary = isLightMode ? '#0A0A0A' : '#F8F6F0'
+  const accent = isLightMode ? '#D4A373' : '#E9C46A'
+  
+  const [progress, setProgress] = useState(0)
 
   useEffect(() => {
-    const wordInterval = setInterval(() => {
-      setCurrentWordIndex((prev) => (prev + 1) % words.length)
-    }, 400)
+    if (showPreloader) {
+      const interval = setInterval(() => {
+        setProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(interval)
+            return 100
+          }
+          return prev + 2
+        })
+      }, 50)
+      
+      return () => clearInterval(interval)
+    } else {
+      setProgress(0)
+    }
+  }, [showPreloader])
 
-    return () => clearInterval(wordInterval)
-  }, [])
-
+  const letters = ['O', 'm', 'a', 'r']
+  
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {showPreloader && (
         <motion.div
+          key="preloader"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: "easeInOut" }}
-          className={`fixed inset-0 z-[100] flex items-center justify-center ${
-            isLightMode ? 'bg-white' : 'bg-[#0A0A0A]'
-          }`}
+          exit={{ 
+            opacity: 0,
+            transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] }
+          }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 100,
+            background: bg,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+          }}
         >
-          <div className="relative w-full max-w-6xl mx-auto px-8">
-            {/* Animated orbs */}
-            <motion.div
-              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full ${
-                isLightMode ? 'bg-[#FFE500]/10' : 'bg-[#FFE500]/10'
-              }`}
-              animate={{ 
-                scale: [1, 1.2, 1],
-                opacity: [0.1, 0.2, 0.1],
-              }}
-              transition={{ 
-                duration: 3, 
-                repeat: Infinity, 
-                repeatType: "loop",
-                ease: "easeInOut" 
-              }}
-              style={{ filter: 'blur(60px)' }}
-            />
-            
-            {/* Top line */}
-            <motion.div 
-              className={`absolute top-0 left-0 right-0 h-[2px] ${
-                isLightMode ? 'bg-[#FFE500]' : 'bg-[#FFE500]/40'
-              }`}
-              initial={{ scaleX: 0, originX: 1 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-            />
-            
-            {/* Bottom line */}
-            <motion.div 
-              className={`absolute bottom-0 left-0 right-0 h-[2px] ${
-                isLightMode ? 'bg-[#FFE500]' : 'bg-[#FFE500]/40'
-              }`}
-              initial={{ scaleX: 0, originX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
-            />
+          {/* Background geometric elements */}
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 0.03 }}
+            transition={{ duration: 1.5, ease: 'easeOut' }}
+            style={{
+              position: 'absolute',
+              width: 'min(800px, 90vw)',
+              height: 'min(800px, 90vw)',
+              borderRadius: '50%',
+              border: `2px solid ${primary}`,
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+          />
+          
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 0.05 }}
+            transition={{ duration: 1.8, ease: 'easeOut', delay: 0.2 }}
+            style={{
+              position: 'absolute',
+              width: 'min(600px, 70vw)',
+              height: 'min(600px, 70vw)',
+              borderRadius: '50%',
+              border: `1px solid ${primary}`,
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+          />
 
-            {/* Main content */}
-            <div className="relative py-20">
-              {/* Left text */}
-              <motion.div
-                className="absolute left-0 bottom-0"
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-              >
-                <span className={`text-xs font-mono tracking-[0.3em] ${
-                  isLightMode ? 'text-black/40' : 'text-white/30'
-                }`}>
-                  DIMENSIONAL PORTAL
-                </span>
-              </motion.div>
-
-              {/* Right text */}
-              <motion.div
-                className="absolute right-0 bottom-0"
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-              >
-                <span className={`text-xs font-mono tracking-[0.3em] ${
-                  isLightMode ? 'text-black/40' : 'text-white/30'
-                }`}>
-                  {new Date().getFullYear()}
-                </span>
-              </motion.div>
-
-              {/* Main text with word changer - CLEAN */}
-              <div className="overflow-hidden">
-                <motion.div
-                  initial={{ x: '100%' }}
-                  animate={{ x: 0 }}
-                  transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-                  className="text-center"
+          {/* Main content container */}
+          <div style={{ position: 'relative', textAlign: 'center' }}>
+            {/* Animated letters */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(4px, 1vw, 12px)' }}>
+              {letters.map((letter, index) => (
+                <motion.span
+                  key={index}
+                  initial={{ 
+                    y: 100, 
+                    opacity: 0,
+                    rotateX: 90
+                  }}
+                  animate={{ 
+                    y: 0, 
+                    opacity: 1,
+                    rotateX: 0,
+                    transition: {
+                      duration: 0.8,
+                      delay: 0.1 * index,
+                      ease: [0.25, 0.1, 0.25, 1],
+                    }
+                  }}
+                  exit={{
+                    opacity: 0,
+                    scale: index % 2 === 0 ? 80 : 0,
+                    transition: {
+                      duration: 1.2,
+                      delay: 1.5 + (0.05 * index),
+                      ease: [0.76, 0, 0.24, 1],
+                    }
+                  }}
+                  style={{
+                    fontFamily: "'Nathan', 'Poppins', sans-serif",
+                    fontSize: 'clamp(80px, 16vw, 160px)',
+                    fontWeight: 900,
+                    letterSpacing: '-0.04em',
+                    color: primary,
+                    lineHeight: 1,
+                    userSelect: 'none',
+                    display: 'inline-block',
+                    transformStyle: 'preserve-3d',
+                    textShadow: isLightMode 
+                      ? '0 0 40px rgba(10,10,10,0.1)'
+                      : '0 0 40px rgba(255,255,255,0.1)',
+                  }}
                 >
-                  <motion.h1
-                    key={currentWordIndex}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className={`text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter whitespace-nowrap ${
-                      isLightMode ? 'text-black' : 'text-white'
-                    }`}
-                  >
-                    {words[currentWordIndex]}
-                  </motion.h1>
-                </motion.div>
-              </div>
-
-              {/* Yellow shadow */}
-              <div className="absolute inset-0 -z-10 overflow-hidden">
-                <motion.div
-                  initial={{ x: '100%' }}
-                  animate={{ x: 0 }}
-                  transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-                  className="text-center"
-                >
-                  <h1 className={`text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter whitespace-nowrap ${
-                    isLightMode ? 'text-[#FFE500]' : 'text-[#FFE500]/40'
-                  }`}>
-                    {words[currentWordIndex]}
-                  </h1>
-                </motion.div>
-              </div>
-
-              {/* Black outline */}
-              {isLightMode && (
-                <div className="absolute inset-0 -z-20 overflow-hidden">
-                  <motion.div
-                    initial={{ x: '100%' }}
-                    animate={{ x: 0 }}
-                    transition={{ duration: 1.2, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-                    className="text-center"
-                  >
-                    <h1 className="text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter whitespace-nowrap text-black/30">
-                      {words[currentWordIndex]}
-                    </h1>
-                  </motion.div>
-                </div>
-              )}
-
-              {/* Corner accents - simplified */}
-              <div className="absolute top-0 left-0 w-20 h-20">
-                <motion.div 
-                  className={`absolute top-0 left-0 w-12 h-[2px] ${
-                    isLightMode ? 'bg-[#FFE500]' : 'bg-[#FFE500]/40'
-                  }`}
-                  initial={{ scaleX: 0, originX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: 0.8, delay: 1 }}
-                />
-                <motion.div 
-                  className={`absolute top-0 left-0 w-[2px] h-12 ${
-                    isLightMode ? 'bg-[#FFE500]' : 'bg-[#FFE500]/40'
-                  }`}
-                  initial={{ scaleY: 0, originY: 0 }}
-                  animate={{ scaleY: 1 }}
-                  transition={{ duration: 0.8, delay: 1 }}
-                />
-              </div>
-              <div className="absolute top-0 right-0 w-20 h-20">
-                <motion.div 
-                  className={`absolute top-0 right-0 w-12 h-[2px] ${
-                    isLightMode ? 'bg-[#FFE500]' : 'bg-[#FFE500]/40'
-                  }`}
-                  initial={{ scaleX: 0, originX: 1 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: 0.8, delay: 1.2 }}
-                />
-                <motion.div 
-                  className={`absolute top-0 right-0 w-[2px] h-12 ${
-                    isLightMode ? 'bg-[#FFE500]' : 'bg-[#FFE500]/40'
-                  }`}
-                  initial={{ scaleY: 0, originY: 0 }}
-                  animate={{ scaleY: 1 }}
-                  transition={{ duration: 0.8, delay: 1.2 }}
-                />
-              </div>
-              <div className="absolute bottom-0 left-0 w-20 h-20">
-                <motion.div 
-                  className={`absolute bottom-0 left-0 w-12 h-[2px] ${
-                    isLightMode ? 'bg-[#FFE500]' : 'bg-[#FFE500]/40'
-                  }`}
-                  initial={{ scaleX: 0, originX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: 0.8, delay: 1.4 }}
-                />
-                <motion.div 
-                  className={`absolute bottom-0 left-0 w-[2px] h-12 ${
-                    isLightMode ? 'bg-[#FFE500]' : 'bg-[#FFE500]/40'
-                  }`}
-                  initial={{ scaleY: 0, originY: 1 }}
-                  animate={{ scaleY: 1 }}
-                  transition={{ duration: 0.8, delay: 1.4 }}
-                />
-              </div>
-              <div className="absolute bottom-0 right-0 w-20 h-20">
-                <motion.div 
-                  className={`absolute bottom-0 right-0 w-12 h-[2px] ${
-                    isLightMode ? 'bg-[#FFE500]' : 'bg-[#FFE500]/40'
-                  }`}
-                  initial={{ scaleX: 0, originX: 1 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: 0.8, delay: 1.6 }}
-                />
-                <motion.div 
-                  className={`absolute bottom-0 right-0 w-[2px] h-12 ${
-                    isLightMode ? 'bg-[#FFE500]' : 'bg-[#FFE500]/40'
-                  }`}
-                  initial={{ scaleY: 0, originY: 1 }}
-                  animate={{ scaleY: 1 }}
-                  transition={{ duration: 0.8, delay: 1.6 }}
-                />
-              </div>
+                  {letter}
+                </motion.span>
+              ))}
             </div>
+
+            {/* Decorative line */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ 
+                scaleX: 1,
+                transition: { duration: 0.6, delay: 0.8, ease: 'easeOut' }
+              }}
+              exit={{ scaleX: 0, transition: { duration: 0.3 } }}
+              style={{
+                height: '2px',
+                background: `linear-gradient(90deg, transparent, ${accent}, transparent)`,
+                width: '100%',
+                marginTop: 'clamp(8px, 2vw, 20px)',
+                transformOrigin: 'center',
+              }}
+            />
+
+            {/* Progress indicator */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ 
+                opacity: 1, 
+                y: 0,
+                transition: { duration: 0.4, delay: 1 }
+              }}
+              exit={{ opacity: 0, transition: { duration: 0.2 } }}
+              style={{
+                marginTop: 'clamp(24px, 5vw, 48px)',
+                color: primary,
+                fontFamily: "'Poppins', sans-serif",
+                fontSize: '12px',
+                fontWeight: 500,
+                letterSpacing: '4px',
+                textTransform: 'uppercase',
+                opacity: 0.6,
+              }}
+            >
+              <motion.span
+                animate={{ opacity: [0.6, 1, 0.6] }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                {Math.round(progress)}% LOADING
+              </motion.span>
+            </motion.div>
           </div>
+
+          {/* Corner accents */}
+          {['top-left', 'top-right', 'bottom-left', 'bottom-right'].map((position, i) => {
+            const styles = {
+              position: 'absolute' as const,
+              width: 'clamp(40px, 8vw, 100px)',
+              height: 'clamp(40px, 8vw, 100px)',
+              ...(position === 'top-left' && { top: 'clamp(20px, 4vw, 48px)', left: 'clamp(20px, 4vw, 48px)', borderTop: `2px solid ${primary}`, borderLeft: `2px solid ${primary}` }),
+              ...(position === 'top-right' && { top: 'clamp(20px, 4vw, 48px)', right: 'clamp(20px, 4vw, 48px)', borderTop: `2px solid ${primary}`, borderRight: `2px solid ${primary}` }),
+              ...(position === 'bottom-left' && { bottom: 'clamp(20px, 4vw, 48px)', left: 'clamp(20px, 4vw, 48px)', borderBottom: `2px solid ${primary}`, borderLeft: `2px solid ${primary}` }),
+              ...(position === 'bottom-right' && { bottom: 'clamp(20px, 4vw, 48px)', right: 'clamp(20px, 4vw, 48px)', borderBottom: `2px solid ${primary}`, borderRight: `2px solid ${primary}` }),
+            }
+            
+            return (
+              <motion.div
+                key={position}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ 
+                  opacity: 0.15,
+                  scale: 1,
+                  transition: { duration: 0.6, delay: 0.3 + (i * 0.1), ease: 'easeOut' }
+                }}
+                exit={{ 
+                  opacity: 0,
+                  scale: 0,
+                  transition: { duration: 0.3, delay: i * 0.05 }
+                }}
+                style={styles}
+              />
+            )
+          })}
         </motion.div>
       )}
     </AnimatePresence>
