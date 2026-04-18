@@ -15,6 +15,22 @@ export default function PPreloader({ isLightMode, showPreloader }: PreloaderProp
   const accent = isLightMode ? '#D4A373' : '#E9C46A'
   
   const [progress, setProgress] = useState(0)
+  const [language, setLanguage] = useState<'en' | 'ar'>('en')
+
+  useEffect(() => {
+    // Get language from localStorage
+    const savedLang = localStorage.getItem('portal-language')
+    if (savedLang) setLanguage(savedLang as 'en' | 'ar')
+    
+    // Listen for language changes
+    const handleStorage = () => {
+      const lang = localStorage.getItem('portal-language')
+      if (lang) setLanguage(lang as 'en' | 'ar')
+    }
+    
+    window.addEventListener('storage', handleStorage)
+    return () => window.removeEventListener('storage', handleStorage)
+  }, [])
 
   useEffect(() => {
     if (showPreloader) {
@@ -34,7 +50,10 @@ export default function PPreloader({ isLightMode, showPreloader }: PreloaderProp
     }
   }, [showPreloader])
 
-  const letters = ['O', 'm', 'a', 'r']
+  // Use different text based on language
+  const letters = language === 'en' 
+    ? ['O', 'm', 'a', 'r']
+    : null // Arabic will be displayed as a single word
   
   return (
     <AnimatePresence mode="wait">
@@ -93,54 +112,102 @@ export default function PPreloader({ isLightMode, showPreloader }: PreloaderProp
 
           {/* Main content container */}
           <div style={{ position: 'relative', textAlign: 'center' }}>
-            {/* Animated letters */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(4px, 1vw, 12px)' }}>
-              {letters.map((letter, index) => (
-                <motion.span
-                  key={index}
-                  initial={{ 
-                    y: 100, 
-                    opacity: 0,
-                    rotateX: 90
-                  }}
-                  animate={{ 
-                    y: 0, 
-                    opacity: 1,
-                    rotateX: 0,
-                    transition: {
-                      duration: 0.8,
-                      delay: 0.1 * index,
-                      ease: [0.25, 0.1, 0.25, 1],
-                    }
-                  }}
-                  exit={{
-                    opacity: 0,
-                    scale: index % 2 === 0 ? 80 : 0,
-                    transition: {
-                      duration: 1.2,
-                      delay: 1.5 + (0.05 * index),
-                      ease: [0.76, 0, 0.24, 1],
-                    }
-                  }}
+            {/* Animated text */}
+            {language === 'en' ? (
+              // English - individual letters
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(4px, 1vw, 12px)' }}>
+                {letters!.map((letter, index) => (
+                  <motion.span
+                    key={index}
+                    initial={{ 
+                      y: 100, 
+                      opacity: 0,
+                      rotateX: 90
+                    }}
+                    animate={{ 
+                      y: 0, 
+                      opacity: 1,
+                      rotateX: 0,
+                      transition: {
+                        duration: 0.8,
+                        delay: 0.1 * index,
+                        ease: [0.25, 0.1, 0.25, 1],
+                      }
+                    }}
+                    exit={{
+                      opacity: 0,
+                      scale: index % 2 === 0 ? 80 : 0,
+                      transition: {
+                        duration: 1.2,
+                        delay: 1.5 + (0.05 * index),
+                        ease: [0.76, 0, 0.24, 1],
+                      }
+                    }}
+                    style={{
+                      fontFamily: "'Nathan', 'Poppins', sans-serif",
+                      fontSize: 'clamp(80px, 16vw, 160px)',
+                      fontWeight: 900,
+                      letterSpacing: '-0.04em',
+                      color: primary,
+                      lineHeight: 1,
+                      userSelect: 'none',
+                      display: 'inline-block',
+                      transformStyle: 'preserve-3d',
+                      textShadow: isLightMode 
+                        ? '0 0 40px rgba(10,10,10,0.1)'
+                        : '0 0 40px rgba(255,255,255,0.1)',
+                    }}
+                  >
+                    {letter}
+                  </motion.span>
+                ))}
+              </div>
+            ) : (
+              // Arabic - single connected word
+              <motion.div
+                initial={{ 
+                  y: 100, 
+                  opacity: 0,
+                }}
+                animate={{ 
+                  y: 0, 
+                  opacity: 1,
+                  transition: {
+                    duration: 0.8,
+                    ease: [0.25, 0.1, 0.25, 1],
+                  }
+                }}
+                exit={{
+                  opacity: 0,
+                  scale: 0,
+                  transition: {
+                    duration: 1.2,
+                    delay: 1.5,
+                    ease: [0.76, 0, 0.24, 1],
+                  }
+                }}
+                style={{
+                  marginBottom: 'clamp(12px, 2.5vw, 24px)', // Extra space below Arabic text
+                }}
+              >
+                <span
                   style={{
-                    fontFamily: "'Nathan', 'Poppins', sans-serif",
-                    fontSize: 'clamp(80px, 16vw, 160px)',
+                    fontFamily: "'Tajawal', 'Nathan', 'Poppins', sans-serif",
+                    fontSize: 'clamp(120px, 20vw, 200px)',
                     fontWeight: 900,
-                    letterSpacing: '-0.04em',
                     color: primary,
-                    lineHeight: 1,
+                    lineHeight: 1.2,
                     userSelect: 'none',
                     display: 'inline-block',
-                    transformStyle: 'preserve-3d',
                     textShadow: isLightMode 
                       ? '0 0 40px rgba(10,10,10,0.1)'
                       : '0 0 40px rgba(255,255,255,0.1)',
                   }}
                 >
-                  {letter}
-                </motion.span>
-              ))}
-            </div>
+                  عمر
+                </span>
+              </motion.div>
+            )}
 
             {/* Decorative line */}
             <motion.div
@@ -154,7 +221,7 @@ export default function PPreloader({ isLightMode, showPreloader }: PreloaderProp
                 height: '2px',
                 background: `linear-gradient(90deg, transparent, ${accent}, transparent)`,
                 width: '100%',
-                marginTop: 'clamp(8px, 2vw, 20px)',
+                marginTop: language === 'ar' ? 'clamp(4px, 1vw, 8px)' : 'clamp(8px, 2vw, 20px)',
                 transformOrigin: 'center',
               }}
             />
@@ -171,10 +238,10 @@ export default function PPreloader({ isLightMode, showPreloader }: PreloaderProp
               style={{
                 marginTop: 'clamp(24px, 5vw, 48px)',
                 color: primary,
-                fontFamily: "'Poppins', sans-serif",
+                fontFamily: language === 'ar' ? "'Tajawal', sans-serif" : "'Poppins', sans-serif",
                 fontSize: '12px',
                 fontWeight: 500,
-                letterSpacing: '4px',
+                letterSpacing: language === 'ar' ? '2px' : '4px',
                 textTransform: 'uppercase',
                 opacity: 0.6,
               }}
@@ -183,7 +250,7 @@ export default function PPreloader({ isLightMode, showPreloader }: PreloaderProp
                 animate={{ opacity: [0.6, 1, 0.6] }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               >
-                {Math.round(progress)}% LOADING
+                {language === 'en' ? `${Math.round(progress)}% LOADING` : `جاري التحميل ${Math.round(progress)}%`}
               </motion.span>
             </motion.div>
           </div>
