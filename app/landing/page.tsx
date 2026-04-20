@@ -1,11 +1,12 @@
-// app/landing/page.tsx - FIXED PRELOADER PROP
+// app/landing/page.tsx - COMPLETE WITH 6 CHARACTERS (MORE HEIGHT, CORRECTED TYPES)
+
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
-import { ArrowRight, ChevronDown, Smartphone, Tablet, Monitor, Maximize2, RefreshCw, Languages, Compass, MapPin, Mountain, BookOpen } from 'lucide-react'
+import { ArrowRight, ChevronDown, Smartphone, Tablet, Monitor, Maximize2, RefreshCw, Languages, Compass, MapPin, Mountain, BookOpen, Shield, Book } from 'lucide-react'
 import Preloader from '@/components/PPreloader'
 
 // ─── Theme constants (dark mode only) ──────────────────────────────────────
@@ -18,6 +19,82 @@ const th = {
   accent:     '#FFD700',
 }
 
+// Enneagram Type 6 Characters
+const enneagram6Characters = [
+  {
+    id: 'yuta',
+    name: { en: 'Yuta Okkotsu', ar: 'يوتا أوكوتسو' },
+    anime: { en: 'Jujutsu Kaisen', ar: 'جوجتسو كايسن' },
+    type: '6w5',
+    story: {
+      en: 'A timid boy cursed by his childhood friend Rika. After joining Jujutsu High, he finds purpose, friends, and the courage to protect others — transforming fear into strength.',
+      ar: 'صبي خجول ملعون من قبل صديقة طفولته ريكا. بعد انضمامه إلى مدرسة الجوجتسو، وجد هدفاً وأصدقاء وشجاعة لحماية الآخرين.'
+    },
+    traits: { en: ['Loyal', 'Anxious', 'Protective'], ar: ['مخلص', 'قلق', 'حامٍ'] },
+    profileUrl: 'https://www.personality-database.com/profile/79830/yuta-okkotsu-jujutsu-kaisen-mbti-personality-type',
+  },
+  {
+    id: 'malcolm-x',
+    name: { en: 'Malcolm X', ar: 'مالكوم إكس' },
+    anime: { en: 'Historical Figure', ar: 'شخصية تاريخية' },
+    type: '6w5',
+    story: {
+      en: 'A civil rights leader who transformed from a street hustler to a powerful voice for Black empowerment. His fierce loyalty to his people and constant vigilance against oppression defined his journey.',
+      ar: 'قائد حقوق مدنية تحول من منحرف في الشوارع إلى صوت قوي لتمكين السود. ولاؤه الشديد لشعبه ويقظته المستمرة ضد الاضطهاد حددت رحلته.'
+    },
+    traits: { en: ['Loyal', 'Vigilant', 'Principled'], ar: ['مخلص', 'يقظ', 'مبدئي'] },
+    profileUrl: 'https://www.personality-database.com/profile/2302/malcolm-x-activists-mbti-personality-type',
+  },
+  {
+    id: 'leon',
+    name: { en: 'Leon S. Kennedy', ar: 'ليون إس كينيدي' },
+    anime: { en: 'Resident Evil', ar: 'ريزدنت إيفل' },
+    type: '6w5',
+    story: {
+      en: 'A rookie cop who survived Raccoon City and became a government agent. Driven by duty and a need to protect, he constantly faces impossible odds with dark humor and unwavering resolve.',
+      ar: 'شرطي مبتدئ نجا من مدينة راكون وأصبح عميل حكومي. مدفوعاً بالواجب والحاجة إلى الحماية، يواجه باستمرار احتمالات مستحيلة بروح دعابة داكنة وإصرار لا يتزعزع.'
+    },
+    traits: { en: ['Dutiful', 'Resilient', 'Protective'], ar: ['ملتزم', 'مرن', 'حامٍ'] },
+    profileUrl: 'https://www.personality-database.com/profile/8110/leon-scott-kennedy-resident-evil-mbti-personality-type',
+  },
+  {
+    id: 'peter',
+    name: { en: 'Peter Parker', ar: 'بيتر باركر' },
+    anime: { en: 'Spider-Man (MCU)', ar: 'الرجل العنكبوت (MCU)' },
+    type: '6w7',
+    story: {
+      en: 'A teenager who gains spider-like powers and learns that with great power comes great responsibility. Constantly anxious about protecting his loved ones while navigating adolescence.',
+      ar: 'مراهق يكتسب قوى تشبه العنكبوت ويتعلم أن القوة الكبيرة تجلب مسؤولية كبيرة. قلق باستمرار بشأن حماية أحبائه أثناء اجتياز فترة المراهقة.'
+    },
+    traits: { en: ['Responsible', 'Anxious', 'Selfless'], ar: ['مسؤول', 'قلق', 'مُضحٍ'] },
+    profileUrl: 'https://www.personality-database.com/profile/2589/peter-parker-spiderman-mcu-the-heroes-mbti-personality-type',
+  },
+  {
+    id: 'sung',
+    name: { en: 'Sung Jin-Woo', ar: 'سونغ جين وو' },
+    anime: { en: 'Solo Leveling', ar: 'سولو ليفيلينغ' },
+    type: '6w5',
+    story: {
+      en: 'The weakest hunter who becomes the strongest after a near-death experience. His constant preparation, strategic mind, and fierce protectiveness of his family drive his relentless growth.',
+      ar: 'أضعف صياد يصبح الأقوى بعد تجربة قريبة من الموت. استعداده الدائم، وعقله الاستراتيجي، وحمايته الشرسة لعائلته تدفع نموه المتواصل.'
+    },
+    traits: { en: ['Strategic', 'Protective', 'Determined'], ar: ['استراتيجي', 'حامٍ', 'مصمم'] },
+    profileUrl: 'https://www.personality-database.com/profile/71004/sung-jinwoo-na-honjaman-levelup-solo-leveling-mbti-personality-type',
+  },
+  {
+    id: 'mark',
+    name: { en: 'Mark Grayson', ar: 'مارك غرايسون' },
+    anime: { en: 'Invincible', ar: 'إنفينسيبل' },
+    type: '6w7',
+    story: {
+      en: 'A young Viltrumite who struggles with his heritage while trying to protect Earth. His loyalty to humanity and fear of becoming like his father shape his conflicted but heroic journey.',
+      ar: 'فيلتروميت شاب يكافح مع تراثه أثناء محاولته حماية الأرض. ولاؤه للبشرية وخوفه من أن يصبح مثل والده يشكلان رحلته البطولية المتضاربة.'
+    },
+    traits: { en: ['Conflicted', 'Loyal', 'Brave'], ar: ['متضارب', 'مخلص', 'شجاع'] },
+    profileUrl: 'https://www.personality-database.com/profile/292933/mark-grayson-invincible-invincible-mbti-personality-type',
+  },
+]
+
 export default function RacingPortalPage() {
   const [mounted, setMounted]           = useState(false)
   const [hoveredPortal, setHoveredPortal] = useState<string | null>(null)
@@ -26,6 +103,7 @@ export default function RacingPortalPage() {
   const [language, setLanguage]         = useState<'en' | 'ar'>('en')
   const [expandedLine, setExpandedLine] = useState<number | null>(null)
   const [hasAnimated, setHasAnimated]   = useState<Record<string, boolean>>({})
+  const [hoveredCharacter, setHoveredCharacter] = useState<string | null>(null)
 
   const [spiderViewMode, setSpiderViewMode] = useState<'mobile' | 'tablet' | 'desktop'>('desktop')
   const [soulViewMode,   setSoulViewMode]   = useState<'mobile' | 'tablet' | 'desktop'>('desktop')
@@ -35,6 +113,7 @@ export default function RacingPortalPage() {
   const spiderIframeRef = useRef<HTMLIFrameElement>(null)
   const soulIframeRef   = useRef<HTMLIFrameElement>(null)
   const heroRef         = useRef<HTMLDivElement>(null)
+  const enneagramRef    = useRef<HTMLDivElement>(null)
   const storyRef        = useRef<HTMLDivElement>(null)
   const aboutRef        = useRef<HTMLDivElement>(null)
   const portalsRef      = useRef<HTMLDivElement>(null)
@@ -47,7 +126,19 @@ export default function RacingPortalPage() {
 
   const t = {
     en: {
-      hero:    { title: 'Omar', subtitle: 'Makes portals. Code meets consciousness.', adventure: 'The Journey Begins Here', chapterTitle: 'The Journey Begins' },
+      hero: { title: 'Omar', subtitle: 'Makes portals. Code meets consciousness.', adventure: 'The Journey Begins Here', chapterTitle: 'The Journey Begins' },
+      enneagram: {
+        chapterTitle: 'The Six Within',
+        dictionary: {
+          word: 'enneagram',
+          pronunciation: 'ˈe-nē-ə-ˌgram',
+          definition: 'a system of classifying personality types that is based on a nine-pointed starlike figure inscribed within a circle in which each of the nine points represents a personality type and its psychological motivations influencing a person\'s emotions, attitudes, and behavior.',
+          source: 'Merriam-Webster'
+        },
+        type6: 'Type Six: The Loyal Guardian',
+        type6Desc: 'Sixes seek security and support. They are loyal, vigilant, and anticipate problems. Their gift is seeing what others miss.',
+        characters: 'Fellow Sixes',
+      },
       story: {
         chapterTitle: "Omar's Story",
         intro: 'It started with imagination.',
@@ -72,10 +163,22 @@ export default function RacingPortalPage() {
         mobile: 'Mobile', tablet: 'Tablet', desktop: 'Desktop',
         footer: '· two worlds · one portal ·', chapterTitle: 'Two Worlds',
       },
-      nav: ['00', '01', '02', '03'],
+      nav: ['00', '01', '02', '03', '04'],
     },
     ar: {
-      hero:    { title: 'عمر', subtitle: 'صانع بوابات. حيث يلتقي الكود بالوعي.', adventure: 'الرحلة تبدأ هنا', chapterTitle: 'تبدأ الرحلة' },
+      hero: { title: 'عمر', subtitle: 'صانع بوابات. حيث يلتقي الكود بالوعي.', adventure: 'الرحلة تبدأ هنا', chapterTitle: 'تبدأ الرحلة' },
+      enneagram: {
+        chapterTitle: 'الستة الداخلية',
+        dictionary: {
+          word: 'إنِيّاغرام',
+          pronunciation: 'e-nee-ya-gram',
+          definition: 'نظام لتصنيف أنواع الشخصيات يعتمد على شكل نجمي ذو تسع نقاط منقوش داخل دائرة، حيث تمثل كل نقطة نوع شخصية ودوافعها النفسية المؤثرة على عواطف الفرد ومواقفه وسلوكه.',
+          source: 'ميريام وبستر'
+        },
+        type6: 'النوع السادس: الحارس المخلص',
+        type6Desc: 'النوع السادس يبحث عن الأمان والدعم. إنهم مخلصون ويقظون ويتوقعون المشاكل. قوتهم هي رؤية ما يغفله الآخرون.',
+        characters: 'زملاء من النوع السادس',
+      },
       story: {
         chapterTitle: 'قصة عمر',
         intro: 'بدأت مع الخيال.',
@@ -100,7 +203,7 @@ export default function RacingPortalPage() {
         mobile: 'جوال', tablet: 'لوحي', desktop: 'مكتبي',
         footer: '· عَالَمَان · بَوَّابَة وَاحِدَة ·', chapterTitle: 'عالمين',
       },
-      nav: ['٠٠', '٠١', '٠٢', '٠٣'],
+      nav: ['٠٠', '٠١', '٠٢', '٠٣', '٠٤'],
     },
   }
 
@@ -122,12 +225,12 @@ export default function RacingPortalPage() {
     document.documentElement.classList.toggle('font-arabic', language === 'ar')
   }, [language, mounted])
 
-  // IntersectionObserver for active section
   useEffect(() => {
     if (!mounted) return
 
     const sections = [
       { ref: heroRef, id: 'hero' },
+      { ref: enneagramRef, id: 'enneagram' },
       { ref: storyRef, id: 'story' },
       { ref: aboutRef, id: 'about' },
       { ref: portalsRef, id: 'portals' },
@@ -260,9 +363,10 @@ export default function RacingPortalPage() {
 
   const navItems = [
     { ref: heroRef, id: 'hero', label: currentLang.nav[0] },
-    { ref: storyRef, id: 'story', label: currentLang.nav[1] },
-    { ref: aboutRef, id: 'about', label: currentLang.nav[2] },
-    { ref: portalsRef, id: 'portals', label: currentLang.nav[3] },
+    { ref: enneagramRef, id: 'enneagram', label: currentLang.nav[1] },
+    { ref: storyRef, id: 'story', label: currentLang.nav[2] },
+    { ref: aboutRef, id: 'about', label: currentLang.nav[3] },
+    { ref: portalsRef, id: 'portals', label: currentLang.nav[4] },
   ]
 
   return (
@@ -340,6 +444,13 @@ export default function RacingPortalPage() {
           color: #FFD700 !important;
           text-shadow: 0 0 6px rgba(255,215,0,0.3);
         }
+
+        .character-card {
+          transition: all 0.3s ease;
+        }
+        .character-card:hover {
+          transform: translateY(-4px);
+        }
       `}</style>
 
       <div className="relative min-h-screen w-full rugged-overlay bg-[#0A0A0A]">
@@ -365,7 +476,6 @@ export default function RacingPortalPage() {
           />
           <div className="absolute inset-0 bg-black/20" />
           
-          {/* Compass cross-hair */}
           <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.08 }}>
             <div className="absolute top-1/2 left-0 right-0 h-px bg-[#FFD700]" />
             <div className="absolute left-1/2 top-0 bottom-0 w-px bg-[#FFD700]" />
@@ -532,10 +642,180 @@ export default function RacingPortalPage() {
           </motion.div>
         </section>
 
-        {/* 01 — OMAR'S STORY */}
+        {/* 01 — ENNEAGRAM TYPE 6 */}
+        <section ref={enneagramRef} className="relative z-10 min-h-screen flex items-center justify-center px-6 py-24">
+          <div className="max-w-5xl mx-auto w-full">
+            <ChapterHeader id="enneagram-header" num="01" title={currentLang.enneagram.chapterTitle} />
+
+            {/* Dictionary Definition */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="mb-12"
+            >
+              <div
+                className="border-l-2 pl-5 py-2"
+                style={{ borderColor: 'rgba(255,215,0,0.3)' }}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Book size={12} style={{ color: '#FFD700', opacity: 0.5 }} />
+                  <span className="text-[10px] font-mono tracking-wider text-white/30">MERRIAM-WEBSTER</span>
+                </div>
+                <div className="mb-2">
+                  <span className="text-lg font-serif italic text-white/70">{currentLang.enneagram.dictionary.word}</span>
+                  <span className="text-xs text-white/40 ml-2">/ {currentLang.enneagram.dictionary.pronunciation} /</span>
+                </div>
+                <p className="text-sm text-white/50 leading-relaxed">
+                  <span className="text-white/60 font-medium">noun</span> {currentLang.enneagram.dictionary.definition}
+                </p>
+                <p className="text-[9px] text-white/25 mt-2">— {currentLang.enneagram.dictionary.source}</p>
+              </div>
+            </motion.div>
+
+            {/* Type 6 Explanation */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.25 }}
+              className="text-center mb-12"
+            >
+              <Shield size={22} className="mx-auto mb-3" style={{ color: '#FFD700', opacity: 0.3 }} />
+              <p className="text-sm text-white/60 max-w-md mx-auto">{currentLang.enneagram.type6Desc}</p>
+            </motion.div>
+
+            {/* Character Cards - 3 columns, taller height */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <div className="text-center mb-8">
+                <p className="text-xs font-mono tracking-wider text-white/30">{currentLang.enneagram.characters}</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {enneagram6Characters.map((character, idx) => (
+                  <motion.div
+                    key={character.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.4 + idx * 0.1 }}
+                    className="character-card h-full"
+                    onMouseEnter={() => setHoveredCharacter(character.id)}
+                    onMouseLeave={() => setHoveredCharacter(null)}
+                  >
+                    <div
+                      className="relative rounded-xl overflow-hidden transition-all duration-300 h-full flex flex-col"
+                      style={{
+                        background: 'rgba(0,0,0,0.6)',
+                        border: `1px solid ${hoveredCharacter === character.id ? '#FFD700' : 'rgba(255,255,255,0.1)'}`,
+                        backdropFilter: 'blur(4px)',
+                      }}
+                    >
+                      {/* Header */}
+                      <div
+                        className="px-4 py-3"
+                        style={{
+                          borderBottom: `1px solid ${hoveredCharacter === character.id ? 'rgba(255,215,0,0.3)' : 'rgba(255,255,255,0.08)'}`,
+                          background: `linear-gradient(135deg, rgba(255,215,0,0.05), transparent)`,
+                        }}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-base font-bold chapter-heading text-white truncate">
+                              {character.name[language]}
+                            </h3>
+                            <p className="text-[9px] font-mono mt-0.5 text-white/40 truncate">
+                              {character.anime[language]}
+                            </p>
+                          </div>
+                          <div
+                            className="px-1.5 py-0.5 rounded text-[8px] font-mono font-bold flex-shrink-0 ml-2"
+                            style={{
+                              background: 'rgba(255,215,0,0.15)',
+                              color: '#FFD700',
+                              border: '1px solid rgba(255,215,0,0.3)',
+                            }}
+                          >
+                            {character.type}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Body - more height */}
+                      <div className="px-4 py-4 flex-1 flex flex-col">
+                        <p className="text-[11px] leading-relaxed text-white/70 mb-3 line-clamp-3">
+                          {character.story[language]}
+                        </p>
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {character.traits[language].map((trait) => (
+                            <span
+                              key={trait}
+                              className="text-[8px] px-1.5 py-0.5 rounded-full"
+                              style={{
+                                background: 'rgba(255,215,0,0.1)',
+                                color: '#FFD700',
+                                border: '1px solid rgba(255,215,0,0.2)',
+                              }}
+                            >
+                              {trait}
+                            </span>
+                          ))}
+                        </div>
+
+                        {/* Iframe - taller */}
+                        <div className="relative mt-2 flex-1">
+                          <div
+                            className="rounded-lg overflow-hidden transition-all duration-300"
+                            style={{
+                              height: hoveredCharacter === character.id ? '340px' : '300px',
+                              opacity: hoveredCharacter === character.id ? 1 : 0.95,
+                            }}
+                          >
+                            <iframe
+                              src={character.profileUrl}
+                              className="w-full h-full"
+                              title={`${character.name.en} profile`}
+                              sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                              loading="lazy"
+                              style={{ border: 'none', background: '#0a0a0a' }}
+                            />
+                          </div>
+                          <div
+                            className="absolute inset-x-0 bottom-0 h-12 rounded-b-lg pointer-events-none"
+                            style={{
+                              background: `linear-gradient(to top, rgba(0,0,0,0.6), transparent)`,
+                            }}
+                          />
+                        </div>
+
+                        {/* External Link */}
+                        <a
+                          href={character.profileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 mt-3 text-[8px] font-mono text-white/30 hover:text-white/50 transition-colors"
+                        >
+                          View full profile ↗
+                        </a>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* 02 — OMAR'S STORY */}
         <section ref={storyRef} className="relative z-10 min-h-screen flex items-center justify-center px-6 py-24">
           <div className="max-w-2xl mx-auto w-full">
-            <ChapterHeader id="story-header" num="01" title={currentLang.story.chapterTitle} />
+            <ChapterHeader id="story-header" num="02" title={currentLang.story.chapterTitle} />
 
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -644,10 +924,10 @@ export default function RacingPortalPage() {
           </div>
         </section>
 
-        {/* 02 — WHAT IS A PORTAL */}
+        {/* 03 — WHAT IS A PORTAL */}
         <section ref={aboutRef} className="relative z-10 min-h-screen flex items-center justify-center px-6">
           <div className="max-w-4xl mx-auto w-full">
-            <ChapterHeader id="about-header" num="02" title={currentLang.about.chapterTitle} />
+            <ChapterHeader id="about-header" num="03" title={currentLang.about.chapterTitle} />
 
             <div className="grid md:grid-cols-2 gap-16 items-center">
               <motion.div
@@ -709,10 +989,10 @@ export default function RacingPortalPage() {
           </div>
         </section>
 
-        {/* 03 — PORTALS */}
+        {/* 04 — PORTALS */}
         <section ref={portalsRef} className="relative z-10 min-h-screen flex items-center justify-center px-6 py-24">
           <div className="w-full max-w-6xl mx-auto">
-            <ChapterHeader id="portals-header" num="03" title={currentLang.portals.chapterTitle} />
+            <ChapterHeader id="portals-header" num="04" title={currentLang.portals.chapterTitle} />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-7">
               {portals.map((portal, index) => (
