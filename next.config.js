@@ -2,10 +2,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  images: {
+    qualities: [75, 100],
+  },
   turbopack: {},
   devIndicators: {
-    appIsrStatus: false, // This disables the static indicator in newer versions
-    buildActivity: false, // This disables the build activity indicator
+    appIsrStatus: false,
+    buildActivity: false,
     buildActivityPosition: 'bottom-right',
   },
   webpack: (config, { dev, isServer }) => {

@@ -1,3 +1,4 @@
+// components/Footer.tsx - FULLY FIXED
 'use client'
 
 import { motion } from 'framer-motion'
@@ -7,10 +8,28 @@ import { useEffect, useState } from 'react'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
+  const [shouldRender, setShouldRender] = useState(true)
   const [mounted, setMounted] = useState(false)
   
   useEffect(() => {
     setMounted(true)
+    
+    const isInIframe = (): boolean => {
+      try {
+        return window.self !== window.top
+      } catch (e) {
+        return true
+      }
+    }
+    
+    const inIframe = isInIframe()
+    const urlParams = new URLSearchParams(window.location.search)
+    const isEmbed = urlParams.get('embed') === 'true'
+    const isFromPortfolio = document.referrer.includes('/portfolio')
+    
+    if (inIframe || isEmbed || isFromPortfolio) {
+      setShouldRender(false)
+    }
   }, [])
   
   const scrollToTop = () => {
@@ -20,7 +39,7 @@ export default function Footer() {
     })
   }
   
-  if (!mounted) return null
+  if (!shouldRender || !mounted) return null
   
   return (
     <footer className="bg-white dark:bg-[#0A0A0A] border-t border-gray-200 dark:border-gray-800 pb-10">

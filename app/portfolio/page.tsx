@@ -1,0 +1,872 @@
+// app/portfolio/page.tsx
+'use client'
+
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { 
+  Github, 
+  Linkedin, 
+  Mail,
+  Briefcase,
+  Award,
+  Clock,
+  Compass,
+  PenTool,
+  Globe,
+  Trophy,
+  BookOpen,
+  Brain,
+  Gamepad2,
+  X,
+  ExternalLink,
+  FileText
+} from 'lucide-react'
+
+// ─────────────────────────────────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────────────────────────────────
+
+const projects = [
+  {
+    id: 'evalui',
+    title: 'EvalUI',
+    subtitle: 'AI-Powered Accessibility Framework',
+    description: 'Computer vision framework for automated UI accessibility assessment. Top 15 in IEEE JCSPC 2025.',
+    tags: ['Python', 'OpenCV', 'Computer Vision', 'HCI'],
+    award: 'Top 15 IEEE',
+    icon: Brain,
+    color: 'indigo',
+    link: 'https://github.com/omaraburub-byte/evalui',
+    external: true
+  },
+  {
+    id: 'onesmind',
+    title: "One's Mind",
+    subtitle: 'Psychological Puzzle Game',
+    description: '2D puzzle-adventure game that won 1st place in SEC4 competition.',
+    tags: ['Unity', 'C#', 'Game Design'],
+    award: '1st Place',
+    icon: Gamepad2,
+    color: 'red',
+    link: 'https://github.com/omaraburub-byte/onesmind',
+    external: true
+  },
+  {
+    id: 'fasbir',
+    title: 'FASBIR',
+    subtitle: 'National Initiatives Platform',
+    description: 'Charity platform supporting crisis-region initiatives. 5th place in SEC3.',
+    tags: ['Figma', 'UX Research', 'Prototyping'],
+    award: '5th Place',
+    icon: Globe,
+    color: 'green',
+    link: 'https://github.com/omaraburub-byte/FASBIR',
+    external: true
+  },
+  {
+    id: 'bytegene',
+    title: 'ByteGene',
+    subtitle: 'Company Website',
+    description: 'Responsive website for EnthusiasTech from wireframing to deployment.',
+    tags: ['Next.js', 'Tailwind', 'Figma'],
+    icon: PenTool,
+    color: 'yellow',
+    link: 'https://bytegene-sa.vercel.app/',
+    external: true
+  }
+]
+
+const skills = ['Python', 'Flutter', 'JavaScript', 'Figma', 'OpenCV', 'Firebase', 'Unity', 'Git']
+
+const experience = [
+  {
+    role: 'Research Assistant',
+    company: 'Applied Science University',
+    period: '2025 — Present',
+    description: 'HCI research on AI-driven interfaces. Top 15 IEEE paper.',
+    color: 'indigo'
+  },
+  {
+    role: 'Team Lead & Co-Founder',
+    company: 'EnthusiasTech',
+    period: '2024 — Present',
+    description: 'Leading web & UX/UI projects, managing technical workflows.',
+    color: 'green'
+  },
+  {
+    role: 'Organizer & Designer',
+    company: 'Software Engineering Club',
+    period: '2023 — Present',
+    description: 'Organized competitions, designed materials, coordinated events.',
+    color: 'red'
+  }
+]
+
+const awards = [
+  'Top 15 Student Researcher — IEEE Region 8 (2025)',
+  'Runner-Up — IT Academy Champions League (2025)',
+  '1st Place — SEC4 Game Competition (2025)',
+  'Top 10 Finalist — UI/UX Competition (2024)'
+]
+
+const colorStyles = {
+  indigo: { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200', line: 'bg-indigo-500', hover: 'hover:border-indigo-300 hover:bg-indigo-50' },
+  red: { bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-200', line: 'bg-red-500', hover: 'hover:border-red-300 hover:bg-red-50' },
+  green: { bg: 'bg-green-50', text: 'text-green-600', border: 'border-green-200', line: 'bg-green-500', hover: 'hover:border-green-300 hover:bg-green-50' },
+  yellow: { bg: 'bg-yellow-50', text: 'text-yellow-600', border: 'border-yellow-200', line: 'bg-yellow-500', hover: 'hover:border-yellow-300 hover:bg-yellow-50' },
+  blue: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200', line: 'bg-blue-500', hover: 'hover:border-blue-300 hover:bg-blue-50' },
+  emerald: { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200', line: 'bg-emerald-500', hover: 'hover:border-emerald-300 hover:bg-emerald-50' },
+  pink: { bg: 'bg-pink-50', text: 'text-pink-600', border: 'border-pink-200', line: 'bg-pink-500', hover: 'hover:border-pink-300 hover:bg-pink-50' },
+  purple: { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200', line: 'bg-purple-500', hover: 'hover:border-purple-300 hover:bg-purple-50' },
+  amber: { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200', line: 'bg-amber-500', hover: 'hover:border-amber-300 hover:bg-amber-50' }
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// MAIN COMPONENT
+// ─────────────────────────────────────────────────────────────────────────
+
+export default function PortfolioPage() {
+  const [mounted, setMounted] = useState(false)
+  const [showPortalModal, setShowPortalModal] = useState(false)
+  const avatarRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const revealOverlayRef = useRef<HTMLDivElement>(null)
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+    layoutEffect: false
+  })
+  
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0])
+  const heroScale = useTransform(scrollYProgress, [0, 0.4], [1, 0.95])
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!avatarRef.current || !revealOverlayRef.current) return
+    const rect = avatarRef.current.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    revealOverlayRef.current.style.clipPath = `circle(50px at ${x}px ${y}px)`
+  }
+
+  const handleMouseLeave = () => {
+    if (!revealOverlayRef.current) return
+    revealOverlayRef.current.style.clipPath = 'circle(0px at 0px 0px)'
+  }
+
+  if (!mounted) return null
+
+  return (
+    <div ref={containerRef} className="bg-white min-h-screen">
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Google+Sans+Display:wght@400;500;600;700&display=swap');
+        
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        
+        body {
+          font-family: 'Google Sans Display', 'Inter', sans-serif;
+          background: #ffffff;
+          color: #202124;
+        }
+        
+        ::-webkit-scrollbar {
+          width: 5px;
+        }
+        
+        ::-webkit-scrollbar-track {
+          background: #f1f3f4;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+          background: #dadce0;
+          border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+          background: #bdc1c6;
+        }
+        
+        .section-kicker {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 11.5px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          margin-bottom: 16px;
+        }
+        
+        .section-kicker-line {
+          width: 28px;
+          height: 2px;
+          border-radius: 2px;
+        }
+        
+        .g4-dots {
+          display: flex;
+          gap: 6px;
+          align-items: center;
+        }
+        .g4-dots span {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+        }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-15px) rotate(3deg); }
+        }
+        
+        @keyframes floatReverse {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(15px) rotate(-3deg); }
+        }
+        
+        .float-animation {
+          animation: float 6s ease-in-out infinite;
+        }
+        
+        .float-reverse {
+          animation: floatReverse 7s ease-in-out infinite;
+        }
+
+        .clip-hexagon {
+          clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+        
+        .clip-triangle {
+          clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+        
+        .clip-diamond {
+          clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+      `}</style>
+
+      {/* Floating Encapsulated Header */}
+      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-4xl bg-white/80 backdrop-blur-xl border border-gray-200/50 rounded-full shadow-lg shadow-black/5 px-6 py-3 flex items-center justify-between">
+        <a href="#" className="text-lg font-semibold tracking-tight">
+          <span className="text-indigo-600">O</span>
+          <span className="text-blue-600">m</span>
+          <span className="text-emerald-600">a</span>
+          <span className="text-red-500">r</span>
+          <span className="text-gray-900">Aburub</span>
+        </a>
+        
+        <div className="hidden md:flex items-center gap-4">
+          <a 
+            href="#work" 
+            className="text-sm text-gray-600 hover:text-purple-600 transition-colors px-3 py-1.5 rounded-full hover:bg-purple-50"
+          >
+            Work
+          </a>
+          <a 
+            href="#skills" 
+            className="text-sm text-gray-600 hover:text-emerald-600 transition-colors px-3 py-1.5 rounded-full hover:bg-emerald-50"
+          >
+            Skills
+          </a>
+          <a 
+            href="#experience" 
+            className="text-sm text-gray-600 hover:text-blue-600 transition-colors px-3 py-1.5 rounded-full hover:bg-blue-50"
+          >
+            Experience
+          </a>
+          <button 
+            onClick={() => setShowPortalModal(true)}
+            className="text-sm px-4 py-1.5 rounded-full bg-indigo-600 text-white flex items-center gap-1.5 hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-500/20"
+          >
+            <Compass size={14} />
+            Portal
+          </button>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <motion.section 
+        style={{ opacity: heroOpacity, scale: heroScale }}
+        className="relative min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden"
+      >
+        <div className="absolute inset-0 bg-white" />
+        
+        <div className="absolute top-10 right-20 w-24 h-24 float-animation opacity-10">
+          <div className="w-full h-full bg-indigo-400 clip-hexagon" />
+        </div>
+        <div className="absolute bottom-20 left-10 w-32 h-32 float-reverse opacity-10">
+          <div className="w-full h-full rounded-full bg-indigo-400 blur-sm" />
+        </div>
+        <div className="absolute top-1/3 left-20 w-20 h-20 float-animation opacity-10" style={{ animationDelay: '-2s' }}>
+          <div className="w-full h-full bg-indigo-400 clip-triangle" />
+        </div>
+        <div className="absolute bottom-1/3 right-10 w-24 h-24 float-reverse opacity-10" style={{ animationDelay: '-3s' }}>
+          <div className="w-full h-full bg-indigo-400 clip-diamond" />
+        </div>
+
+        <div className="max-w-3xl mx-auto text-center relative z-10">
+          <div 
+            ref={avatarRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            className="relative w-[160px] h-[160px] sm:w-[180px] sm:h-[180px] md:w-[200px] md:h-[200px] mx-auto mb-8 cursor-pointer"
+          >
+            <div className="absolute inset-0 rounded-2xl bg-indigo-500 p-[3px] shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
+              <div className="relative w-full h-full rounded-2xl overflow-hidden bg-white">
+                <div className="absolute inset-0 w-full h-full flex items-center justify-center">
+                  <Image
+                    src="/omarw.png"
+                    alt="Omar Aburub"
+                    width={200}
+                    height={200}
+                    className="object-cover w-full h-full"
+                    priority
+                  />
+                </div>
+                
+                <div 
+                  ref={revealOverlayRef}
+                  className="absolute inset-0 w-full h-full pointer-events-none"
+                  style={{
+                    clipPath: 'circle(0px at 0px 0px)',
+                    willChange: 'clip-path'
+                  }}
+                >
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Image
+                      src="/omarwbg.png"
+                      alt="Omar Aburub - Creative"
+                      width={200}
+                      height={200}
+                      className="object-cover w-full h-full"
+                      priority
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-400 ring-4 ring-white shadow-lg z-10 flex items-center justify-center">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+            </div>
+            
+            <div className="absolute -inset-3 rounded-2xl border-2 border-indigo-200/30 border-dashed animate-spin-slow pointer-events-none" style={{ animationDuration: '20s' }} />
+          </div>
+          
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.1] mb-4"
+          >
+            <span className="text-gray-900">Hi, I'm </span>
+            <span className="text-indigo-600">O</span>
+            <span className="text-blue-600">m</span>
+            <span className="text-emerald-600">a</span>
+            <span className="text-red-500">r</span>
+            <span className="text-gray-900"> </span>
+            <span className="text-amber-600">A</span>
+            <span className="text-cyan-600">b</span>
+            <span className="text-pink-600">u</span>
+            <span className="text-purple-600">r</span>
+            <span className="text-teal-600">u</span>
+            <span className="text-orange-600">b</span>
+          </motion.h1>
+          
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto mb-8 leading-relaxed"
+          >
+            I bridge HCI, AI, and design to create accessible digital experiences. 
+            Software Engineering student at Applied Science University.
+          </motion.p>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="flex flex-wrap items-center justify-center gap-6"
+          >
+            <motion.a
+              href="#work"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="text-base text-gray-700 hover:text-indigo-600 transition-colors duration-200 cursor-pointer relative group"
+            >
+              Work
+              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-indigo-500 transition-all duration-300 group-hover:w-full" />
+            </motion.a>
+            
+            <motion.a
+              href="mailto:omar.abualrob@gmail.com"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="text-base text-gray-700 hover:text-indigo-600 transition-colors duration-200 cursor-pointer relative group"
+            >
+              Contact
+              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-indigo-500 transition-all duration-300 group-hover:w-full" />
+            </motion.a>
+
+            <motion.a
+              href="/omcv2026.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="text-base text-gray-700 hover:text-indigo-600 transition-colors duration-200 cursor-pointer relative group flex items-center gap-1.5"
+            >
+              <FileText size={16} />
+              CV
+              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-indigo-500 transition-all duration-300 group-hover:w-full" />
+            </motion.a>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="flex items-center justify-center gap-5 mt-8"
+          >
+            <motion.a
+              href="https://github.com/omaraburub-byte"
+              target="_blank"
+              rel="noopener"
+              whileHover={{ y: -2, scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="text-gray-400 hover:text-indigo-600 transition-colors duration-200"
+            >
+              <Github size={18} />
+            </motion.a>
+            
+            <motion.a
+              href="https://www.linkedin.com/in/omar-aburub-profile/"
+              target="_blank"
+              rel="noopener"
+              whileHover={{ y: -2, scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="text-gray-400 hover:text-indigo-600 transition-colors duration-200"
+            >
+              <Linkedin size={18} />
+            </motion.a>
+            
+            <motion.a
+              href="mailto:omar.abualrob@gmail.com"
+              whileHover={{ y: -2, scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="text-gray-400 hover:text-indigo-600 transition-colors duration-200"
+            >
+              <Mail size={18} />
+            </motion.a>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="absolute -bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          >
+            <span className="text-xs text-gray-400 font-medium tracking-wider uppercase">Scroll</span>
+            <div className="w-5 h-8 rounded-full border-2 border-gray-300 flex justify-center p-1">
+              <motion.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                className="w-1 h-2 rounded-full bg-indigo-500"
+              />
+            </div>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Stats Bar */}
+      <div className="border-y border-gray-200 py-5 px-6 bg-gray-50">
+        <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-8 md:gap-12">
+          <div className="flex items-center gap-2">
+            <Briefcase size={16} className="text-indigo-500" />
+            <span className="font-semibold text-gray-800">15+</span>
+            <span className="text-xs text-gray-500">Projects</span>
+          </div>
+          <div className="w-px h-4 bg-gray-300 hidden md:block" />
+          <div className="flex items-center gap-2">
+            <Trophy size={16} className="text-amber-500" />
+            <span className="font-semibold text-gray-800">Top 15</span>
+            <span className="text-xs text-gray-500">IEEE Rank</span>
+          </div>
+          <div className="w-px h-4 bg-gray-300 hidden md:block" />
+          <div className="flex items-center gap-2">
+            <Clock size={16} className="text-emerald-600" />
+            <span className="font-semibold text-gray-800">89.2%</span>
+            <span className="text-xs text-gray-500">GPA</span>
+          </div>
+          <div className="w-px h-4 bg-gray-300 hidden md:block" />
+          <div className="flex items-center gap-2">
+            <Award size={16} className="text-red-500" />
+            <span className="font-semibold text-gray-800">6</span>
+            <span className="text-xs text-gray-500">Awards</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Work Section */}
+      <section id="work" className="py-24 px-6">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="mb-12"
+          >
+            <div className="section-kicker">
+              <span className="section-kicker-line bg-indigo-500"></span>
+              <span className="text-indigo-600">PORTFOLIO</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">Selected Work</h2>
+            <p className="text-gray-500 max-w-2xl">Research, design, and development projects I'm proud of.</p>
+          </motion.div>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            {projects.map((project, idx) => {
+              const c = colorStyles[project.color as keyof typeof colorStyles]
+              const Icon = project.icon
+              return (
+                <motion.a
+                  key={project.id}
+                  href={project.link}
+                  target={project.external ? "_blank" : "_self"}
+                  rel={project.external ? "noopener noreferrer" : ""}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+                  className={`group relative bg-white border ${c.border} rounded-xl overflow-hidden ${c.hover} transition-all duration-300 block cursor-pointer`}
+                >
+                  <div className={`absolute top-0 left-0 h-0.5 w-full ${c.line} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left`} />
+                  
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <p className="text-xs text-gray-400 mb-1">{project.subtitle}</p>
+                        <h3 className="text-xl font-bold text-gray-800 group-hover:text-indigo-600 transition-colors duration-200">{project.title}</h3>
+                      </div>
+                      <div className={`w-8 h-8 rounded-lg ${c.bg} flex items-center justify-center ${c.text} group-hover:scale-105 transition-transform duration-200`}>
+                        <Icon size={16} />
+                      </div>
+                    </div>
+                    <p className="text-gray-500 text-sm leading-relaxed mb-4">{project.description}</p>
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {project.tags.map(tag => (
+                        <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-gray-100 text-gray-600 group-hover:bg-gray-200 transition-colors duration-200">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    <div className="flex items-center justify-between mt-2 pt-4 border-t border-gray-100">
+                      <div>
+                        {project.award && (
+                          <div className="flex items-center gap-1.5 text-xs text-amber-600">
+                            <Trophy size={12} />
+                            <span>{project.award}</span>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-xs text-gray-400 group-hover:text-indigo-600 transition-colors duration-200 flex items-center gap-1">
+                        View Project
+                        <ExternalLink size={12} />
+                      </span>
+                    </div>
+                  </div>
+                </motion.a>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Skills Section */}
+      <section id="skills" className="py-24 px-6 bg-gray-50">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-10"
+          >
+            <div className="section-kicker justify-center">
+              <span className="section-kicker-line bg-indigo-500"></span>
+              <span className="text-indigo-600">TECH STACK</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">Tools & Technologies</h2>
+            <p className="text-gray-500 max-w-2xl mx-auto">Languages, frameworks, and design tools I work with daily.</p>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex flex-wrap justify-center gap-2"
+          >
+            {skills.map((skill, idx) => (
+              <motion.span
+                key={skill}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: idx * 0.03 }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                className="px-4 py-2 rounded-full bg-white border border-gray-200 text-gray-700 text-sm hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all cursor-pointer"
+              >
+                {skill}
+              </motion.span>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Experience Section */}
+      <section id="experience" className="py-24 px-6">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-12"
+          >
+            <div className="section-kicker justify-center">
+              <span className="section-kicker-line bg-indigo-500"></span>
+              <span className="text-indigo-600">JOURNEY</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">Experience & Education</h2>
+            <p className="text-gray-500 max-w-2xl mx-auto">Where I've learned and grown.</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="border border-emerald-200 rounded-xl p-6 mb-8 bg-emerald-50/30 hover:shadow-md transition-all"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600">
+                <BookOpen size={20} />
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg">BSc in Software Engineering</h3>
+                <p className="text-emerald-600 text-sm">Applied Science Private University</p>
+                <div className="flex flex-wrap gap-3 mt-2">
+                  <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">GPA: 89.2%</span>
+                  <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">Rank: 16</span>
+                  <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">Expected 2027</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+          
+          <div className="space-y-6">
+            {experience.map((exp, idx) => {
+              const c = colorStyles[exp.color as keyof typeof colorStyles]
+              return (
+                <motion.div
+                  key={exp.role}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+                  className="relative pl-6 border-l-2 border-gray-200 hover:border-indigo-300 transition-all group"
+                >
+                  <div className={`absolute -left-[5px] top-1 w-2.5 h-2.5 rounded-full bg-${exp.color}-500 group-hover:scale-125 transition-transform`} />
+                  <div className="flex flex-wrap justify-between items-start gap-2 mb-1">
+                    <div>
+                      <h3 className={`font-semibold text-gray-800 group-hover:text-${exp.color}-600 transition-colors`}>{exp.role}</h3>
+                      <p className={`text-${exp.color}-600 text-sm`}>{exp.company}</p>
+                    </div>
+                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">{exp.period}</span>
+                  </div>
+                  <p className="text-gray-500 text-sm mt-1">{exp.description}</p>
+                </motion.div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Awards Section */}
+      <section className="py-24 px-6 bg-gray-50">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-10"
+          >
+            <div className="section-kicker justify-center">
+              <span className="section-kicker-line bg-indigo-500"></span>
+              <span className="text-indigo-600">RECOGNITION</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">Awards & Achievements</h2>
+            <p className="text-gray-500">Competitions and honors I've received.</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="grid md:grid-cols-2 gap-3"
+          >
+            {awards.map((award, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.05 }}
+                whileHover={{ x: 4 }}
+                className="flex items-center gap-3 p-3.5 rounded-lg bg-white border border-gray-100 hover:border-indigo-200 hover:shadow-sm transition-all"
+              >
+                <div className="w-6 h-6 rounded-full bg-amber-50 flex items-center justify-center">
+                  <Trophy size={12} className="text-amber-500" />
+                </div>
+                <span className="text-sm text-gray-700">{award}</span>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            whileHover={{ scale: 1.01 }}
+            className="bg-indigo-600 rounded-2xl p-10 text-center cursor-default shadow-xl"
+          >
+            <motion.h2
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="text-2xl md:text-3xl font-bold text-white mb-3"
+            >
+              Let's Connect
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="text-indigo-100 mb-6 max-w-md mx-auto"
+            >
+              Open to research collaborations, design projects, and development opportunities.
+            </motion.p>
+            <motion.a
+              href="mailto:omar.abualrob@gmail.com"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
+              <button className="px-6 py-2.5 rounded-full bg-white text-indigo-600 font-medium hover:shadow-lg transition-all cursor-pointer">
+                Get in Touch
+              </button>
+            </motion.a>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Portal Modal */}
+      <AnimatePresence>
+        {showPortalModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setShowPortalModal(false)}
+              className="fixed inset-0 bg-black/80 z-[100]"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="fixed inset-4 md:inset-8 z-[101] bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+            >
+              <div className="flex-shrink-0 bg-white/90 backdrop-blur-md border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Compass size={16} className="text-indigo-500" />
+                  <span className="text-sm font-medium text-gray-700">Portal Universe</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Link
+                    href="/landing"
+                    target="_blank"
+                    className="flex items-center gap-1.5 text-sm text-indigo-600 hover:text-indigo-700 font-medium px-3 py-1.5 rounded-full hover:bg-indigo-50 transition-colors"
+                  >
+                    Open Full Page
+                    <ExternalLink size={14} />
+                  </Link>
+                  <button
+                    onClick={() => setShowPortalModal(false)}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <iframe
+                  src="/landing?embed=true"
+                  className="w-full h-full"
+                  title="Portal"
+                  sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"
+                  style={{ border: 'none', background: '#0A0A0A' }}
+                />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Footer */}
+      <footer className="py-8 px-6 border-t border-gray-100">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="g4-dots justify-center mb-3">
+            <span style={{ background: '#4f46e5' }}></span>
+            <span style={{ background: '#e53935' }}></span>
+            <span style={{ background: '#f9a825' }}></span>
+            <span style={{ background: '#2e7d32' }}></span>
+          </div>
+          <p className="text-xs text-gray-400">© {new Date().getFullYear()} Omar Aburub • Built with Next.js & Framer Motion</p>
+        </div>
+      </footer>
+    </div>
+  )
+}

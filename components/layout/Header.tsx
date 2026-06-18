@@ -1,3 +1,4 @@
+// components/layout/Header.tsx - FULLY FIXED
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
@@ -18,7 +19,7 @@ const navItems = [
 ]
 
 export default function Header() {
-  // All hooks MUST be called unconditionally at the top level
+  // ALL HOOKS MUST BE CALLED FIRST - unconditionally
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
@@ -27,56 +28,85 @@ export default function Header() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const { theme, setTheme } = useTheme()
   const [showAbove, setShowAbove] = useState(false)
+  const [shouldRender, setShouldRender] = useState(true) // Default to true
   
   const menuRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
 
-  // All effects must be called unconditionally
+  // FIRST useEffect - check iframe status and set shouldRender
   useEffect(() => {
     setMounted(true)
-  }, [])
-
-  useEffect(() => {
+    
+    // Strong iframe detection
+    const isInIframe = (): boolean => {
+      try {
+        return window.self !== window.top
+      } catch (e) {
+        return true
+      }
+    }
+    
+    const inIframe = isInIframe()
+    const urlParams = new URLSearchParams(window.location.search)
+    const isEmbed = urlParams.get('embed') === 'true'
+    const isFromPortfolio = document.referrer.includes('/portfolio')
+    
+    // Don't render if in iframe, embed mode, or from portfolio
+    if (inIframe || isEmbed || isFromPortfolio) {
+      setShouldRender(false)
+      return
+    }
+    
+    setShouldRender(true)
+    
     // Only delay on homepage
     const isHomePage = window.location.pathname === '/'
     
     if (isHomePage) {
       const timer = setTimeout(() => {
         setIsVisible(true)
-      }, 4000) // 4 second delay only on homepage
-      
+      }, 4000)
       return () => clearTimeout(timer)
     } else {
-      // Show immediately on other pages
       setIsVisible(true)
     }
   }, [])
-    
-  const handleScroll = () => {
-    // Only track active section on home page
-    if (window.location.pathname === '/') {
-      const sections = ['home', 'projects', 'skills', 'experience', 'journey', 'contact']
-      const scrollPosition = window.scrollY + 200
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight
-      const progress = (window.scrollY / totalHeight) * 100
-      setScrollProgress(progress)
 
-      for (const section of sections) {
-        const element = document.getElementById(section)
-        if (element) {
-          const top = element.offsetTop
-          const height = element.offsetHeight
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section)
-            break
+  // SECOND useEffect - scroll handler
+  useEffect(() => {
+    if (!shouldRender) return
+    
+    const handleScroll = () => {
+      if (window.location.pathname === '/') {
+        const sections = ['home', 'projects', 'skills', 'experience', 'journey', 'contact']
+        const scrollPosition = window.scrollY + 200
+        const totalHeight = document.documentElement.scrollHeight - window.innerHeight
+        const progress = (window.scrollY / totalHeight) * 100
+        setScrollProgress(progress)
+
+        for (const section of sections) {
+          const element = document.getElementById(section)
+          if (element) {
+            const top = element.offsetTop
+            const height = element.offsetHeight
+            if (scrollPosition >= top && scrollPosition < top + height) {
+              setActiveSection(section)
+              break
+            }
           }
         }
       }
     }
-  }
 
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [shouldRender])
+
+  // THIRD useEffect - click outside handler
   useEffect(() => {
+    if (!shouldRender) return
+    
     const handleClickOutside = (event: MouseEvent) => {
       if (
         isOpen && 
@@ -89,16 +119,14 @@ export default function Header() {
       }
     }
 
-    window.addEventListener('scroll', handleScroll)
     document.addEventListener('mousedown', handleClickOutside)
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen])
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isOpen, shouldRender])
 
+  // FOURTH useEffect - menu position
   useEffect(() => {
+    if (!shouldRender) return
+    
     if (isOpen && buttonRef.current) {
       const buttonRect = buttonRef.current.getBoundingClientRect()
       const spaceAbove = buttonRect.top
@@ -106,13 +134,14 @@ export default function Header() {
       
       setShowAbove(spaceAbove > menuHeight)
     }
-  }, [isOpen])
+  }, [isOpen, shouldRender])
 
-  // Handle initial hash scroll when coming from another page
+  // FIFTH useEffect - hash scroll
   useEffect(() => {
+    if (!shouldRender) return
+    
     if (window.location.pathname === '/' && window.location.hash) {
       const sectionId = window.location.hash.substring(1)
-      // Small delay to ensure DOM is ready
       setTimeout(() => {
         const element = document.getElementById(sectionId)
         if (element) {
@@ -123,23 +152,20 @@ export default function Header() {
         }
       }, 100)
     }
-  }, [])
+  }, [shouldRender])
 
+  // Navigation handler (not a hook, so this is fine)
   const handleNavigation = (item: typeof navItems[0]) => {
-    // Special handling for HOME button - go to landing page
     if (item.name === 'HOME') {
       router.push('/landing')
       setIsOpen(false)
       return
     }
 
-    // For other navigation items
     const href = item.href
-    const sectionId = href.substring(1) // Remove the #
+    const sectionId = href.substring(1)
     
-    // Check if we're on the spider page
     if (window.location.pathname === '/spider') {
-      // On spider page - scroll directly within the spider page
       const element = document.getElementById(sectionId)
       if (element) {
         window.scrollTo({
@@ -149,9 +175,7 @@ export default function Header() {
         setActiveSection(sectionId)
       }
     } 
-    // Check if we're on the home page
     else if (window.location.pathname === '/') {
-      // On home page - scroll directly
       const element = document.getElementById(sectionId)
       if (element) {
         window.scrollTo({
@@ -161,7 +185,6 @@ export default function Header() {
         setActiveSection(sectionId)
       }
     } else {
-      // On another page - navigate to home page first, then scroll
       window.location.href = `/#${sectionId}`
     }
     
@@ -169,7 +192,6 @@ export default function Header() {
   }
 
   const scrollToTop = () => {
-    // Scroll to top of current page
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
@@ -177,17 +199,20 @@ export default function Header() {
     setIsOpen(false)
   }
 
-  // Instead of returning null early, we render with conditional animations
+  // Early return AFTER all hooks - this is allowed
+  if (!shouldRender || !mounted) {
+    return null
+  }
+
   return (
     <motion.div 
       ref={headerRef}
       className="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-4 pb-8"
       initial={{ y: 100, opacity: 0 }}
-      animate={mounted && isVisible ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
+      animate={isVisible ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <div className="flex items-center relative">
-        {/* PART 1: LOGO SECTION - Scroll to top of current page */}
         <motion.button
           onClick={scrollToTop}
           className="flex items-center gap-3 bg-white dark:bg-[#1a1a1a] px-4 py-2 rounded-full border border-gray-200 dark:border-[#333] shadow-lg dark:shadow-2xl whitespace-nowrap"
@@ -198,12 +223,9 @@ export default function Header() {
           <span className="font-barrio text-sm text-black dark:text-white/90">SPIDER-PORTFOLIO</span>
         </motion.button>
 
-        {/* GAP */}
         <div className="w-4"></div>
 
-        {/* PART 2: EVERYTHING ELSE */}
         <div className="flex items-center gap-3 bg-white dark:bg-[#1a1a1a] px-4 py-2 rounded-full border border-gray-200 dark:border-[#333] shadow-lg dark:shadow-2xl">
-          {/* Progress Bar */}
           <div className="w-20 h-1.5 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden hidden lg:block">
             <motion.div 
               className="h-full bg-black dark:bg-white"
@@ -213,7 +235,6 @@ export default function Header() {
             />
           </div>
 
-          {/* Resume Button */}
           <motion.a
             href="/resume.pdf"
             target="_blank"
@@ -224,7 +245,6 @@ export default function Header() {
             Resume
           </motion.a>
 
-          {/* Social Icons */}
           <div className="hidden md:flex items-center gap-2">
             <motion.a
               href="https://github.com/omaraburub-byte"
@@ -248,17 +268,15 @@ export default function Header() {
             </motion.a>
           </div>
 
-          {/* Theme Toggle - FIXED */}
           <motion.button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             className="text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
-            {mounted ? (theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />) : <div className="w-[18px] h-[18px]" />}
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
           </motion.button>
 
-          {/* Menu Button */}
           <motion.button
             ref={buttonRef}
             className="flex items-center gap-1.5 px-4 py-1.5 bg-black/5 dark:bg-white/10 text-black dark:text-white text-xs font-medium rounded-full whitespace-nowrap"
@@ -271,11 +289,9 @@ export default function Header() {
           </motion.button>
         </div>
 
-        {/* Popup Menu */}
         <AnimatePresence>
           {isOpen && (
             <>
-              {/* Backdrop */}
               <motion.div
                 className="fixed inset-0 bg-black/20 dark:bg-black/40 z-40 lg:hidden"
                 initial={{ opacity: 0 }}
@@ -284,7 +300,6 @@ export default function Header() {
                 onClick={() => setIsOpen(false)}
               />
               
-              {/* Menu - Responsive positioning */}
               <motion.div
                 ref={menuRef}
                 className={`absolute z-50 w-64 ${
@@ -296,7 +311,6 @@ export default function Header() {
                 transition={{ duration: 0.15 }}
               >
                 <div className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#333] rounded-2xl shadow-2xl overflow-hidden">
-                  {/* Navigation - Scrollable */}
                   <div className="max-h-[60vh] overflow-y-auto p-2">
                     {navItems.map((item) => (
                       <button
@@ -313,10 +327,8 @@ export default function Header() {
                     ))}
                   </div>
 
-                  {/* Divider */}
                   <div className="h-px bg-gray-200 dark:bg-[#333] mx-2" />
 
-                  {/* Social & Theme */}
                   <div className="p-3 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <a
