@@ -21,7 +21,8 @@ import {
   Gamepad2,
   X,
   ExternalLink,
-  FileText
+  FileText,
+  Menu
 } from 'lucide-react'
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -90,7 +91,7 @@ const experience = [
   },
   {
     role: 'Team Lead & Co-Founder',
-    company: 'EnthusiasTech',
+    company: 'ByteGene',
     period: '2024 — Present',
     description: 'Leading web & UX/UI projects, managing technical workflows.',
     color: 'green'
@@ -130,6 +131,7 @@ const colorStyles = {
 export default function PortfolioPage() {
   const [mounted, setMounted] = useState(false)
   const [showPortalModal, setShowPortalModal] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const avatarRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const revealOverlayRef = useRef<HTMLDivElement>(null)
@@ -253,46 +255,114 @@ export default function PortfolioPage() {
         .clip-diamond {
           clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
         }
+
+        @keyframes slideDown {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .mobile-menu-open {
+          animation: slideDown 0.2s ease-out both;
+        }
       `}</style>
 
-      {/* Floating Encapsulated Header */}
-      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-4xl bg-white/80 backdrop-blur-xl border border-gray-200/50 rounded-full shadow-lg shadow-black/5 px-6 py-3 flex items-center justify-between">
-        <a href="#" className="text-lg font-semibold tracking-tight">
-          <span className="text-indigo-600">O</span>
-          <span className="text-blue-600">m</span>
-          <span className="text-emerald-600">a</span>
-          <span className="text-red-500">r</span>
-          <span className="text-gray-900">Aburub</span>
-        </a>
-        
-        <div className="hidden md:flex items-center gap-4">
-          <a 
-            href="#work" 
-            className="text-sm text-gray-600 hover:text-purple-600 transition-colors px-3 py-1.5 rounded-full hover:bg-purple-50"
-          >
-            Work
-          </a>
-          <a 
-            href="#skills" 
-            className="text-sm text-gray-600 hover:text-emerald-600 transition-colors px-3 py-1.5 rounded-full hover:bg-emerald-50"
-          >
-            Skills
-          </a>
-          <a 
-            href="#experience" 
-            className="text-sm text-gray-600 hover:text-blue-600 transition-colors px-3 py-1.5 rounded-full hover:bg-blue-50"
-          >
-            Experience
-          </a>
-          <button 
-            onClick={() => setShowPortalModal(true)}
-            className="text-sm px-4 py-1.5 rounded-full bg-indigo-600 text-white flex items-center gap-1.5 hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-500/20"
-          >
-            <Compass size={14} />
-            Portal
-          </button>
+      {/* Header */}
+      <div className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4 pointer-events-none">
+        <div className="w-full max-w-4xl pointer-events-auto">
+          {/* Main Header */}
+          <nav className="bg-white/80 backdrop-blur-xl border border-gray-200/50 rounded-full shadow-lg shadow-black/5 px-6 py-3 flex items-center justify-between">
+            <a href="#" className="text-lg font-semibold tracking-tight">
+              <span className="text-indigo-600">O</span>
+              <span className="text-blue-600">m</span>
+              <span className="text-emerald-600">a</span>
+              <span className="text-red-500">r</span>
+              <span className="text-gray-900">Aburub</span>
+            </a>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-4">
+              <a 
+                href="#work" 
+                className="text-sm text-gray-600 hover:text-purple-600 transition-colors px-3 py-1.5 rounded-full hover:bg-purple-50"
+              >
+                Work
+              </a>
+              <a 
+                href="#skills" 
+                className="text-sm text-gray-600 hover:text-emerald-600 transition-colors px-3 py-1.5 rounded-full hover:bg-emerald-50"
+              >
+                Skills
+              </a>
+              <a 
+                href="#experience" 
+                className="text-sm text-gray-600 hover:text-blue-600 transition-colors px-3 py-1.5 rounded-full hover:bg-blue-50"
+              >
+                Experience
+              </a>
+              <button 
+                onClick={() => setShowPortalModal(true)}
+                className="text-sm px-4 py-1.5 rounded-full bg-indigo-600 text-white flex items-center gap-1.5 hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-500/20"
+              >
+                <Compass size={14} />
+                Portal
+              </button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </nav>
+
+          {/* Mobile Menu Dropdown */}
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="mt-2 bg-white/95 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-xl shadow-black/5 px-4 py-3 flex flex-col gap-1 md:hidden"
+              >
+                <a 
+                  href="#work" 
+                  className="text-sm text-gray-700 hover:text-purple-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-purple-50"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Work
+                </a>
+                <a 
+                  href="#skills" 
+                  className="text-sm text-gray-700 hover:text-emerald-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-emerald-50"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Skills
+                </a>
+                <a 
+                  href="#experience" 
+                  className="text-sm text-gray-700 hover:text-blue-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-blue-50"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Experience
+                </a>
+                <button 
+                  onClick={() => {
+                    setShowPortalModal(true)
+                    setMobileMenuOpen(false)
+                  }}
+                  className="text-sm px-4 py-2.5 rounded-lg bg-indigo-600 text-white flex items-center gap-1.5 hover:bg-indigo-700 transition-colors justify-center mt-1"
+                >
+                  <Compass size={14} />
+                  Portal
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      </nav>
+      </div>
 
       {/* Hero Section */}
       <motion.section 
