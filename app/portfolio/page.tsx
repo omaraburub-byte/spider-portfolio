@@ -19,10 +19,13 @@ import {
   BookOpen,
   Brain,
   Gamepad2,
+  Star,
   X,
   ExternalLink,
   FileText,
-  Menu
+  Menu,
+  Eye,
+  Lock
 } from 'lucide-react'
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -110,6 +113,21 @@ const awards = [
   'Runner-Up — IT Academy Champions League (2025)',
   '1st Place — SEC4 Game Competition (2025)',
   'Top 10 Finalist — UI/UX Competition (2024)'
+]
+
+// ─────────────────────────────────────────────────────────────────────────
+// ROLE MODELS DATA
+// ─────────────────────────────────────────────────────────────────────────
+
+const roleModels = [
+  {
+    name: 'Prof. Mohammed Alhusban',
+    title: 'Associate Professor, Software Architecture',
+    description: 'The absolute GOAT. Like Gojo Satoru — strong, funny, smart, and effortlessly brilliant. A professor who makes you want to be better, not just in code but in how you show up. He is the reason I started taking software architecture seriously, and honestly, he made the entire semester feel like a masterclass in what it means to be a great educator and human being.',
+    traits: ['Strong', 'Funny', 'Smart', 'GOAT'],
+    color: 'purple',
+    image: '/drmh.png'
+  }
 ]
 
 const colorStyles = {
@@ -263,6 +281,12 @@ export default function PortfolioPage() {
         .mobile-menu-open {
           animation: slideDown 0.2s ease-out both;
         }
+
+        /* Blur effect for locked section */
+        .blur-bg {
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+        }
       `}</style>
 
       {/* Header */}
@@ -280,24 +304,10 @@ export default function PortfolioPage() {
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-4">
-              <a 
-                href="#work" 
-                className="text-sm text-gray-600 hover:text-purple-600 transition-colors px-3 py-1.5 rounded-full hover:bg-purple-50"
-              >
-                Work
-              </a>
-              <a 
-                href="#skills" 
-                className="text-sm text-gray-600 hover:text-emerald-600 transition-colors px-3 py-1.5 rounded-full hover:bg-emerald-50"
-              >
-                Skills
-              </a>
-              <a 
-                href="#experience" 
-                className="text-sm text-gray-600 hover:text-blue-600 transition-colors px-3 py-1.5 rounded-full hover:bg-blue-50"
-              >
-                Experience
-              </a>
+              <a href="#work" className="text-sm text-gray-600 hover:text-indigo-600 transition-colors px-3 py-1.5 rounded-full hover:bg-indigo-50">Work</a>
+              <a href="#skills" className="text-sm text-gray-600 hover:text-emerald-600 transition-colors px-3 py-1.5 rounded-full hover:bg-emerald-50">Skills</a>
+              <a href="#experience" className="text-sm text-gray-600 hover:text-blue-600 transition-colors px-3 py-1.5 rounded-full hover:bg-blue-50">Experience</a>
+              <a href="#rolemodels" className="text-sm text-gray-600 hover:text-purple-600 transition-colors px-3 py-1.5 rounded-full hover:bg-purple-50">Role Models</a>
               <button 
                 onClick={() => setShowPortalModal(true)}
                 className="text-sm px-4 py-1.5 rounded-full bg-indigo-600 text-white flex items-center gap-1.5 hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-500/20"
@@ -327,27 +337,10 @@ export default function PortfolioPage() {
                 transition={{ duration: 0.2 }}
                 className="mt-2 bg-white/95 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-xl shadow-black/5 px-4 py-3 flex flex-col gap-1 md:hidden"
               >
-                <a 
-                  href="#work" 
-                  className="text-sm text-gray-700 hover:text-purple-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-purple-50"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Work
-                </a>
-                <a 
-                  href="#skills" 
-                  className="text-sm text-gray-700 hover:text-emerald-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-emerald-50"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Skills
-                </a>
-                <a 
-                  href="#experience" 
-                  className="text-sm text-gray-700 hover:text-blue-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-blue-50"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Experience
-                </a>
+                <a href="#work" className="text-sm text-gray-700 hover:text-indigo-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-indigo-50" onClick={() => setMobileMenuOpen(false)}>Work</a>
+                <a href="#skills" className="text-sm text-gray-700 hover:text-emerald-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-emerald-50" onClick={() => setMobileMenuOpen(false)}>Skills</a>
+                <a href="#experience" className="text-sm text-gray-700 hover:text-blue-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-blue-50" onClick={() => setMobileMenuOpen(false)}>Experience</a>
+                <a href="#rolemodels" className="text-sm text-gray-700 hover:text-purple-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-purple-50" onClick={() => setMobileMenuOpen(false)}>Role Models</a>
                 <button 
                   onClick={() => {
                     setShowPortalModal(true)
@@ -394,14 +387,7 @@ export default function PortfolioPage() {
             <div className="absolute inset-0 rounded-2xl bg-indigo-500 p-[3px] shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
               <div className="relative w-full h-full rounded-2xl overflow-hidden bg-white">
                 <div className="absolute inset-0 w-full h-full flex items-center justify-center">
-                  <Image
-                    src="/omarw.png"
-                    alt="Omar Aburub"
-                    width={200}
-                    height={200}
-                    className="object-cover w-full h-full"
-                    priority
-                  />
+                  <Image src="/omarw.png" alt="Omar Aburub" width={200} height={200} className="object-cover w-full h-full" priority />
                 </div>
                 
                 <div 
@@ -413,14 +399,7 @@ export default function PortfolioPage() {
                   }}
                 >
                   <div className="w-full h-full flex items-center justify-center">
-                    <Image
-                      src="/omarwbg.png"
-                      alt="Omar Aburub - Creative"
-                      width={200}
-                      height={200}
-                      className="object-cover w-full h-full"
-                      priority
-                    />
+                    <Image src="/omarwbg.png" alt="Omar Aburub - Creative" width={200} height={200} className="object-cover w-full h-full" priority />
                   </div>
                 </div>
               </div>
@@ -512,37 +491,13 @@ export default function PortfolioPage() {
             transition={{ duration: 0.5, delay: 0.5 }}
             className="flex items-center justify-center gap-5 mt-8"
           >
-            <motion.a
-              href="https://github.com/omaraburub-byte"
-              target="_blank"
-              rel="noopener"
-              whileHover={{ y: -2, scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              className="text-gray-400 hover:text-indigo-600 transition-colors duration-200"
-            >
+            <motion.a href="https://github.com/omaraburub-byte" target="_blank" rel="noopener" whileHover={{ y: -2, scale: 1.1 }} whileTap={{ scale: 0.95 }} transition={{ type: "spring", stiffness: 400, damping: 17 }} className="text-gray-400 hover:text-indigo-600 transition-colors duration-200">
               <Github size={18} />
             </motion.a>
-            
-            <motion.a
-              href="https://www.linkedin.com/in/omar-aburub-profile/"
-              target="_blank"
-              rel="noopener"
-              whileHover={{ y: -2, scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              className="text-gray-400 hover:text-indigo-600 transition-colors duration-200"
-            >
+            <motion.a href="https://www.linkedin.com/in/omar-aburub-profile/" target="_blank" rel="noopener" whileHover={{ y: -2, scale: 1.1 }} whileTap={{ scale: 0.95 }} transition={{ type: "spring", stiffness: 400, damping: 17 }} className="text-gray-400 hover:text-indigo-600 transition-colors duration-200">
               <Linkedin size={18} />
             </motion.a>
-            
-            <motion.a
-              href="mailto:omar.abualrob@gmail.com"
-              whileHover={{ y: -2, scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              className="text-gray-400 hover:text-indigo-600 transition-colors duration-200"
-            >
+            <motion.a href="mailto:omar.abualrob@gmail.com" whileHover={{ y: -2, scale: 1.1 }} whileTap={{ scale: 0.95 }} transition={{ type: "spring", stiffness: 400, damping: 17 }} className="text-gray-400 hover:text-indigo-600 transition-colors duration-200">
               <Mail size={18} />
             </motion.a>
           </motion.div>
@@ -555,11 +510,7 @@ export default function PortfolioPage() {
           >
             <span className="text-xs text-gray-400 font-medium tracking-wider uppercase">Scroll</span>
             <div className="w-5 h-8 rounded-full border-2 border-gray-300 flex justify-center p-1">
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                className="w-1 h-2 rounded-full bg-indigo-500"
-              />
+              <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }} className="w-1 h-2 rounded-full bg-indigo-500" />
             </div>
           </motion.div>
         </div>
@@ -682,8 +633,8 @@ export default function PortfolioPage() {
             className="text-center mb-10"
           >
             <div className="section-kicker justify-center">
-              <span className="section-kicker-line bg-indigo-500"></span>
-              <span className="text-indigo-600">TECH STACK</span>
+              <span className="section-kicker-line bg-emerald-500"></span>
+              <span className="text-emerald-600">TECH STACK</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">Tools & Technologies</h2>
             <p className="text-gray-500 max-w-2xl mx-auto">Languages, frameworks, and design tools I work with daily.</p>
@@ -704,7 +655,7 @@ export default function PortfolioPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.3, delay: idx * 0.03 }}
                 whileHover={{ scale: 1.05, y: -2 }}
-                className="px-4 py-2 rounded-full bg-white border border-gray-200 text-gray-700 text-sm hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all cursor-pointer"
+                className="px-4 py-2 rounded-full bg-white border border-gray-200 text-gray-700 text-sm hover:border-emerald-300 hover:text-emerald-600 hover:bg-emerald-50 transition-all cursor-pointer"
               >
                 {skill}
               </motion.span>
@@ -724,8 +675,8 @@ export default function PortfolioPage() {
             className="text-center mb-12"
           >
             <div className="section-kicker justify-center">
-              <span className="section-kicker-line bg-indigo-500"></span>
-              <span className="text-indigo-600">JOURNEY</span>
+              <span className="section-kicker-line bg-blue-500"></span>
+              <span className="text-blue-600">JOURNEY</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">Experience & Education</h2>
             <p className="text-gray-500 max-w-2xl mx-auto">Where I've learned and grown.</p>
@@ -782,6 +733,88 @@ export default function PortfolioPage() {
         </div>
       </section>
 
+      {/* Role Models Section - LOCKED with Eye icon and "Under Work" */}
+      <section id="rolemodels" className="py-24 px-6 bg-gray-50">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-12"
+          >
+            <div className="section-kicker justify-center">
+              <span className="section-kicker-line bg-purple-500"></span>
+              <span className="text-purple-600">ROLE MODELS</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">People Who Inspire Me</h2>
+            <p className="text-gray-500 max-w-2xl mx-auto">The mentors and teachers who shaped how I think, learn, and grow.</p>
+          </motion.div>
+
+          {/* Locked Content Overlay */}
+          <div className="relative">
+            {/* Blurred background content */}
+            <div className="grid md:grid-cols-1 gap-6 max-w-2xl mx-auto opacity-50 blur-sm pointer-events-none select-none">
+              {roleModels.map((model, idx) => {
+                const c = colorStyles[model.color as keyof typeof colorStyles]
+                return (
+                  <div
+                    key={model.name}
+                    className={`relative bg-white border ${c.border} rounded-2xl overflow-hidden p-8 shadow-md`}
+                  >
+                    <div className={`absolute top-0 left-0 right-0 h-1 ${c.line}`} />
+                    <div className="flex flex-col items-center text-center">
+                      <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md mb-4">
+                        <Image
+                          src={model.image}
+                          alt={model.name}
+                          width={96}
+                          height={96}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                      <div className="w-full">
+                        <div className="flex items-center justify-center gap-2 flex-wrap">
+                          <h3 className="text-xl font-bold text-gray-900">{model.name}</h3>
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${c.bg} ${c.text} font-medium`}>Associate Professor</span>
+                        </div>
+                        <p className="text-sm text-gray-500 mb-3">{model.title}</p>
+                        <p className="text-gray-600 leading-relaxed text-sm max-w-xl mx-auto">{model.description}</p>
+                        <div className="flex flex-wrap justify-center gap-2 mt-4">
+                          {model.traits.map((trait, i) => (
+                            <span key={i} className={`text-xs px-3 py-1 rounded-full ${c.bg} ${c.text} font-medium flex items-center gap-1`}>
+                              <Star size={12} />
+                              {trait}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Lock Overlay */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-white/60 backdrop-blur-sm rounded-2xl">
+              <div className="w-20 h-20 rounded-full bg-purple-100 flex items-center justify-center">
+                <Lock size={32} className="text-purple-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800">Under Work</h3>
+              <p className="text-gray-500 text-sm max-w-sm text-center">
+                This section is currently being refined. 
+                <br />
+                Coming soon with more inspiring stories.
+              </p>
+              <div className="flex items-center gap-2 text-sm text-purple-600">
+                <Eye size={16} />
+                <span>Preview mode</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Awards Section */}
       <section className="py-24 px-6 bg-gray-50">
         <div className="max-w-4xl mx-auto">
@@ -793,8 +826,8 @@ export default function PortfolioPage() {
             className="text-center mb-10"
           >
             <div className="section-kicker justify-center">
-              <span className="section-kicker-line bg-indigo-500"></span>
-              <span className="text-indigo-600">RECOGNITION</span>
+              <span className="section-kicker-line bg-amber-500"></span>
+              <span className="text-amber-600">RECOGNITION</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">Awards & Achievements</h2>
             <p className="text-gray-500">Competitions and honors I've received.</p>
@@ -815,7 +848,7 @@ export default function PortfolioPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
                 whileHover={{ x: 4 }}
-                className="flex items-center gap-3 p-3.5 rounded-lg bg-white border border-gray-100 hover:border-indigo-200 hover:shadow-sm transition-all"
+                className="flex items-center gap-3 p-3.5 rounded-lg bg-white border border-gray-100 hover:border-amber-200 hover:shadow-sm transition-all"
               >
                 <div className="w-6 h-6 rounded-full bg-amber-50 flex items-center justify-center">
                   <Trophy size={12} className="text-amber-500" />
