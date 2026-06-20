@@ -26,7 +26,8 @@ import {
   Eye,
   Lock,
   Star,
-  Timer
+  Timer,
+  Info
 } from 'lucide-react'
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -38,7 +39,8 @@ const projects = [
     id: 'sutimer',
     title: 'SUTimer',
     subtitle: 'Figma Productivity Plugin',
-    description: 'A professional Figma plugin with real-time Firebase sync, collaborative counters, and timer automation to streamline team workflows and enhance design productivity. Built for the Software Engineering Club at ASU.',
+    shortDescription: 'A Figma plugin with real-time Firebase sync, collaborative counters, and timer automation.',
+    fullDescription: 'A professional Figma plugin with real-time Firebase sync, collaborative counters, and timer automation to streamline team workflows and enhance design productivity. Built for the Software Engineering Club at ASU, this tool enables design teams to track time spent on tasks, collaborate seamlessly with synchronized counters, and automate repetitive timing workflows. The plugin leverages Firebase Realtime Database for instant state synchronization across team members, making it ideal for remote design teams.',
     tags: ['Figma Plugin', 'Firebase', 'TypeScript', 'Real-time'],
     award: 'Featured',
     icon: Timer,
@@ -50,7 +52,8 @@ const projects = [
     id: 'evalui',
     title: 'EvalUI',
     subtitle: 'AI-Powered Accessibility Framework',
-    description: 'Computer vision framework for automated UI accessibility assessment. Top 15 in IEEE JCSPC 2025.',
+    shortDescription: 'Computer vision framework for automated UI accessibility assessment.',
+    fullDescription: 'A computer vision framework for automated UI accessibility assessment that analyzes web interfaces and identifies accessibility violations. Leveraging OpenCV and Python, EvalUI detects contrast issues, missing alt text, and layout problems. Top 15 in IEEE JCSPC 2025.',
     tags: ['Python', 'OpenCV', 'Computer Vision', 'HCI'],
     award: 'Top 15 IEEE',
     icon: Brain,
@@ -62,7 +65,8 @@ const projects = [
     id: 'onesmind',
     title: "One's Mind",
     subtitle: 'Psychological Puzzle Game',
-    description: '2D puzzle-adventure game that won 1st place in SEC4 competition.',
+    shortDescription: '2D puzzle-adventure game exploring psychological concepts.',
+    fullDescription: 'A 2D puzzle-adventure game that explores psychological concepts through interactive gameplay. Players navigate through levels that represent different mental states, solving puzzles that require critical thinking and emotional intelligence. Won 1st place in SEC4 competition.',
     tags: ['Unity', 'C#', 'Game Design'],
     award: '1st Place',
     icon: Gamepad2,
@@ -74,7 +78,8 @@ const projects = [
     id: 'fasbir',
     title: 'FASBIR',
     subtitle: 'National Initiatives Platform',
-    description: 'Charity platform supporting crisis-region initiatives. 5th place in SEC3.',
+    shortDescription: 'Charity platform supporting crisis-region initiatives.',
+    fullDescription: 'A comprehensive charity platform designed to support initiatives in crisis regions. FASBIR connects donors with verified charitable projects, provides transparent tracking of donations, and highlights impact stories. 5th place in SEC3 competition.',
     tags: ['Figma', 'UX Research', 'Prototyping'],
     award: '5th Place',
     icon: Globe,
@@ -86,7 +91,8 @@ const projects = [
     id: 'bytegene',
     title: 'ByteGene',
     subtitle: 'Company Website',
-    description: 'Responsive website for EnthusiasTech from wireframing to deployment.',
+    shortDescription: 'Responsive website for EnthusiasTech from wireframing to deployment.',
+    fullDescription: 'A responsive, modern company website for EnthusiasTech built from wireframing to full deployment. Features include interactive components, smooth animations, and a clean UI that represents the brand identity. Built with Next.js and Tailwind CSS.',
     tags: ['Next.js', 'Tailwind', 'Figma'],
     icon: PenTool,
     color: 'yellow',
@@ -162,6 +168,8 @@ const colorStyles = {
 export default function PortfolioPage() {
   const [mounted, setMounted] = useState(false)
   const [showPortalModal, setShowPortalModal] = useState(false)
+  const [showProjectModal, setShowProjectModal] = useState(false)
+  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const avatarRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -191,6 +199,11 @@ export default function PortfolioPage() {
   const handleMouseLeave = () => {
     if (!revealOverlayRef.current) return
     revealOverlayRef.current.style.clipPath = 'circle(0px at 0px 0px)'
+  }
+
+  const openProjectModal = (project: typeof projects[0]) => {
+    setSelectedProject(project)
+    setShowProjectModal(true)
   }
 
   if (!mounted) return null
@@ -576,16 +589,13 @@ export default function PortfolioPage() {
               const c = colorStyles[project.color as keyof typeof colorStyles]
               const Icon = project.icon
               return (
-                <motion.a
+                <motion.div
                   key={project.id}
-                  href={project.link}
-                  target={project.external ? "_blank" : "_self"}
-                  rel={project.external ? "noopener noreferrer" : ""}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  className={`group relative bg-white border ${c.border} rounded-xl overflow-hidden ${c.hover} transition-all duration-300 block cursor-pointer`}
+                  className={`group relative bg-white border ${c.border} rounded-xl overflow-hidden ${c.hover} transition-all duration-300`}
                 >
                   <div className={`absolute top-0 left-0 h-0.5 w-full ${c.line} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left`} />
                   
@@ -601,7 +611,7 @@ export default function PortfolioPage() {
                         <Icon size={16} />
                       </div>
                     </div>
-                    <p className="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3">{project.description}</p>
+                    <p className="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-2">{project.shortDescription}</p>
                     <div className="flex flex-wrap gap-2 mb-3">
                       {project.tags.slice(0, 3).map(tag => (
                         <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-gray-100 text-gray-600 group-hover:bg-gray-200 transition-colors duration-200">
@@ -614,7 +624,7 @@ export default function PortfolioPage() {
                     </div>
                     
                     <div className="flex items-center justify-between mt-2 pt-4 border-t border-gray-100">
-                      <div>
+                      <div className="flex items-center gap-2">
                         {project.award && (
                           <div className="flex items-center gap-1.5 text-xs text-amber-600">
                             <Trophy size={12} />
@@ -622,13 +632,30 @@ export default function PortfolioPage() {
                           </div>
                         )}
                       </div>
-                      <span className="text-xs text-gray-400 group-hover:text-indigo-600 transition-colors duration-200 flex items-center gap-1">
-                        View
-                        <ExternalLink size={12} />
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault()
+                            openProjectModal(project)
+                          }}
+                          className="text-xs text-gray-400 hover:text-indigo-600 transition-colors duration-200 flex items-center gap-1 px-2 py-1 rounded-full hover:bg-indigo-50"
+                        >
+                          <Info size={12} />
+                          More Info
+                        </button>
+                        <a
+                          href={project.link}
+                          target={project.external ? "_blank" : "_self"}
+                          rel={project.external ? "noopener noreferrer" : ""}
+                          className="text-xs text-gray-400 hover:text-indigo-600 transition-colors duration-200 flex items-center gap-1 px-2 py-1 rounded-full hover:bg-indigo-50"
+                        >
+                          View
+                          <ExternalLink size={12} />
+                        </a>
+                      </div>
                     </div>
                   </div>
-                </motion.a>
+                </motion.div>
               )
             })}
           </div>
@@ -903,6 +930,75 @@ export default function PortfolioPage() {
           </motion.div>
         </div>
       </section>
+
+      {/* Project Details Modal */}
+      <AnimatePresence>
+        {showProjectModal && selectedProject && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setShowProjectModal(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="fixed inset-4 md:inset-12 z-[101] max-w-2xl mx-auto bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+            >
+              <div className="flex-shrink-0 bg-white/90 backdrop-blur-md border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-lg ${colorStyles[selectedProject.color as keyof typeof colorStyles].bg} flex items-center justify-center ${colorStyles[selectedProject.color as keyof typeof colorStyles].text}`}>
+                    {selectedProject.icon && <selectedProject.icon size={16} />}
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">{selectedProject.title}</h3>
+                    <p className="text-xs text-gray-500">{selectedProject.subtitle}</p>
+                  </div>
+                </div>
+                <button onClick={() => setShowProjectModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-6">
+                <div className="mb-4">
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {selectedProject.tags.map(tag => (
+                      <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  {selectedProject.award && (
+                    <div className="flex items-center gap-2 text-sm text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full mb-4">
+                      <Trophy size={14} />
+                      <span>{selectedProject.award}</span>
+                    </div>
+                  )}
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                    {selectedProject.fullDescription || selectedProject.shortDescription}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                  <a
+                    href={selectedProject.link}
+                    target={selectedProject.external ? "_blank" : "_self"}
+                    rel={selectedProject.external ? "noopener noreferrer" : ""}
+                    className="flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-700 font-medium px-4 py-2 rounded-lg hover:bg-indigo-50 transition-colors"
+                  >
+                    View Project
+                    <ExternalLink size={14} />
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Portal Modal */}
       <AnimatePresence>
