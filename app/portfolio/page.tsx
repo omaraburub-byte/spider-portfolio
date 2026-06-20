@@ -19,13 +19,14 @@ import {
   BookOpen,
   Brain,
   Gamepad2,
-  Star,
   X,
   ExternalLink,
   FileText,
   Menu,
   Eye,
-  Lock
+  Lock,
+  Star,
+  Timer
 } from 'lucide-react'
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -33,6 +34,18 @@ import {
 // ─────────────────────────────────────────────────────────────────────────
 
 const projects = [
+  {
+    id: 'sutimer',
+    title: 'SUTimer',
+    subtitle: 'Figma Productivity Plugin',
+    description: 'A professional Figma plugin with real-time Firebase sync, collaborative counters, and timer automation to streamline team workflows and enhance design productivity. Built for the Software Engineering Club at ASU.',
+    tags: ['Figma Plugin', 'Firebase', 'TypeScript', 'Real-time'],
+    award: 'Featured',
+    icon: Timer,
+    color: 'purple',
+    link: 'https://www.figma.com/community/plugin/1565449206322423301',
+    external: true
+  },
   {
     id: 'evalui',
     title: 'EvalUI',
@@ -131,15 +144,15 @@ const roleModels = [
 ]
 
 const colorStyles = {
-  indigo: { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200', line: 'bg-indigo-500', hover: 'hover:border-indigo-300 hover:bg-indigo-50' },
-  red: { bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-200', line: 'bg-red-500', hover: 'hover:border-red-300 hover:bg-red-50' },
-  green: { bg: 'bg-green-50', text: 'text-green-600', border: 'border-green-200', line: 'bg-green-500', hover: 'hover:border-green-300 hover:bg-green-50' },
-  yellow: { bg: 'bg-yellow-50', text: 'text-yellow-600', border: 'border-yellow-200', line: 'bg-yellow-500', hover: 'hover:border-yellow-300 hover:bg-yellow-50' },
-  blue: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200', line: 'bg-blue-500', hover: 'hover:border-blue-300 hover:bg-blue-50' },
-  emerald: { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200', line: 'bg-emerald-500', hover: 'hover:border-emerald-300 hover:bg-emerald-50' },
-  pink: { bg: 'bg-pink-50', text: 'text-pink-600', border: 'border-pink-200', line: 'bg-pink-500', hover: 'hover:border-pink-300 hover:bg-pink-50' },
-  purple: { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200', line: 'bg-purple-500', hover: 'hover:border-purple-300 hover:bg-purple-50' },
-  amber: { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200', line: 'bg-amber-500', hover: 'hover:border-amber-300 hover:bg-amber-50' }
+  indigo: { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-gray-200', line: 'bg-indigo-500', hover: 'hover:border-gray-300 hover:bg-indigo-50' },
+  red: { bg: 'bg-red-50', text: 'text-red-600', border: 'border-gray-200', line: 'bg-red-500', hover: 'hover:border-gray-300 hover:bg-red-50' },
+  green: { bg: 'bg-green-50', text: 'text-green-600', border: 'border-gray-200', line: 'bg-green-500', hover: 'hover:border-gray-300 hover:bg-green-50' },
+  yellow: { bg: 'bg-yellow-50', text: 'text-yellow-600', border: 'border-gray-200', line: 'bg-yellow-500', hover: 'hover:border-gray-300 hover:bg-yellow-50' },
+  blue: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-gray-200', line: 'bg-blue-500', hover: 'hover:border-gray-300 hover:bg-blue-50' },
+  emerald: { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-gray-200', line: 'bg-emerald-500', hover: 'hover:border-gray-300 hover:bg-emerald-50' },
+  pink: { bg: 'bg-pink-50', text: 'text-pink-600', border: 'border-gray-200', line: 'bg-pink-500', hover: 'hover:border-gray-300 hover:bg-pink-50' },
+  purple: { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-gray-200', line: 'bg-purple-500', hover: 'hover:border-gray-300 hover:bg-purple-50' },
+  amber: { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-gray-200', line: 'bg-amber-500', hover: 'hover:border-gray-300 hover:bg-amber-50' }
 }
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -282,7 +295,6 @@ export default function PortfolioPage() {
           animation: slideDown 0.2s ease-out both;
         }
 
-        /* Blur effect for locked section */
         .blur-bg {
           backdrop-filter: blur(8px);
           -webkit-backdrop-filter: blur(8px);
@@ -292,7 +304,6 @@ export default function PortfolioPage() {
       {/* Header */}
       <div className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4 pointer-events-none">
         <div className="w-full max-w-4xl pointer-events-auto">
-          {/* Main Header */}
           <nav className="bg-white/80 backdrop-blur-xl border border-gray-200/50 rounded-full shadow-lg shadow-black/5 px-6 py-3 flex items-center justify-between">
             <a href="#" className="text-lg font-semibold tracking-tight">
               <span className="text-indigo-600">O</span>
@@ -302,7 +313,6 @@ export default function PortfolioPage() {
               <span className="text-gray-900">Aburub</span>
             </a>
             
-            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-4">
               <a href="#work" className="text-sm text-gray-600 hover:text-indigo-600 transition-colors px-3 py-1.5 rounded-full hover:bg-indigo-50">Work</a>
               <a href="#skills" className="text-sm text-gray-600 hover:text-emerald-600 transition-colors px-3 py-1.5 rounded-full hover:bg-emerald-50">Skills</a>
@@ -317,7 +327,6 @@ export default function PortfolioPage() {
               </button>
             </div>
 
-            {/* Mobile Menu Button */}
             <button 
               className="md:hidden flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -327,7 +336,6 @@ export default function PortfolioPage() {
             </button>
           </nav>
 
-          {/* Mobile Menu Dropdown */}
           <AnimatePresence>
             {mobileMenuOpen && (
               <motion.div
@@ -545,7 +553,7 @@ export default function PortfolioPage() {
         </div>
       </div>
 
-      {/* Work Section */}
+      {/* Work Section - 3 cards per row */}
       <section id="work" className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <motion.div
@@ -563,7 +571,7 @@ export default function PortfolioPage() {
             <p className="text-gray-500 max-w-2xl">Research, design, and development projects I'm proud of.</p>
           </motion.div>
           
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project, idx) => {
               const c = colorStyles[project.color as keyof typeof colorStyles]
               const Icon = project.icon
@@ -582,22 +590,27 @@ export default function PortfolioPage() {
                   <div className={`absolute top-0 left-0 h-0.5 w-full ${c.line} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left`} />
                   
                   <div className="p-6">
+                    <div className={`w-10 h-0.5 ${c.line} mb-4`} />
+                    
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <p className="text-xs text-gray-400 mb-1">{project.subtitle}</p>
-                        <h3 className="text-xl font-bold text-gray-800 group-hover:text-indigo-600 transition-colors duration-200">{project.title}</h3>
+                        <h3 className="text-lg font-bold text-gray-800 group-hover:text-indigo-600 transition-colors duration-200">{project.title}</h3>
                       </div>
                       <div className={`w-8 h-8 rounded-lg ${c.bg} flex items-center justify-center ${c.text} group-hover:scale-105 transition-transform duration-200`}>
                         <Icon size={16} />
                       </div>
                     </div>
-                    <p className="text-gray-500 text-sm leading-relaxed mb-4">{project.description}</p>
+                    <p className="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3">{project.description}</p>
                     <div className="flex flex-wrap gap-2 mb-3">
-                      {project.tags.map(tag => (
+                      {project.tags.slice(0, 3).map(tag => (
                         <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-gray-100 text-gray-600 group-hover:bg-gray-200 transition-colors duration-200">
                           {tag}
                         </span>
                       ))}
+                      {project.tags.length > 3 && (
+                        <span className="text-xs px-2.5 py-1 rounded-full bg-gray-100 text-gray-400">+{project.tags.length - 3}</span>
+                      )}
                     </div>
                     
                     <div className="flex items-center justify-between mt-2 pt-4 border-t border-gray-100">
@@ -610,7 +623,7 @@ export default function PortfolioPage() {
                         )}
                       </div>
                       <span className="text-xs text-gray-400 group-hover:text-indigo-600 transition-colors duration-200 flex items-center gap-1">
-                        View Project
+                        View
                         <ExternalLink size={12} />
                       </span>
                     </div>
@@ -733,7 +746,7 @@ export default function PortfolioPage() {
         </div>
       </section>
 
-      {/* Role Models Section - LOCKED with Eye icon and "Under Work" */}
+      {/* Role Models Section */}
       <section id="rolemodels" className="py-24 px-6 bg-gray-50">
         <div className="max-w-4xl mx-auto">
           <motion.div
@@ -751,27 +764,16 @@ export default function PortfolioPage() {
             <p className="text-gray-500 max-w-2xl mx-auto">The mentors and teachers who shaped how I think, learn, and grow.</p>
           </motion.div>
 
-          {/* Locked Content Overlay */}
           <div className="relative">
-            {/* Blurred background content */}
             <div className="grid md:grid-cols-1 gap-6 max-w-2xl mx-auto opacity-50 blur-sm pointer-events-none select-none">
               {roleModels.map((model, idx) => {
                 const c = colorStyles[model.color as keyof typeof colorStyles]
                 return (
-                  <div
-                    key={model.name}
-                    className={`relative bg-white border ${c.border} rounded-2xl overflow-hidden p-8 shadow-md`}
-                  >
+                  <div key={model.name} className={`relative bg-white border ${c.border} rounded-2xl overflow-hidden p-8 shadow-md`}>
                     <div className={`absolute top-0 left-0 right-0 h-1 ${c.line}`} />
                     <div className="flex flex-col items-center text-center">
                       <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md mb-4">
-                        <Image
-                          src={model.image}
-                          alt={model.name}
-                          width={96}
-                          height={96}
-                          className="object-cover w-full h-full"
-                        />
+                        <Image src={model.image} alt={model.name} width={96} height={96} className="object-cover w-full h-full" />
                       </div>
                       <div className="w-full">
                         <div className="flex items-center justify-center gap-2 flex-wrap">
@@ -795,14 +797,13 @@ export default function PortfolioPage() {
               })}
             </div>
 
-            {/* Lock Overlay */}
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-white/60 backdrop-blur-sm rounded-2xl">
               <div className="w-20 h-20 rounded-full bg-purple-100 flex items-center justify-center">
                 <Lock size={32} className="text-purple-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-800">Under Work</h3>
               <p className="text-gray-500 text-sm max-w-sm text-center">
-                This section is currently being refined. 
+                This section is currently being refined.
                 <br />
                 Coming soon with more inspiring stories.
               </p>
@@ -928,30 +929,17 @@ export default function PortfolioPage() {
                   <span className="text-sm font-medium text-gray-700">Portal Universe</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Link
-                    href="/landing"
-                    target="_blank"
-                    className="flex items-center gap-1.5 text-sm text-indigo-600 hover:text-indigo-700 font-medium px-3 py-1.5 rounded-full hover:bg-indigo-50 transition-colors"
-                  >
+                  <Link href="/landing" target="_blank" className="flex items-center gap-1.5 text-sm text-indigo-600 hover:text-indigo-700 font-medium px-3 py-1.5 rounded-full hover:bg-indigo-50 transition-colors">
                     Open Full Page
                     <ExternalLink size={14} />
                   </Link>
-                  <button
-                    onClick={() => setShowPortalModal(false)}
-                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                  >
+                  <button onClick={() => setShowPortalModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                     <X size={18} />
                   </button>
                 </div>
               </div>
               <div className="flex-1 overflow-hidden">
-                <iframe
-                  src="/landing?embed=true"
-                  className="w-full h-full"
-                  title="Portal"
-                  sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"
-                  style={{ border: 'none', background: '#0A0A0A' }}
-                />
+                <iframe src="/landing?embed=true" className="w-full h-full" title="Portal" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals" style={{ border: 'none', background: '#0A0A0A' }} />
               </div>
             </motion.div>
           </>
