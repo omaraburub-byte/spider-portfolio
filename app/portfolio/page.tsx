@@ -27,7 +27,8 @@ import {
   Lock,
   Star,
   Timer,
-  Info
+  Info,
+  Users
 } from 'lucide-react'
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -330,6 +331,7 @@ export default function PortfolioPage() {
               <a href="#work" className="text-sm text-gray-600 hover:text-indigo-600 transition-colors px-3 py-1.5 rounded-full hover:bg-indigo-50">Work</a>
               <a href="#skills" className="text-sm text-gray-600 hover:text-emerald-600 transition-colors px-3 py-1.5 rounded-full hover:bg-emerald-50">Skills</a>
               <a href="#experience" className="text-sm text-gray-600 hover:text-blue-600 transition-colors px-3 py-1.5 rounded-full hover:bg-blue-50">Experience</a>
+              <a href="#friends" className="text-sm text-gray-600 hover:text-pink-600 transition-colors px-3 py-1.5 rounded-full hover:bg-pink-50">Friends</a>
               <a href="#rolemodels" className="text-sm text-gray-600 hover:text-purple-600 transition-colors px-3 py-1.5 rounded-full hover:bg-purple-50">Role Models</a>
               <button 
                 onClick={() => setShowPortalModal(true)}
@@ -361,6 +363,7 @@ export default function PortfolioPage() {
                 <a href="#work" className="text-sm text-gray-700 hover:text-indigo-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-indigo-50" onClick={() => setMobileMenuOpen(false)}>Work</a>
                 <a href="#skills" className="text-sm text-gray-700 hover:text-emerald-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-emerald-50" onClick={() => setMobileMenuOpen(false)}>Skills</a>
                 <a href="#experience" className="text-sm text-gray-700 hover:text-blue-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-blue-50" onClick={() => setMobileMenuOpen(false)}>Experience</a>
+                <a href="#friends" className="text-sm text-gray-700 hover:text-pink-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-pink-50" onClick={() => setMobileMenuOpen(false)}>Friends</a>
                 <a href="#rolemodels" className="text-sm text-gray-700 hover:text-purple-600 transition-colors px-3 py-2.5 rounded-lg hover:bg-purple-50" onClick={() => setMobileMenuOpen(false)}>Role Models</a>
                 <button 
                   onClick={() => {
@@ -770,6 +773,64 @@ export default function PortfolioPage() {
               )
             })}
           </div>
+        </div>
+      </section>
+
+      {/* Friends Section */}
+      <section id="friends" className="py-24 px-6 bg-pink-50/30">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-12"
+          >
+            <div className="section-kicker justify-center">
+              <span className="section-kicker-line bg-pink-500"></span>
+              <span className="text-pink-600">FRIENDS</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">Moments Together</h2>
+            <p className="text-gray-500 max-w-2xl mx-auto">The people who make the journey worthwhile.</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="relative bg-white rounded-2xl overflow-hidden shadow-lg border border-pink-100 max-w-sm mx-auto"
+          >
+            <div className="relative w-full" style={{ aspectRatio: '1023 / 1090' }}>
+              <Image
+                src="/omfs.jpeg"
+                alt="Omar and Friends"
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+            <div className="p-4 md:p-6 bg-white">
+              <div className="flex items-center gap-2 mb-1">
+                <Users size={16} className="text-pink-500" />
+                <h3 className="text-base font-semibold text-gray-800">Good Times, Better People</h3>
+              </div>
+              <p className="text-gray-600 text-xs leading-relaxed">
+                Captured moments with friends who make every challenge easier and every success sweeter.
+              </p>
+              <div className="flex flex-wrap gap-1.5 mt-3">
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-pink-50 text-pink-600 border border-pink-200">
+                  Friendship
+                </span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-pink-50 text-pink-600 border border-pink-200">
+                  Memories
+                </span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-pink-50 text-pink-600 border border-pink-200">
+                  Support
+                </span>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
